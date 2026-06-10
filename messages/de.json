@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "homeTitle": "KitchenPrime — Thermomix TM7 & Premium-Zubehör in Europa",
+    "homeDesc": "Offizieller Thermomix TM7 Händler. Kostenloser 48h-Versand in Europa, 2 Jahre Garantie, sichere Zahlung.",
+    "catalogTitle": "Vollständiger Katalog — Thermomix TM7",
+    "checkoutTitle": "Bestellung abschließen"
+  },
+  "topbar": {
+    "trust": "Kostenloser Versand in Europa · Offizieller Händler · 2 Jahre Garantie"
+  },
+  "nav": {
+    "home": "Startseite",
+    "catalog": "Katalog",
+    "search": "Produkt suchen…",
+    "cart": "Warenkorb"
+  },
+  "hero": {
+    "eyebrow": "Offizieller Händler Europa",
+    "titlePre": "Kulinarische Exzellenz,",
+    "titleHighlightPre": "zu Ihnen ",
+    "titleHighlight": "geliefert.",
+    "desc": "KitchenPrime wählt die besten Geräte für Ihre Küche. Thermomix TM7 — 22 Funktionen, Express-Lieferung 48h in Europa.",
+    "cta1": "TM7 bestellen",
+    "cta2": "WhatsApp",
+    "trust1": "2 Jahre Garantie",
+    "trust2": "48h Lieferung",
+    "trust3": "14 Tage Rückgabe",
+    "badge": "Neu · −€200"
+  },
+  "strip": {
+    "shippingLabel": "Kostenloser Versand",
+    "shippingVal": "Express 48h Europa",
+    "warrantyLabel": "Offizielle Garantie",
+    "warrantyVal": "2 Jahre inklusive",
+    "resellerLabel": "Händler",
+    "resellerVal": "Offiziell zertifiziert",
+    "directLabel": "Direktbestellung",
+    "directVal": "WhatsApp 7T/7"
+  },
+  "home": {
+    "popularEyebrow": "KitchenPrime Auswahl",
+    "popularTitle": "Beliebte Produkte",
+    "seeAll": "Alle 20 Produkte ansehen",
+    "reviewsEyebrow": "Geprüfte Bewertungen",
+    "reviewsTitle": "Sie haben KitchenPrime gewählt",
+    "verified": "Geprüfter Kauf"
+  },
+  "catalog": {
+    "eyebrow": "Vollständiger Katalog · 20 Produkte",
+    "title": "Alle unsere Produkte",
+    "subtitle": "Roboter · Zubehör · Bücher · Pakete — die komplette Thermomix TM7 Reihe.",
+    "filterAll": "Alle",
+    "filterRobots": "Roboter",
+    "filterAcc": "Zubehör",
+    "filterBooks": "Bücher",
+    "filterPacks": "Pakete",
+    "add": "Hinzufügen"
+  },
+  "pdp": {
+    "breadHome": "Startseite",
+    "breadCatalog": "Katalog",
+    "reviewsCount": "{count} geprüfte Bewertungen",
+    "save": "Sparen Sie €{amount}",
+    "qty": "Menge",
+    "addToCart": "In den Warenkorb",
+    "orderWa": "Über WhatsApp bestellen",
+    "feat1": "22 Funktionen — Mixer, Dampfgarer, integrierte Waage",
+    "feat2": "6,8\" Touchscreen + Wi-Fi Cookidoo Anleitung",
+    "feat3": "1550W Motor · Präzise Waage ±1g",
+    "feat4": "2 Jahre Herstellergarantie inklusive"
+  },
+  "checkout": {
+    "secure": "Sichere SSL-Zahlung",
+    "title": "Bestellung abschließen",
+    "shippingTitle": "Lieferinformationen",
+    "fullName": "Vollständiger Name",
+    "fullNameP": "Hans Müller",
+    "email": "E-Mail",
+    "emailP": "hans@beispiel.de",
+    "phone": "Telefon",
+    "phoneP": "+49 30 00000000",
+    "address": "Adresse",
+    "addressP": "Hauptstraße 1",
+    "city": "Stadt",
+    "cityP": "München",
+    "zip": "PLZ",
+    "zipP": "80331",
+    "country": "Land",
+    "paymentTitle": "Zahlungsart",
+    "pmCard": "Kreditkarte",
+    "pmCardSub": "Visa · Mastercard · Apple Pay · Klarna · SEPA",
+    "pmCardRec": "Empfohlen",
+    "pmWise": "Wise Banküberweisung",
+    "pmWiseSub": "Internationale SEPA-Überweisung · 1–2 Tage",
+    "confirmPay": "Bestätigen und zahlen",
+    "summary": "Übersicht",
+    "subtotal": "Zwischensumme",
+    "shipping": "Versand",
+    "free": "Kostenlos",
+    "vat": "MwSt. (19%)",
+    "included": "Inklusive",
+    "total": "Gesamtsumme",
+    "trustPay": "100% sichere Zahlung",
+    "trustShip": "Kostenloser 48h Versand",
+    "trustReturn": "14 Tage Rückgaberecht",
+    "trustWarranty": "2 Jahre Garantie"
+  },
+  "footer": {
+    "tagline": "Premium-Händler des Thermomix TM7 in Europa. Frankreich · Belgien · Deutschland · Italien · Schweiz.",
+    "products": "Produkte",
+    "support": "Support",
+    "robots": "Roboter",
+    "accessories": "Zubehör",
+    "books": "Bücher",
+    "packs": "Pakete",
+    "whatsapp": "WhatsApp",
+    "shipping": "Versand",
+    "returns": "Rückgabe",
+    "cgv": "AGB",
+    "securePay": "Sichere Zahlung:",
+    "copy": "© 2026 KitchenPrime SAS. Alle Rechte vorbehalten.",
+    "legal": "Impressum",
+    "privacy": "Datenschutz"
+  },
+  "wa": {
+    "label": "Bestellen · WhatsApp",
+    "msg": "Hallo KitchenPrime, ich möchte bestellen: {product}"
+  },
+  "categories": {
+    "robots": "Küchenroboter",
+    "acc": "Zubehör",
+    "livres": "Buch",
+    "packs": "Exklusives Paket"
+  }
+}

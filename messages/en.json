@@ -1,0 +1,135 @@
+{
+  "meta": {
+    "homeTitle": "KitchenPrime — Thermomix TM7 & premium accessories in Europe",
+    "homeDesc": "Official Thermomix TM7 reseller. Free 48h delivery in Europe, 2-year warranty, secure payment.",
+    "catalogTitle": "Full catalog — Thermomix TM7",
+    "checkoutTitle": "Complete your order"
+  },
+  "topbar": {
+    "trust": "Free delivery in Europe · Official reseller · 2-year warranty"
+  },
+  "nav": {
+    "home": "Home",
+    "catalog": "Catalog",
+    "search": "Search a product…",
+    "cart": "Cart"
+  },
+  "hero": {
+    "eyebrow": "Official reseller Europe",
+    "titlePre": "Culinary excellence,",
+    "titleHighlightPre": "delivered to ",
+    "titleHighlight": "you.",
+    "desc": "KitchenPrime selects the finest equipment for your kitchen. Thermomix TM7 — 22 functions, 48h express delivery across Europe.",
+    "cta1": "Order the TM7",
+    "cta2": "WhatsApp",
+    "trust1": "2-year warranty",
+    "trust2": "48h delivery",
+    "trust3": "14-day returns",
+    "badge": "New · −€200"
+  },
+  "strip": {
+    "shippingLabel": "Free delivery",
+    "shippingVal": "48h Express Europe",
+    "warrantyLabel": "Official warranty",
+    "warrantyVal": "2 years included",
+    "resellerLabel": "Reseller",
+    "resellerVal": "Officially certified",
+    "directLabel": "Direct order",
+    "directVal": "WhatsApp 7d/7"
+  },
+  "home": {
+    "popularEyebrow": "KitchenPrime selection",
+    "popularTitle": "Popular products",
+    "seeAll": "View all 20 products",
+    "reviewsEyebrow": "Verified reviews",
+    "reviewsTitle": "They chose KitchenPrime",
+    "verified": "Verified purchase"
+  },
+  "catalog": {
+    "eyebrow": "Full catalog · 20 products",
+    "title": "All our products",
+    "subtitle": "Robots · Accessories · Books · Packs — the complete Thermomix TM7 range.",
+    "filterAll": "All",
+    "filterRobots": "Robots",
+    "filterAcc": "Accessories",
+    "filterBooks": "Books",
+    "filterPacks": "Packs",
+    "add": "Add"
+  },
+  "pdp": {
+    "breadHome": "Home",
+    "breadCatalog": "Catalog",
+    "reviewsCount": "{count} verified reviews",
+    "save": "Save €{amount}",
+    "qty": "Quantity",
+    "addToCart": "Add to cart",
+    "orderWa": "Order via WhatsApp",
+    "feat1": "22 functions — blender, steamer, integrated scale",
+    "feat2": "6.8\" touchscreen + Wi-Fi Cookidoo guidance",
+    "feat3": "1550W motor · Precise scale ±1g",
+    "feat4": "2-year manufacturer warranty included"
+  },
+  "checkout": {
+    "secure": "Secure SSL payment",
+    "title": "Complete your order",
+    "shippingTitle": "Shipping information",
+    "fullName": "Full name",
+    "fullNameP": "John Smith",
+    "email": "Email",
+    "emailP": "john@example.com",
+    "phone": "Phone",
+    "phoneP": "+44 20 0000 0000",
+    "address": "Address",
+    "addressP": "1 Main Street",
+    "city": "City",
+    "cityP": "London",
+    "zip": "Zip / Postcode",
+    "zipP": "SW1A 1AA",
+    "country": "Country",
+    "paymentTitle": "Payment method",
+    "pmCard": "Credit card",
+    "pmCardSub": "Visa · Mastercard · Apple Pay · Klarna · SEPA",
+    "pmCardRec": "Recommended",
+    "pmWise": "Wise bank transfer",
+    "pmWiseSub": "International SEPA transfer · 1–2 days",
+    "confirmPay": "Confirm and pay",
+    "summary": "Summary",
+    "subtotal": "Subtotal",
+    "shipping": "Shipping",
+    "free": "Free",
+    "vat": "VAT (20%)",
+    "included": "Included",
+    "total": "Total",
+    "trustPay": "100% secure payment",
+    "trustShip": "Free 48h delivery",
+    "trustReturn": "14-day return policy",
+    "trustWarranty": "2-year warranty"
+  },
+  "footer": {
+    "tagline": "Premium reseller of the Thermomix TM7 in Europe. France · Belgium · Germany · Italy · Switzerland.",
+    "products": "Products",
+    "support": "Support",
+    "robots": "Robots",
+    "accessories": "Accessories",
+    "books": "Books",
+    "packs": "Packs",
+    "whatsapp": "WhatsApp",
+    "shipping": "Shipping",
+    "returns": "Returns",
+    "cgv": "Terms",
+    "securePay": "Secure payment:",
+    "copy": "© 2026 KitchenPrime SAS. All rights reserved.",
+    "legal": "Legal notice",
+    "privacy": "Privacy"
+  },
+  "wa": {
+    "label": "Order · WhatsApp",
+    "msg": "Hello KitchenPrime, I'd like to order: {product}"
+  },
+  "categories": {
+    "robots": "Kitchen robot",
+    "acc": "Accessory",
+    "livres": "Book",
+    "packs": "Exclusive bundle"
+  }
+}

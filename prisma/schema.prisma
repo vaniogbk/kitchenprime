@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Category {
+  robots
+  acc
+  livres
+  packs
+}
+
+enum OrderStatus {
+  pending
+  paid
+  shipped
+  delivered
+  cancelled
+  refunded
+}
+
+enum PaymentMethod {
+  card
+  wise
+  whatsapp
+}
+
+model Product {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  name          String
+  category      Category
+  ref           String    @unique
+  priceCents    Int
+  oldPriceCents Int?
+  imageId       String
+  badge         String?
+  badgeLabel    String?
+  rating        Float     @default(4.8)
+  reviewsCount  Int       @default(0)
+  active        Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  orderItems    OrderItem[]
+
+  @@index([category])
+  @@index([active])
+}
+
+model Order {
+  id             String        @id @default(cuid())
+  status         OrderStatus   @default(pending)
+  paymentMethod  PaymentMethod
+  paymentRef     String?       @unique
+  subtotalCents  Int
+  shippingCents  Int           @default(0)
+  totalCents     Int
+  currency       String        @default("EUR")
+  locale         String        @default("fr")
+
+  customerName    String
+  customerEmail   String
+  customerPhone   String?
+  shippingAddress String
+  shippingCity    String
+  shippingZip     String
+  shippingCountry String
+
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([status])
+  @@index([customerEmail])
+}
+
+model OrderItem {
+  id         String  @id @default(cuid())
+  order      Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  orderId    String
+  product    Product @relation(fields: [productId], references: [id])
+  productId  String
+  nameAtSale String
+  refAtSale  String
+  priceCents Int
+  quantity   Int
+
+  @@index([orderId])
+  @@index([productId])
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime @default(now())
+}
