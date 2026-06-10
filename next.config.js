@@ -4,7 +4,8 @@ const withNextIntl = createNextIntlPlugin('./lib/i18n.ts');
 
 const nextConfig = {
   reactStrictMode: true,
-  output: 'standalone',
+  // 'standalone' is for Docker/Hostinger — not needed on Vercel
+  ...(process.env.BUILD_STANDALONE === 'true' && { output: 'standalone' }),
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
