@@ -43,7 +43,6 @@ export function PDPActions({
         <button
           type="button"
           className="btn-buy"
-          style={{ width: '100%', padding: 14 }}
           onClick={() => {
             window.location.href = `/${locale}/checkout?p=${productSlug}&qty=${qty}`;
           }}
@@ -55,7 +54,6 @@ export function PDPActions({
           target="_blank"
           rel="noopener noreferrer"
           className="btn-wa"
-          style={{ width: '100%', padding: 14 }}
         >
           <i className="fa-brands fa-whatsapp" style={{ fontSize: 16 }} /> {t('orderWa')}
         </a>

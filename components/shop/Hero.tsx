@@ -6,10 +6,10 @@ import { waOrderUrl } from '@/lib/whatsapp';
 import { type Locale } from '@/lib/i18n';
 
 const HERO_IMAGES = [
-  'photo-1556909114-f6e7ad7d3136',
-  'photo-1585515320310-259814833e62',
-  'photo-1591189863430-ab87e120f312',
-  'photo-1565299624946-b28f40a0ae38',
+  'KfouZ7nkiho',
+  'XbTJE_Ul41U',
+  'xEZR4-kYhgM',
+  'VghP75yXtWE',
 ];
 
 export function Hero({ locale }: { locale: Locale }) {
