@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import {
@@ -9,6 +10,12 @@ import {
 } from '@/lib/products';
 import { waOrderUrl } from '@/lib/whatsapp';
 import { type Locale } from '@/lib/i18n';
+
+const WL_KEY = 'kp_wishlist';
+
+function getWishlist(): string[] {
+  try { return JSON.parse(localStorage.getItem(WL_KEY) || '[]'); } catch { return []; }
+}
 
 export function ProductCard({
   product,
@@ -26,6 +33,22 @@ export function ProductCard({
     en: 'en-GB',
   };
   const numLocale = localeMap[locale];
+  const [wished, setWished] = useState(false);
+
+  useEffect(() => {
+    setWished(getWishlist().includes(product.slug));
+  }, [product.slug]);
+
+  function toggleWish(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    const list = getWishlist();
+    const next = wished
+      ? list.filter((s) => s !== product.slug)
+      : [...list, product.slug];
+    localStorage.setItem(WL_KEY, JSON.stringify(next));
+    setWished(!wished);
+  }
 
   const badgeClass =
     product.badge === 'new' ? 'b-new'
@@ -46,11 +69,11 @@ export function ProductCard({
         )}
         <button
           type="button"
-          className="pwish"
-          onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-          aria-label="wishlist"
+          className={`pwish${wished ? ' on' : ''}`}
+          onClick={toggleWish}
+          aria-label={wished ? 'Retirer des favoris' : 'Ajouter aux favoris'}
         >
-          <i className="fa-regular fa-heart" />
+          <i className={wished ? 'fa-solid fa-heart' : 'fa-regular fa-heart'} />
         </button>
       </div>
       <div className="pbody">

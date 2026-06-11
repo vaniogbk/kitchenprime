@@ -36,9 +36,9 @@ export default function ProductPage({
 
   const gallery = [
     product.imageId,
-    'KfouZ7nkiho',
-    'xEZR4-kYhgM',
-    'VghP75yXtWE',
+    'photo-1585515320310-259814833e62',
+    'photo-1591189863430-ab87e120f312',
+    'photo-1565299624946-b28f40a0ae38',
   ];
 
   return (

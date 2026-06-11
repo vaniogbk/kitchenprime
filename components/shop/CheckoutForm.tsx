@@ -1,14 +1,20 @@
 'use client';
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, FormEvent } from 'react';
 import { useTranslations } from 'next-intl';
 import { type Product, formatEUR, unsplashUrl } from '@/lib/products';
 import { type Locale } from '@/lib/i18n';
 
+const CK_KEY = 'kp_customer';
+
+type CustomerData = {
+  name: string; email: string; phone: string;
+  address: string; city: string; zip: string; country: string;
+  method: 'card' | 'wise';
+};
+
 const localeMap: Record<Locale, string> = {
   fr: 'fr-FR', de: 'de-DE', it: 'it-IT', en: 'en-GB',
 };
-
-type PaymentMethod = 'card' | 'wise';
 
 export function CheckoutForm({
   product,
@@ -20,148 +26,196 @@ export function CheckoutForm({
   locale: Locale;
 }) {
   const t = useTranslations('checkout');
-  const [method, setMethod] = useState<PaymentMethod>('card');
+  const [method, setMethod] = useState<'card' | 'wise'>('card');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [saved, setSaved] = useState<CustomerData | null>(null);
+  const [editing, setEditing] = useState(false);
 
   const subtotal = product.priceCents * qty;
-  const shipping = 0;
-  const total = subtotal + shipping;
+  const total = subtotal;
   const numLocale = localeMap[locale];
 
-  async function onSubmit(e: FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(CK_KEY);
+      if (raw) {
+        const data = JSON.parse(raw) as CustomerData;
+        setSaved(data);
+        setMethod(data.method || 'card');
+      }
+    } catch {}
+  }, []);
+
+  async function doSubmit(customer: CustomerData) {
     setSubmitting(true);
     setError(null);
-    const form = new FormData(e.currentTarget);
-    const payload = {
-      paymentMethod: method,
-      items: [{ productSlug: product.slug, quantity: qty }],
-      locale,
-      customer: {
-        name: String(form.get('name') || ''),
-        email: String(form.get('email') || ''),
-        phone: String(form.get('phone') || ''),
-        address: String(form.get('address') || ''),
-        city: String(form.get('city') || ''),
-        zip: String(form.get('zip') || ''),
-        country: String(form.get('country') || 'FR'),
-      },
-    };
     try {
       const res = await fetch('/api/orders', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
+        body: JSON.stringify({
+          paymentMethod: customer.method,
+          items: [{ productSlug: product.slug, quantity: qty }],
+          locale,
+          customer,
+        }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Order failed');
-      if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl;
-      } else {
-        window.location.href = `/${locale}?orderId=${data.orderId}`;
-      }
+      localStorage.setItem(CK_KEY, JSON.stringify(customer));
+      if (data.checkoutUrl) window.location.href = data.checkoutUrl;
+      else window.location.href = `/${locale}?orderId=${data.orderId}`;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Order failed');
       setSubmitting(false);
     }
   }
 
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = new FormData(e.currentTarget);
+    await doSubmit({
+      name: String(form.get('name') || ''),
+      email: String(form.get('email') || ''),
+      phone: String(form.get('phone') || ''),
+      address: String(form.get('address') || ''),
+      city: String(form.get('city') || ''),
+      zip: String(form.get('zip') || ''),
+      country: String(form.get('country') || 'FR'),
+      method,
+    });
+  }
+
+  const showSaved = saved && !editing;
+
   return (
-    <form className="ck-grid" onSubmit={onSubmit}>
+    <div className="ck-grid">
       <div>
-        <div className="fcard">
-          <div className="fcard-title">
-            <i className="fa-solid fa-location-dot" /> {t('shippingTitle')}
-          </div>
-          <div className="fgrid">
-            <div className="fg ffull">
-              <label>{t('fullName')} *</label>
-              <input type="text" name="name" placeholder={t('fullNameP')} required />
-            </div>
-            <div className="fg">
-              <label>{t('email')} *</label>
-              <input type="email" name="email" placeholder={t('emailP')} required />
-            </div>
-            <div className="fg">
-              <label>{t('phone')}</label>
-              <input type="tel" name="phone" placeholder={t('phoneP')} />
-            </div>
-            <div className="fg ffull">
-              <label>{t('address')} *</label>
-              <input type="text" name="address" placeholder={t('addressP')} required />
-            </div>
-            <div className="fg">
-              <label>{t('city')} *</label>
-              <input type="text" name="city" placeholder={t('cityP')} required />
-            </div>
-            <div className="fg">
-              <label>{t('zip')} *</label>
-              <input type="text" name="zip" placeholder={t('zipP')} required />
-            </div>
-            <div className="fg ffull">
-              <label>{t('country')} *</label>
-              <select name="country" defaultValue="FR" required>
-                <option value="FR">🇫🇷 France</option>
-                <option value="DE">🇩🇪 Allemagne</option>
-                <option value="IT">🇮🇹 Italie</option>
-                <option value="BE">🇧🇪 Belgique</option>
-                <option value="CH">🇨🇭 Suisse</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <div className="fcard">
-          <div className="fcard-title">
-            <i className="fa-solid fa-credit-card" /> {t('paymentTitle')}
-          </div>
-          <label className={`pm-opt${method === 'card' ? ' on' : ''}`}>
-            <input
-              type="radio"
-              name="pm"
-              checked={method === 'card'}
-              onChange={() => setMethod('card')}
-            />
-            <div>
-              <div className="pm-name">
-                <i className="fa-solid fa-credit-card" /> {t('pmCard')}
-                <span style={{ fontSize: 10, background: 'var(--copper-50)', color: 'var(--copper)', padding: '2px 7px', borderRadius: 5, marginLeft: 4 }}>
-                  {t('pmCardRec')}
-                </span>
+        {showSaved ? (
+          /* ── Returning customer fast-track ── */
+          <div className="ck-saved">
+            <div className="ck-saved-top">
+              <div className="ck-saved-check"><i className="fa-solid fa-circle-check" /></div>
+              <div>
+                <div className="ck-saved-name">Bonjour, {saved.name.split(' ')[0]} !</div>
+                <div className="ck-saved-addr">{saved.address}, {saved.zip} {saved.city}</div>
+                <div className="ck-saved-email">{saved.email}</div>
               </div>
-              <div className="pm-sub">{t('pmCardSub')}</div>
             </div>
-          </label>
-          <label className={`pm-opt${method === 'wise' ? ' on' : ''}`}>
-            <input
-              type="radio"
-              name="pm"
-              checked={method === 'wise'}
-              onChange={() => setMethod('wise')}
-            />
-            <div>
-              <div className="pm-name">
-                <i className="fa-solid fa-building-columns" /> {t('pmWise')}
-              </div>
-              <div className="pm-sub">{t('pmWiseSub')}</div>
+            <div className="ck-saved-pm">
+              <i className={saved.method === 'card' ? 'fa-solid fa-credit-card' : 'fa-solid fa-building-columns'} />
+              {saved.method === 'card' ? ' Paiement par carte sécurisée' : ' Virement Wise'}
             </div>
-          </label>
-        </div>
+            {error && <div className="ck-error">{error}</div>}
+            <div className="ck-saved-btns">
+              <button
+                type="button"
+                className="btn-checkout"
+                disabled={submitting}
+                onClick={() => doSubmit(saved)}
+              >
+                <i className="fa-solid fa-lock" />
+                {submitting ? ' Traitement…' : ` Commander · ${formatEUR(total, numLocale)}`}
+              </button>
+              <button type="button" className="ck-change" onClick={() => setEditing(true)}>
+                <i className="fa-solid fa-pen-to-square" /> Changer la carte
+              </button>
+            </div>
+          </div>
+        ) : (
+          /* ── Full form ── */
+          <form onSubmit={onSubmit}>
+            {saved && (
+              <button type="button" className="ck-back" onClick={() => setEditing(false)}>
+                <i className="fa-solid fa-arrow-left" /> Utiliser mes infos sauvegardées
+              </button>
+            )}
 
-        {error && (
-          <div style={{ color: '#9E4E1E', fontSize: 13, marginBottom: 12 }}>{error}</div>
+            <div className="fcard">
+              <div className="fcard-title">
+                <i className="fa-solid fa-location-dot" /> {t('shippingTitle')}
+              </div>
+              <div className="fgrid">
+                <div className="fg ffull">
+                  <label>{t('fullName')} *</label>
+                  <input type="text" name="name" placeholder={t('fullNameP')} required defaultValue={saved?.name} />
+                </div>
+                <div className="fg">
+                  <label>{t('email')} *</label>
+                  <input type="email" name="email" placeholder={t('emailP')} required defaultValue={saved?.email} />
+                </div>
+                <div className="fg">
+                  <label>{t('phone')}</label>
+                  <input type="tel" name="phone" placeholder={t('phoneP')} defaultValue={saved?.phone} />
+                </div>
+                <div className="fg ffull">
+                  <label>{t('address')} *</label>
+                  <input type="text" name="address" placeholder={t('addressP')} required defaultValue={saved?.address} />
+                </div>
+                <div className="fg">
+                  <label>{t('city')} *</label>
+                  <input type="text" name="city" placeholder={t('cityP')} required defaultValue={saved?.city} />
+                </div>
+                <div className="fg">
+                  <label>{t('zip')} *</label>
+                  <input type="text" name="zip" placeholder={t('zipP')} required defaultValue={saved?.zip} />
+                </div>
+                <div className="fg ffull">
+                  <label htmlFor="country">{t('country')} *</label>
+                  <select id="country" name="country" title={t('country')} defaultValue={saved?.country || 'FR'} required>
+                    <option value="FR">🇫🇷 France</option>
+                    <option value="DE">🇩🇪 Allemagne</option>
+                    <option value="IT">🇮🇹 Italie</option>
+                    <option value="BE">🇧🇪 Belgique</option>
+                    <option value="CH">🇨🇭 Suisse</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className="fcard">
+              <div className="fcard-title">
+                <i className="fa-solid fa-credit-card" /> {t('paymentTitle')}
+              </div>
+              <label className={`pm-opt${method === 'card' ? ' on' : ''}`}>
+                <input type="radio" name="pm" checked={method === 'card'} onChange={() => setMethod('card')} />
+                <div>
+                  <div className="pm-name">
+                    <i className="fa-solid fa-credit-card" /> {t('pmCard')}
+                    <span className="pm-rec">{t('pmCardRec')}</span>
+                  </div>
+                  <div className="pm-sub">{t('pmCardSub')}</div>
+                </div>
+              </label>
+              <label className={`pm-opt${method === 'wise' ? ' on' : ''}`}>
+                <input type="radio" name="pm" checked={method === 'wise'} onChange={() => setMethod('wise')} />
+                <div>
+                  <div className="pm-name">
+                    <i className="fa-solid fa-building-columns" /> {t('pmWise')}
+                  </div>
+                  <div className="pm-sub">{t('pmWiseSub')}</div>
+                </div>
+              </label>
+            </div>
+
+            {error && <div className="ck-error">{error}</div>}
+
+            <div className="ck-submit-row">
+              <button
+                type="submit"
+                disabled={submitting}
+                className={`btn-checkout${submitting ? ' loading' : ''}`}
+              >
+                <i className="fa-solid fa-lock" />
+                {submitting ? ' Traitement…' : ` ${t('confirmPay')} · ${formatEUR(total, numLocale)}`}
+              </button>
+              <p className="ck-secure-note">
+                <i className="fa-solid fa-shield-halved" /> Paiement 100% sécurisé — données chiffrées SSL
+              </p>
+            </div>
+          </form>
         )}
-
-        <button
-          type="submit"
-          disabled={submitting}
-          className="btn-buy"
-          style={{ width: '100%', padding: 16, fontSize: 14, opacity: submitting ? 0.6 : 1 }}
-        >
-          <i className="fa-solid fa-lock" />{' '}
-          {submitting ? '…' : `${t('confirmPay')} — ${formatEUR(total, numLocale)}`}
-        </button>
       </div>
 
       <aside className="sumcard">
@@ -186,8 +240,8 @@ export function CheckoutForm({
           </div>
           <div className="sum-row">
             <span>{t('shipping')}</span>
-            <span style={{ color: '#0E7268', fontWeight: 700 }}>
-              <i className="fa-solid fa-truck-fast" style={{ fontSize: 10 }} /> {t('free')}
+            <span className="sum-free">
+              <i className="fa-solid fa-truck-fast" /> {t('free')}
             </span>
           </div>
           <div className="sum-row">
@@ -206,6 +260,6 @@ export function CheckoutForm({
           <div className="sum-tr"><i className="fa-solid fa-medal" /> {t('trustWarranty')}</div>
         </div>
       </aside>
-    </form>
+    </div>
   );
 }
