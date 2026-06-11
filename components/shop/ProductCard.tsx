@@ -80,7 +80,7 @@ export function ProductCard({
             <i className="fa-solid fa-cart-plus" /> {t('catalog.add')}
           </button>
           <a
-            href={waOrderUrl(product.name, tWa('msg'))}
+            href={waOrderUrl(product.name, tWa.raw('msg') as string)}
             target="_blank"
             rel="noopener noreferrer"
             className="pbtn-wa"

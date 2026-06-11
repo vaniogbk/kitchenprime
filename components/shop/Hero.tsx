@@ -33,7 +33,7 @@ export function Hero({ locale }: { locale: Locale }) {
             <i className="fa-solid fa-bag-shopping" /> {t('cta1')}
           </Link>
           <a
-            href={waOrderUrl('Thermomix TM7', tWa('msg'))}
+            href={waOrderUrl('Thermomix TM7', tWa.raw('msg') as string)}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-wa"

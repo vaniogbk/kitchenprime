@@ -6,14 +6,15 @@ const nextConfig = {
   reactStrictMode: true,
   // 'standalone' is for Docker/Hostinger — not needed on Vercel
   ...(process.env.BUILD_STANDALONE === 'true' && { output: 'standalone' }),
+  experimental: {
+    serverComponentsExternalPackages: ['pdfkit', 'fontkit'],
+    serverActions: { bodySizeLimit: '4mb' },
+  },
   images: {
     remotePatterns: [
       { protocol: 'https', hostname: 'images.unsplash.com' },
       { protocol: 'https', hostname: 'cdnjs.cloudflare.com' },
     ],
-  },
-  experimental: {
-    serverActions: { bodySizeLimit: '4mb' },
   },
 };
 

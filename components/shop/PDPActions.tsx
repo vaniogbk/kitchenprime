@@ -51,7 +51,7 @@ export function PDPActions({
           <i className="fa-solid fa-bag-shopping" /> {t('addToCart')} · {formatEUR(total, localeMap[locale])}
         </button>
         <a
-          href={waOrderUrl(productName, tWa('msg'))}
+          href={waOrderUrl(productName, tWa.raw('msg') as string)}
           target="_blank"
           rel="noopener noreferrer"
           className="btn-wa"

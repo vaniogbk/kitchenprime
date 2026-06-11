@@ -31,7 +31,7 @@ export async function GET(_req: Request, { params }: { params: { id: string } })
     totalCents: order.totalCents,
   });
 
-  return new NextResponse(pdf, {
+  return new NextResponse(new Uint8Array(pdf), {
     status: 200,
     headers: {
       'Content-Type': 'application/pdf',
