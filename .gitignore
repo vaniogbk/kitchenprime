@@ -53,3 +53,7 @@ yarn-error.log*
 
 # OS
 Thumbs.db
+
+.vercel
+.env.prod
+.env.railway
