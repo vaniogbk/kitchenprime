@@ -12,6 +12,11 @@ type CustomerData = {
   method: 'card' | 'wise';
 };
 
+type BankInfo = {
+  id: string; label: string; holder: string;
+  iban: string; bic: string | null; bank: string | null;
+};
+
 const localeMap: Record<Locale, string> = {
   fr: 'fr-FR', de: 'de-DE', it: 'it-IT', en: 'en-GB',
 };
@@ -31,6 +36,7 @@ export function CheckoutForm({
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<CustomerData | null>(null);
   const [editing, setEditing] = useState(false);
+  const [bankInfo, setBankInfo] = useState<BankInfo | null>(null);
 
   const subtotal = product.priceCents * qty;
   const total = subtotal;
@@ -45,6 +51,7 @@ export function CheckoutForm({
         setMethod(data.method || 'card');
       }
     } catch {}
+    fetch('/api/bank-account').then(r => r.ok ? r.json() : null).then(d => { if (d) setBankInfo(d); });
   }, []);
 
   async function doSubmit(customer: CustomerData) {
@@ -190,11 +197,34 @@ export function CheckoutForm({
               </label>
               <label className={`pm-opt${method === 'wise' ? ' on' : ''}`}>
                 <input type="radio" name="pm" checked={method === 'wise'} onChange={() => setMethod('wise')} />
-                <div>
+                <div className="pm-wise-body">
                   <div className="pm-name">
                     <i className="fa-solid fa-building-columns" /> {t('pmWise')}
                   </div>
                   <div className="pm-sub">{t('pmWiseSub')}</div>
+                  {method === 'wise' && bankInfo && (
+                    <div className="ck-iban-box">
+                      <div className="ck-iban-label">
+                        <i className="fa-solid fa-circle-info" /> Coordonnées bancaires pour votre virement
+                      </div>
+                      <table className="ck-iban-table">
+                        <tbody>
+                          <tr><td>Bénéficiaire</td><td><strong>{bankInfo.holder}</strong></td></tr>
+                          {bankInfo.bank && <tr><td>Banque</td><td>{bankInfo.bank}</td></tr>}
+                          <tr><td>IBAN</td><td><span className="ck-iban-mono">{bankInfo.iban.replace(/(.{4})/g, '$1 ').trim()}</span></td></tr>
+                          {bankInfo.bic && <tr><td>BIC</td><td><span className="ck-iban-mono">{bankInfo.bic}</span></td></tr>}
+                        </tbody>
+                      </table>
+                      <div className="ck-iban-note">
+                        Indiquez votre numéro de commande en référence. Nous expédions dès réception du virement.
+                      </div>
+                    </div>
+                  )}
+                  {method === 'wise' && !bankInfo && (
+                    <div className="ck-iban-note ck-iban-note--fallback">
+                      Les coordonnées bancaires vous seront envoyées par email après confirmation.
+                    </div>
+                  )}
                 </div>
               </label>
             </div>

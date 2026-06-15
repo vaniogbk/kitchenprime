@@ -35,6 +35,12 @@ export default async function AdminDashboard() {
         <div style={{ display: 'flex', gap: 10 }}>
           <Link href="/admin/orders" className="btn-buy"><i className="fa-solid fa-receipt" /> Commandes</Link>
           <Link href="/admin/products" className="btn-copper"><i className="fa-solid fa-box" /> Produits</Link>
+          <Link href="/admin/bank-accounts" style={{ fontSize: 13, padding: '8px 14px', background: 'var(--indigo-50)', color: 'var(--indigo)', borderRadius: 8, fontWeight: 800, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <i className="fa-solid fa-building-columns" /> IBAN
+          </Link>
+          <Link href="/admin/payment" style={{ fontSize: 13, padding: '8px 14px', background: '#F0FDF4', color: '#15803D', borderRadius: 8, fontWeight: 800, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+            <i className="fa-solid fa-credit-card" /> Paiement
+          </Link>
         </div>
       </div>
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3,1fr)', gap: 14, marginBottom: 22 }}>

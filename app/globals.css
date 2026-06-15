@@ -613,6 +613,38 @@
   .sum-free { color: #0E7268; font-weight: 700; font-size: 12px; }
   .sum-free i { font-size: 10px; }
 
+  /* ===== IBAN box in checkout ===== */
+  .pm-wise-body { flex: 1; }
+
+  .ck-iban-box {
+    margin-top: 12px;
+    background: var(--indigo-50);
+    border: 1.5px solid var(--indigo);
+    border-radius: 10px;
+    padding: 12px 14px;
+  }
+  .ck-iban-label {
+    font-size: 11px; font-weight: 800; color: var(--indigo);
+    text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px;
+  }
+  .ck-iban-table {
+    width: 100%; border-collapse: collapse; font-size: 12px;
+  }
+  .ck-iban-table td {
+    padding: 3px 6px 3px 0; color: var(--slate); vertical-align: top;
+  }
+  .ck-iban-table td:first-child {
+    color: var(--mute); white-space: nowrap; padding-right: 12px; font-weight: 600;
+  }
+  .ck-iban-mono {
+    font-family: monospace; font-size: 13px; font-weight: 700;
+    color: var(--ink); letter-spacing: .06em;
+  }
+  .ck-iban-note {
+    font-size: 11px; color: var(--mute); margin-top: 8px; line-height: 1.5;
+  }
+  .ck-iban-note--fallback { margin-top: 8px; }
+
   /* ===== Checkout extras ===== */
   .pm-rec {
     font-size: 10px; background: var(--copper-50); color: var(--copper);

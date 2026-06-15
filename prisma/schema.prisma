@@ -93,10 +93,32 @@ model OrderItem {
   @@index([productId])
 }
 
+model Setting {
+  key       String   @id
+  value     String
+  updatedAt DateTime @updatedAt
+}
+
 model AdminUser {
   id           String   @id @default(cuid())
   email        String   @unique
   passwordHash String
   name         String?
   createdAt    DateTime @default(now())
+}
+
+model BankAccount {
+  id        String   @id @default(cuid())
+  label     String   // ex: "BNP Paribas — Compte principal"
+  holder    String   // ex: "KitchenPrime"
+  iban      String
+  bic       String?
+  bank      String?  // nom de la banque
+  isDefault Boolean  @default(false)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([isDefault])
+  @@index([isActive])
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getMolliePayment } from '@/lib/mollie';
+import { getMolliePayment } from '@/lib/processors/mollie';
 import { sendEmail } from '@/lib/email';
 import { generateReceiptPdf } from '@/lib/pdf';
 import type { OrderStatus } from '@prisma/client';
