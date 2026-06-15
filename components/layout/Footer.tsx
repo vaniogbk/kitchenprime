@@ -1,15 +1,15 @@
-import { useTranslations } from 'next-intl';
+import Link from 'next/link';
+import { useTranslations, useLocale } from 'next-intl';
 
 export function Footer() {
   const t = useTranslations('footer');
+  const locale = useLocale();
 
   return (
     <footer className="footer">
       <div className="footer-top">
         <div>
-          <div className="f-logo">
-            Kitchen<span>Prime</span>
-          </div>
+          <div className="f-logo">Kitchen<span>Prime</span></div>
           <div className="f-tag">{t('tagline')}</div>
           <div className="f-socials">
             <a className="fsoc" href="https://facebook.com" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
@@ -26,19 +26,19 @@ export function Footer() {
         <div>
           <div className="f-col-title">{t('products')}</div>
           <div className="f-links">
-            <a className="flink" href="#"><i className="fa-solid fa-blender" /> {t('robots')}</a>
-            <a className="flink" href="#"><i className="fa-solid fa-kitchen-set" /> {t('accessories')}</a>
-            <a className="flink" href="#"><i className="fa-solid fa-book-open" /> {t('books')}</a>
-            <a className="flink" href="#"><i className="fa-solid fa-boxes-stacked" /> {t('packs')}</a>
+            <Link className="flink" href={`/${locale}/catalogue?cat=robots`}><i className="fa-solid fa-blender" /> {t('robots')}</Link>
+            <Link className="flink" href={`/${locale}/catalogue?cat=acc`}><i className="fa-solid fa-kitchen-set" /> {t('accessories')}</Link>
+            <Link className="flink" href={`/${locale}/catalogue?cat=livres`}><i className="fa-solid fa-book-open" /> {t('books')}</Link>
+            <Link className="flink" href={`/${locale}/catalogue?cat=packs`}><i className="fa-solid fa-boxes-stacked" /> {t('packs')}</Link>
           </div>
         </div>
         <div>
           <div className="f-col-title">{t('support')}</div>
           <div className="f-links">
-            <a className="flink" href="#"><i className="fa-brands fa-whatsapp" /> {t('whatsapp')}</a>
-            <a className="flink" href="#"><i className="fa-solid fa-truck-fast" /> {t('shipping')}</a>
-            <a className="flink" href="#"><i className="fa-solid fa-rotate-left" /> {t('returns')}</a>
-            <a className="flink" href="#"><i className="fa-solid fa-file-shield" /> {t('cgv')}</a>
+            <a className="flink" href="https://wa.me/33756976502" target="_blank" rel="noopener noreferrer"><i className="fa-brands fa-whatsapp" /> {t('whatsapp')}</a>
+            <Link className="flink" href={`/${locale}/politique-retour`}><i className="fa-solid fa-rotate-left" /> {t('returns')}</Link>
+            <Link className="flink" href={`/${locale}/contact`}><i className="fa-solid fa-headset" /> {t('shipping')}</Link>
+            <Link className="flink" href={`/${locale}/cgv`}><i className="fa-solid fa-file-shield" /> {t('cgv')}</Link>
           </div>
         </div>
       </div>
@@ -54,9 +54,10 @@ export function Footer() {
       <div className="f-bot">
         <div className="f-copy">{t('copy')}</div>
         <div className="f-bot-links">
-          <a href="#">{t('legal')}</a>
-          <a href="#">{t('privacy')}</a>
-          <a href="#">{t('cgv')}</a>
+          <Link href={`/${locale}/mentions-legales`}>{t('legal')}</Link>
+          <Link href={`/${locale}/cgv`}>{t('cgv')}</Link>
+          <Link href={`/${locale}/politique-retour`}>{t('returns')}</Link>
+          <Link href={`/${locale}/contact`}>Contact</Link>
         </div>
       </div>
     </footer>
