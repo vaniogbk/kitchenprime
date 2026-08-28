@@ -1,8 +1,18 @@
+# Déploiement Hostinger — déclenchement MANUEL uniquement.
+#
+# Le déclenchement automatique sur `main` a été retiré tant que l'hébergement
+# n'est pas en place : sans les secrets SSH, le job échouait à chaque push et
+# affichait un rouge permanent sur la branche principale, ce qui finit par
+# faire ignorer les vrais échecs.
+#
+# Pour le réactiver quand Hostinger sera prêt :
+#   1. renseigner les secrets DEPLOY_HOST, DEPLOY_USER, DEPLOY_PATH,
+#      DEPLOY_SSH_KEY (et DATABASE_URL, NEXTAUTH_SECRET, NEXTAUTH_URL,
+#      NEXT_PUBLIC_APP_URL) dans Settings → Secrets and variables → Actions ;
+#   2. remettre le bloc `push: branches: [main]` ci-dessous.
 name: Deploy to Hostinger
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 concurrency:
@@ -15,6 +25,30 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+
+      # Échoue tôt et clairement plutôt qu'au milieu du déploiement, une fois
+      # le code déjà compilé.
+      - name: Vérifier que les secrets de déploiement sont configurés
+        run: |
+          missing=""
+          for name in DEPLOY_HOST DEPLOY_USER DEPLOY_PATH DEPLOY_SSH_KEY; do
+            eval "value=\$$name"
+            # Un `if` et non `[ … ] && …` : sous `set -e`, une condition fausse
+            # ferait échouer l'étape alors que le secret est bien présent.
+            if [ -z "$value" ]; then
+              missing="$missing $name"
+            fi
+          done
+          if [ -n "$missing" ]; then
+            echo "::error::Secrets manquants :$missing — voir l'en-tête de ce fichier."
+            exit 1
+          fi
+          echo "Tous les secrets de déploiement sont présents."
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          DEPLOY_USER: ${{ secrets.DEPLOY_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
 
       - uses: actions/setup-node@v4
         with:
