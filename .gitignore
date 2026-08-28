@@ -68,3 +68,6 @@ Thumbs.db
 
 # Artefact Windows : `vercel env pull /dev/null` crée un fichier nommé `nul`
 nul
+
+# Secret généré localement par scripts/set-admin-password.mjs
+admin-password.txt

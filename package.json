@@ -21,7 +21,8 @@
     "test:lighthouse": "lhci autorun",
     "typecheck": "tsc --noEmit",
     "build:e2e": "node scripts/build-e2e.mjs",
-    "check:images": "node scripts/check-images.mjs"
+    "check:images": "node scripts/check-images.mjs",
+    "admin:password": "node scripts/set-admin-password.mjs"
   },
   "dependencies": {
     "@prisma/client": "^5.22.0",
