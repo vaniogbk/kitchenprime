@@ -92,6 +92,9 @@ module.exports = {
       },
     },
 
-    upload: { target: 'filesystem', outputDir: './.lighthouseci' },
+    // `outputDir` doit différer du dossier de collecte (`.lighthouseci`) :
+    // autorun le vide avant chaque campagne, et les rapports copiés dedans
+    // disparaissaient — la CI n'archivait donc aucun artefact.
+    upload: { target: 'filesystem', outputDir: './lighthouse-reports' },
   },
 };

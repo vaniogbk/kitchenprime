@@ -64,3 +64,4 @@ Thumbs.db
 /blob-report/
 /playwright/.cache/
 /.lighthouseci/
+/lighthouse-reports/
