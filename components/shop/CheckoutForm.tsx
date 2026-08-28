@@ -1,8 +1,13 @@
 'use client';
-import { useState, useEffect, FormEvent } from 'react';
+import { useState, useEffect, useMemo, type FormEvent } from 'react';
 import { useTranslations } from 'next-intl';
-import { type Product, formatEUR, unsplashUrl } from '@/lib/products';
+import { formatEUR } from '@/lib/products';
+import { BCP47 } from '@/lib/seo';
 import { type Locale } from '@/lib/i18n';
+import { Icon } from '@/components/ui/Icon';
+import { RemoteImage } from '@/components/ui/RemoteImage';
+import { useCart } from '@/components/shop/CartProvider';
+import { type CartCatalogEntry } from '@/components/shop/CartView';
 
 const CK_KEY = 'kp_customer';
 
@@ -17,44 +22,64 @@ type BankInfo = {
   iban: string; bic: string | null; bank: string | null;
 };
 
-const localeMap: Record<Locale, string> = {
-  fr: 'fr-FR', de: 'de-DE', it: 'it-IT', en: 'en-GB',
-};
+const COUNTRIES = ['FR', 'DE', 'IT', 'BE', 'CH'] as const;
 
 export function CheckoutForm({
-  product,
-  qty,
+  catalog,
+  directLine,
   locale,
 }: {
-  product: Product;
-  qty: number;
+  catalog: CartCatalogEntry[];
+  /** Achat direct depuis une fiche produit ; `null` = on facture le panier. */
+  directLine: { slug: string; qty: number } | null;
   locale: Locale;
 }) {
   const t = useTranslations('checkout');
+  const tCart = useTranslations('cart');
+  const { lines: cartLines, clear, ready } = useCart();
   const [method, setMethod] = useState<'card' | 'wise'>('card');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<CustomerData | null>(null);
   const [editing, setEditing] = useState(false);
   const [bankInfo, setBankInfo] = useState<BankInfo | null>(null);
+  const numLocale = BCP47[locale];
 
-  const subtotal = product.priceCents * qty;
+  const lines = useMemo(() => (directLine ? [directLine] : cartLines), [directLine, cartLines]);
+
+  const rows = useMemo(
+    () =>
+      lines
+        .map((l) => {
+          const p = catalog.find((c) => c.slug === l.slug);
+          return p ? { ...p, qty: l.qty } : null;
+        })
+        .filter((r): r is CartCatalogEntry & { qty: number } => r !== null),
+    [lines, catalog],
+  );
+
+  const subtotal = rows.reduce((sum, r) => sum + r.priceCents * r.qty, 0);
   const total = subtotal;
-  const numLocale = localeMap[locale];
 
   useEffect(() => {
     try {
-      const raw = localStorage.getItem(CK_KEY);
-      if (raw) {
-        const data = JSON.parse(raw) as CustomerData;
+      const rawSaved = localStorage.getItem(CK_KEY);
+      if (rawSaved) {
+        const data = JSON.parse(rawSaved) as CustomerData;
         setSaved(data);
         setMethod(data.method || 'card');
       }
-    } catch {}
-    fetch('/api/bank-account').then(r => r.ok ? r.json() : null).then(d => { if (d) setBankInfo(d); });
+    } catch {
+      /* stockage indisponible : on repart d'un formulaire vierge */
+    }
+    fetch('/api/bank-account')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => { if (d) setBankInfo(d); })
+      .catch(() => { /* l'IBAN sera envoyé par e-mail, voir ibanFallback */ });
   }, []);
 
   async function doSubmit(customer: CustomerData) {
+    if (rows.length === 0) return;
     setSubmitting(true);
     setError(null);
     try {
@@ -63,18 +88,19 @@ export function CheckoutForm({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           paymentMethod: customer.method,
-          items: [{ productSlug: product.slug, quantity: qty }],
+          items: rows.map((r) => ({ productSlug: r.slug, quantity: r.qty })),
           locale,
           customer,
         }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Order failed');
+      if (!res.ok) throw new Error(data.error || t('genericError'));
       localStorage.setItem(CK_KEY, JSON.stringify(customer));
-      if (data.checkoutUrl) window.location.href = data.checkoutUrl;
-      else window.location.href = `/${locale}?orderId=${data.orderId}`;
+      // Le panier n'est vidé qu'une fois la commande acceptée par le serveur.
+      if (!directLine) clear();
+      window.location.href = data.checkoutUrl ?? `/${locale}?orderId=${data.orderId}`;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Order failed');
+      setError(err instanceof Error ? err.message : t('genericError'));
       setSubmitting(false);
     }
   }
@@ -95,26 +121,39 @@ export function CheckoutForm({
   }
 
   const showSaved = saved && !editing;
+  const empty = ready && rows.length === 0;
+
+  if (empty) {
+    return (
+      <div className="cart-empty">
+        <Icon name="bag-shopping" />
+        <p>{tCart('empty')}</p>
+        <a href={`/${locale}/catalogue`} className="btn-buy">
+          <Icon name="table-cells-large" /> {tCart('emptyCta')}
+        </a>
+      </div>
+    );
+  }
 
   return (
     <div className="ck-grid">
       <div>
         {showSaved ? (
-          /* ── Returning customer fast-track ── */
+          /* ── Client déjà connu : commande en un clic ── */
           <div className="ck-saved">
             <div className="ck-saved-top">
-              <div className="ck-saved-check"><i className="fa-solid fa-circle-check" /></div>
+              <div className="ck-saved-check"><Icon name="circle-check" /></div>
               <div>
-                <div className="ck-saved-name">Bonjour, {saved.name.split(' ')[0]} !</div>
+                <div className="ck-saved-name">{t('greeting', { name: saved.name.split(' ')[0] })}</div>
                 <div className="ck-saved-addr">{saved.address}, {saved.zip} {saved.city}</div>
                 <div className="ck-saved-email">{saved.email}</div>
               </div>
             </div>
             <div className="ck-saved-pm">
-              <i className={saved.method === 'card' ? 'fa-solid fa-credit-card' : 'fa-solid fa-building-columns'} />
-              {saved.method === 'card' ? ' Paiement par carte sécurisée' : ' Virement Wise'}
+              <Icon name={saved.method === 'card' ? 'credit-card' : 'building-columns'} />
+              {' '}{saved.method === 'card' ? t('savedPmCard') : t('savedPmWise')}
             </div>
-            {error && <div className="ck-error">{error}</div>}
+            {error && <p className="ck-error" role="alert">{error}</p>}
             <div className="ck-saved-btns">
               <button
                 type="button"
@@ -122,74 +161,72 @@ export function CheckoutForm({
                 disabled={submitting}
                 onClick={() => doSubmit(saved)}
               >
-                <i className="fa-solid fa-lock" />
-                {submitting ? ' Traitement…' : ` Commander · ${formatEUR(total, numLocale)}`}
+                <Icon name="lock" />
+                {submitting ? ` ${t('processing')}` : ` ${t('order')} · ${formatEUR(total, numLocale)}`}
               </button>
               <button type="button" className="ck-change" onClick={() => setEditing(true)}>
-                <i className="fa-solid fa-pen-to-square" /> Changer la carte
+                <Icon name="pen-to-square" /> {t('changeCard')}
               </button>
             </div>
           </div>
         ) : (
-          /* ── Full form ── */
+          /* ── Formulaire complet ── */
           <form onSubmit={onSubmit}>
             {saved && (
               <button type="button" className="ck-back" onClick={() => setEditing(false)}>
-                <i className="fa-solid fa-arrow-left" /> Utiliser mes infos sauvegardées
+                <Icon name="arrow-left" /> {t('useSaved')}
               </button>
             )}
 
             <div className="fcard">
-              <div className="fcard-title">
-                <i className="fa-solid fa-location-dot" /> {t('shippingTitle')}
-              </div>
+              <h2 className="fcard-title">
+                <Icon name="location-dot" /> {t('shippingTitle')}
+              </h2>
               <div className="fgrid">
                 <div className="fg ffull">
-                  <label>{t('fullName')} *</label>
-                  <input type="text" name="name" placeholder={t('fullNameP')} required defaultValue={saved?.name} />
+                  <label htmlFor="ck-name">{t('fullName')} *</label>
+                  <input id="ck-name" type="text" name="name" autoComplete="name" placeholder={t('fullNameP')} required defaultValue={saved?.name} />
                 </div>
                 <div className="fg">
-                  <label>{t('email')} *</label>
-                  <input type="email" name="email" placeholder={t('emailP')} required defaultValue={saved?.email} />
+                  <label htmlFor="ck-email">{t('email')} *</label>
+                  <input id="ck-email" type="email" name="email" autoComplete="email" placeholder={t('emailP')} required defaultValue={saved?.email} />
                 </div>
                 <div className="fg">
-                  <label>{t('phone')}</label>
-                  <input type="tel" name="phone" placeholder={t('phoneP')} defaultValue={saved?.phone} />
+                  <label htmlFor="ck-phone">{t('phone')}</label>
+                  <input id="ck-phone" type="tel" name="phone" autoComplete="tel" placeholder={t('phoneP')} defaultValue={saved?.phone} />
                 </div>
                 <div className="fg ffull">
-                  <label>{t('address')} *</label>
-                  <input type="text" name="address" placeholder={t('addressP')} required defaultValue={saved?.address} />
+                  <label htmlFor="ck-address">{t('address')} *</label>
+                  <input id="ck-address" type="text" name="address" autoComplete="street-address" placeholder={t('addressP')} required defaultValue={saved?.address} />
                 </div>
                 <div className="fg">
-                  <label>{t('city')} *</label>
-                  <input type="text" name="city" placeholder={t('cityP')} required defaultValue={saved?.city} />
+                  <label htmlFor="ck-city">{t('city')} *</label>
+                  <input id="ck-city" type="text" name="city" autoComplete="address-level2" placeholder={t('cityP')} required defaultValue={saved?.city} />
                 </div>
                 <div className="fg">
-                  <label>{t('zip')} *</label>
-                  <input type="text" name="zip" placeholder={t('zipP')} required defaultValue={saved?.zip} />
+                  <label htmlFor="ck-zip">{t('zip')} *</label>
+                  <input id="ck-zip" type="text" name="zip" autoComplete="postal-code" inputMode="numeric" placeholder={t('zipP')} required defaultValue={saved?.zip} />
                 </div>
                 <div className="fg ffull">
-                  <label htmlFor="country">{t('country')} *</label>
-                  <select id="country" name="country" title={t('country')} defaultValue={saved?.country || 'FR'} required>
-                    <option value="FR">🇫🇷 France</option>
-                    <option value="DE">🇩🇪 Allemagne</option>
-                    <option value="IT">🇮🇹 Italie</option>
-                    <option value="BE">🇧🇪 Belgique</option>
-                    <option value="CH">🇨🇭 Suisse</option>
+                  <label htmlFor="ck-country">{t('country')} *</label>
+                  <select id="ck-country" name="country" autoComplete="country" defaultValue={saved?.country || 'FR'} required>
+                    {COUNTRIES.map((c) => (
+                      <option key={c} value={c}>{t(`country${c}`)}</option>
+                    ))}
                   </select>
                 </div>
               </div>
             </div>
 
             <div className="fcard">
-              <div className="fcard-title">
-                <i className="fa-solid fa-credit-card" /> {t('paymentTitle')}
-              </div>
+              <h2 className="fcard-title">
+                <Icon name="credit-card" /> {t('paymentTitle')}
+              </h2>
               <label className={`pm-opt${method === 'card' ? ' on' : ''}`}>
                 <input type="radio" name="pm" checked={method === 'card'} onChange={() => setMethod('card')} />
                 <div>
                   <div className="pm-name">
-                    <i className="fa-solid fa-credit-card" /> {t('pmCard')}
+                    <Icon name="credit-card" /> {t('pmCard')}
                     <span className="pm-rec">{t('pmCardRec')}</span>
                   </div>
                   <div className="pm-sub">{t('pmCardSub')}</div>
@@ -199,37 +236,33 @@ export function CheckoutForm({
                 <input type="radio" name="pm" checked={method === 'wise'} onChange={() => setMethod('wise')} />
                 <div className="pm-wise-body">
                   <div className="pm-name">
-                    <i className="fa-solid fa-building-columns" /> {t('pmWise')}
+                    <Icon name="building-columns" /> {t('pmWise')}
                   </div>
                   <div className="pm-sub">{t('pmWiseSub')}</div>
                   {method === 'wise' && bankInfo && (
                     <div className="ck-iban-box">
                       <div className="ck-iban-label">
-                        <i className="fa-solid fa-circle-info" /> Coordonnées bancaires pour votre virement
+                        <Icon name="circle-info" /> {t('ibanTitle')}
                       </div>
                       <table className="ck-iban-table">
                         <tbody>
-                          <tr><td>Bénéficiaire</td><td><strong>{bankInfo.holder}</strong></td></tr>
-                          {bankInfo.bank && <tr><td>Banque</td><td>{bankInfo.bank}</td></tr>}
+                          <tr><td>{t('beneficiary')}</td><td><strong>{bankInfo.holder}</strong></td></tr>
+                          {bankInfo.bank && <tr><td>{t('bank')}</td><td>{bankInfo.bank}</td></tr>}
                           <tr><td>IBAN</td><td><span className="ck-iban-mono">{bankInfo.iban.replace(/(.{4})/g, '$1 ').trim()}</span></td></tr>
                           {bankInfo.bic && <tr><td>BIC</td><td><span className="ck-iban-mono">{bankInfo.bic}</span></td></tr>}
                         </tbody>
                       </table>
-                      <div className="ck-iban-note">
-                        Indiquez votre numéro de commande en référence. Nous expédions dès réception du virement.
-                      </div>
+                      <div className="ck-iban-note">{t('ibanNote')}</div>
                     </div>
                   )}
                   {method === 'wise' && !bankInfo && (
-                    <div className="ck-iban-note ck-iban-note--fallback">
-                      Les coordonnées bancaires vous seront envoyées par email après confirmation.
-                    </div>
+                    <div className="ck-iban-note ck-iban-note--fallback">{t('ibanFallback')}</div>
                   )}
                 </div>
               </label>
             </div>
 
-            {error && <div className="ck-error">{error}</div>}
+            {error && <p className="ck-error" role="alert">{error}</p>}
 
             <div className="ck-submit-row">
               <button
@@ -237,11 +270,11 @@ export function CheckoutForm({
                 disabled={submitting}
                 className={`btn-checkout${submitting ? ' loading' : ''}`}
               >
-                <i className="fa-solid fa-lock" />
-                {submitting ? ' Traitement…' : ` ${t('confirmPay')} · ${formatEUR(total, numLocale)}`}
+                <Icon name="lock" />
+                {submitting ? ` ${t('processing')}` : ` ${t('confirmPay')} · ${formatEUR(total, numLocale)}`}
               </button>
               <p className="ck-secure-note">
-                <i className="fa-solid fa-shield-halved" /> Paiement 100% sécurisé — données chiffrées SSL
+                <Icon name="shield-halved" /> {t('secureNote')}
               </p>
             </div>
           </form>
@@ -249,20 +282,21 @@ export function CheckoutForm({
       </div>
 
       <aside className="sumcard">
-        <div className="sum-title">
-          <i className="fa-solid fa-receipt" /> {t('summary')}
-        </div>
-        <div className="sum-item">
-          <div className="sum-img">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={unsplashUrl(product.imageId, 120, 70)} alt="" />
+        <h2 className="sum-title">
+          <Icon name="receipt" /> {t('summary')}
+        </h2>
+        {rows.map((r) => (
+          <div className="sum-item" key={r.slug}>
+            <div className="sum-img">
+              <RemoteImage imageId={r.imageId} alt="" sizes="50px" quality={55} />
+            </div>
+            <div>
+              <div className="sum-iname">{r.name}</div>
+              <div className="sum-isub">{t('lineSub', { ref: r.ref, qty: r.qty })}</div>
+            </div>
+            <div className="sum-iprice">{formatEUR(r.priceCents * r.qty, numLocale)}</div>
           </div>
-          <div>
-            <div className="sum-iname">{product.name}</div>
-            <div className="sum-isub">Réf. {product.ref} · Qté {qty}</div>
-          </div>
-          <div className="sum-iprice">{formatEUR(subtotal, numLocale)}</div>
-        </div>
+        ))}
         <div>
           <div className="sum-row">
             <span>{t('subtotal')}</span>
@@ -271,7 +305,7 @@ export function CheckoutForm({
           <div className="sum-row">
             <span>{t('shipping')}</span>
             <span className="sum-free">
-              <i className="fa-solid fa-truck-fast" /> {t('free')}
+              <Icon name="truck-fast" /> {t('free')}
             </span>
           </div>
           <div className="sum-row">
@@ -284,10 +318,10 @@ export function CheckoutForm({
           </div>
         </div>
         <div className="sum-trust">
-          <div className="sum-tr"><i className="fa-solid fa-shield-halved" /> {t('trustPay')}</div>
-          <div className="sum-tr"><i className="fa-solid fa-truck-fast" /> {t('trustShip')}</div>
-          <div className="sum-tr"><i className="fa-solid fa-rotate-left" /> {t('trustReturn')}</div>
-          <div className="sum-tr"><i className="fa-solid fa-medal" /> {t('trustWarranty')}</div>
+          <div className="sum-tr"><Icon name="shield-halved" /> {t('trustPay')}</div>
+          <div className="sum-tr"><Icon name="truck-fast" /> {t('trustShip')}</div>
+          <div className="sum-tr"><Icon name="rotate-left" /> {t('trustReturn')}</div>
+          <div className="sum-tr"><Icon name="medal" /> {t('trustWarranty')}</div>
         </div>
       </aside>
     </div>

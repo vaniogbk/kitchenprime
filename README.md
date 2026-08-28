@@ -1,33 +1,20 @@
 # KitchenPrime
 
-E-commerce SaaS multilingue (FR · DE · IT · EN) pour la vente du **Thermomix TM7** et de ses accessoires en Europe.
+Boutique e-commerce multilingue (FR · DE · IT · EN) : **Thermomix TM7 reconditionné**, accessoires, livres de recettes, packs et **maison connectée / électroménager**.
 
-Stack : **Next.js 14 (App Router) · Prisma + MySQL · NextAuth · next-intl · Tailwind CSS · Mollie · Wise · WhatsApp Cloud API · Nodemailer / SendGrid · pdfkit**. Déploiement cible : **Docker + GitHub Actions + Nginx sur Hostinger**.
-
-Le design correspond strictement au template canonique `kitchenprime_v3_clean.html` — Direction D "Indigo & Cuivre". Toute régénération de composant doit conserver cette identité : boutons en couleur pleine (jamais transparents), navbar minimale (Accueil · Catalogue · search · cart), pas de section "Offre de lancement", socials Facebook · Instagram · TikTok uniquement.
+Stack : **Next.js 14 (App Router) · Prisma + PostgreSQL · NextAuth · next-intl · Tailwind CSS · Stripe / Mollie / Adyen / SumUp · Nodemailer · pdfkit**.
 
 ---
 
 ## 🚀 Démarrage rapide
 
 ```bash
-# 1. Installer les dépendances
 npm install
-
-# 2. Copier l'environnement
-cp .env.example .env
-# Éditer .env : DATABASE_URL, NEXTAUTH_SECRET, MOLLIE_API_KEY, SMTP_*
-
-# 3. Préparer la base
-npm run db:push   # crée le schéma
-npm run db:seed   # 20 produits + utilisateur admin
-
-# 4. Lancer en dev
-npm run dev
-# → http://localhost:3000 (redirige vers /fr)
+cp .env.example .env      # puis renseigner DATABASE_URL, NEXTAUTH_SECRET, SMTP_*
+npm run db:push           # crée le schéma
+npm run db:seed           # 20 produits + compte admin
+npm run dev               # http://localhost:3000
 ```
-
-> ⚠️ **Note historique** : `nodemailer` est fixé à `^7.0.7` (et non `^6.9.x`) pour satisfaire la peer-dep de `next-auth@4.24.14`. C'est cette correction qui a débloqué l'installation lors de la session précédente.
 
 ---
 
@@ -35,116 +22,160 @@ npm run dev
 
 ```
 app/
-  [locale]/            # pages publiques i18n (fr|de|it|en)
-    page.tsx           # Accueil — Hero + TrustStrip + Populaires + Testimonials
-    catalogue/         # Catalogue 20 produits + filtres
-    produit/[slug]/    # Fiche produit (PDP)
-    checkout/          # Tunnel de commande
-  admin/               # Espace admin (non listé, URL séparée)
-    login/
-    dashboard/
-    orders/
-    products/
-  api/
-    auth/[...nextauth]/
-    products/          # GET catalogue public
-    orders/            # POST création commande → Mollie ou Wise
-    orders/[id]/receipt/  # GET PDF de facture
-    webhooks/mollie/   # Mollie webhook (paid → email + PDF)
-    webhooks/wise/     # Stub réconciliation manuelle
-    whatsapp/          # Cloud API send (ops)
-    admin/products/    # PATCH catalogue (auth)
-    admin/orders/      # GET/PATCH commandes (auth)
-  globals.css          # Tokens Direction D + classes utilitaires
-  robots.ts, sitemap.ts
+  [locale]/            pages publiques i18n (fr|de|it|en)
+    page.tsx           accueil — hero 3D, confiance, populaires, avis
+    catalogue/         20 produits, filtres par catégorie, recherche
+    produit/[slug]/    fiche produit (contenu traduit + JSON-LD Product)
+    panier/            panier persistant
+    favoris/           liste d'envies
+    checkout/          tunnel de commande
+    cgv/ mentions-legales/ politique-retour/ contact/
+    opengraph-image.tsx  vignette de partage générée par locale
+  admin/               espace privé (non listé)
+  api/                 commandes, webhooks paiement, PDF, WhatsApp
+  robots.ts · sitemap.ts · manifest.ts
 components/
-  layout/  TopBar · Header · Footer · WhatsAppFloat (draggable)
-  shop/    Hero · TrustStrip · ProductCard · CatalogGrid · PDPGallery · PDPActions · CheckoutForm · Testimonials
+  layout/  TopBar · Header · Footer · WhatsAppFloat
+  shop/    Hero · TrustStrip · ProductCard · CatalogGrid · CartProvider ·
+           CartView · WishlistView · PDPGallery · PDPActions · CheckoutForm
+  ui/      Icon (sprite SVG généré) · RemoteImage
+  seo/     JsonLd
+  legal/   LegalArticle · RichText
+content/legal/         CGV, mentions, retours, contact — dans les 4 langues
 lib/
-  prisma.ts · products.ts (catalogue) · whatsapp.ts · auth.ts ·
-  mollie.ts · email.ts · pdf.ts · i18n.ts · cn.ts
-messages/  fr.json · de.json · it.json · en.json
-prisma/    schema.prisma · seed.ts
-public/    favicon.svg · icon.svg
+  products.ts          catalogue canonique (prix, réf., images)
+  product-content.ts   textes produit traduits (nom, accroche, description)
+  catalog-view.ts      assemblage produit + traduction pour l'affichage
+  seo.ts               métadonnées, hreflang, JSON-LD
+  i18n.ts              constantes de locale
+  i18n-request.ts      configuration next-intl
+messages/              fr · de · it · en
+tests/
+  unit/                Vitest — catalogue, i18n, SEO
+  e2e/                 Playwright — parcours, SEO, performance, responsive
+scripts/               génération des icônes, patch de traductions, build e2e
 ```
 
 ---
 
-## 🎨 Design — Direction D : Indigo & Cuivre
+## 🛒 Catalogue
 
-Tokens verrouillés dans `app/globals.css` et `tailwind.config.ts` :
+20 produits en 5 catégories : robots (3), accessoires (7), livres (3), packs (3), maison & électroménager (4).
 
-| Rôle | Hex |
-|---|---|
-| Indigo principal | `#3D4DB8` |
-| Indigo foncé | `#1A1F5E` |
-| Indigo profond | `#2E3E9E` |
-| Cuivre | `#B8622A` |
-| Cuivre foncé | `#9E4E1E` |
-| WhatsApp | `#25D366` |
-| Encre (texte) | `#1A1F5E` |
-| Fond | `#F7F8FD` |
-| Or (accents) | `#FFD88A` |
+`lib/products.ts` est la **source de vérité canonique** — slug, référence, prix, marque, visuel. Les textes affichés viennent de `lib/product-content.ts`, traduits dans les 4 langues.
 
-Typo : **Outfit** (display, 400–900) + **Plus Jakarta Sans** (UI, 400–700), chargées via `next/font/google`. Icônes : **Font Awesome 6.5.1** via CDN.
-
----
-
-## 🛒 Catalogue (20 produits)
-
-Trois robots (TM7 / TM6 / Cookidoo), dix accessoires, quatre livres et trois packs. Source de vérité : `lib/products.ts` (importé par le seed Prisma). Réfs auto-générées par catégorie : `ROB-001`, `ACC-001`, `LIV-001`, `PCK-001`…
-
----
-
-## 💳 Flux paiement
-
-- **Carte** → création d'une commande locale (`status: pending`), puis création d'un paiement Mollie. La page checkout redirige vers l'URL `_links.checkout.href` retournée par Mollie. Webhook `/api/webhooks/mollie` met à jour le statut, génère la facture PDF (`pdfkit`) et l'envoie par email.
-- **Wise** → commande créée avec `paymentMethod: wise`, email d'instructions envoyé au client. Réconciliation manuelle pour l'instant via `/admin/orders`.
-- **WhatsApp** → tous les CTAs ouvrent `https://wa.me/33780967339?text=…` avec le nom du produit pré-rempli (numéro configurable via `NEXT_PUBLIC_WA_NUMBER`).
-
-Le sous-total est **recalculé côté serveur** depuis la DB (jamais depuis le client) pour empêcher la falsification des prix.
+> Les références sont dérivées de l'index dans le tableau. **Ajouter un produit en fin de tableau**, jamais au milieu : une insertion renumériserait des références déjà vendues.
 
 ---
 
 ## 🌐 i18n
 
-Quatre locales, préfixe d'URL toujours présent (`/fr`, `/de`, `/it`, `/en`). `next-intl` charge `messages/{locale}.json`. Le sélecteur de la TopBar bascule en conservant le chemin courant.
+Quatre locales, préfixe d'URL toujours présent (`/fr`, `/de`, `/it`, `/en`). La racine `/` négocie la langue depuis `Accept-Language` et retombe sur `/fr`.
+
+Les slugs produit restent dérivés du français et identiques dans toutes les langues : ils servent de clé en base et dans les commandes.
+
+Un test unitaire vérifie que les 4 fichiers de messages exposent exactement les mêmes clés, sans valeur vide, avec les mêmes variables ICU.
 
 ---
 
-## 🔐 Admin (espace privé)
+## 🔍 SEO
 
-URL : `/admin` → redirige vers `/admin/login` si non connecté, sinon `/admin/dashboard`. Aucun lien public ne pointe vers l'admin. NextAuth avec un seul fournisseur (`Credentials`), sessions JWT de 8h.
+| Élément | Mise en œuvre |
+|---|---|
+| Titres & descriptions | `lib/seo.ts` → `pageMetadata()`, par page et par locale |
+| Canoniques | absolues, une par locale |
+| hreflang | 4 langues + `x-default`, réciproques, aussi dans le sitemap |
+| Données structurées | `Organization`, `WebSite` + `SearchAction`, `Product` + `Offer` + `AggregateRating`, `BreadcrumbList`, `ItemList`, `ContactPage` |
+| Open Graph / Twitter | complet, image générée par locale (`opengraph-image.tsx`) |
+| Sitemap | 104 URL avec alternates ; panier, favoris et checkout exclus |
+| robots.txt | `/api/`, `/admin`, checkout, panier, favoris interdits |
+| Sémantique | un seul `h1` par page, `<main>`, sections titrées, lien d'évitement |
 
-Comptes par défaut : `ADMIN_EMAIL` / `ADMIN_PASSWORD` dans `.env` — créés/synchronisés par `npm run db:seed`. **Changer le mot de passe avant la mise en prod.**
+`NEXT_PUBLIC_APP_URL` doit pointer vers le domaine public : les canoniques, les hreflang et le JSON-LD sont **figés au build** pour les pages pré-rendues.
 
 ---
 
-## 🐳 Docker (local & Hostinger)
+## ⚡ Performance
+
+- **Icônes** : sprite SVG inline généré depuis `@fortawesome/fontawesome-free` par `scripts/build-icons.mjs`, à la place du CDN Font Awesome (CSS bloquant + ~200 Ko de webfonts). Régénérer avec `npm run build:icons` après avoir ajouté une icône — la CI échoue si le fichier généré diverge du source.
+- **Images** : `next/image` en mode `fill` dans des conteneurs au ratio fixé (aucun décalage de mise en page), AVIF/WebP, `priority` sur le seul visuel LCP.
+- **Cartes produit rendues côté serveur** : seuls le cœur « favori » et le bouton « ajouter » sont des îlots clients. Le catalogue hydratait auparavant vingt composants complets, ce qui dominait le temps de blocage du thread principal.
+- **Filtres de catégorie en liens** (`?cat=`) plutôt qu'en état React : zéro JavaScript pour filtrer, et chaque catégorie devient une adresse explorable par les moteurs. La canonique reste `/catalogue` sans paramètre, ce qui évite les quasi-doublons.
+- **Accueil 3D** : perspective, parallaxe au pointeur et halos animés en **CSS pur** — `transform` et `opacity` uniquement, donc composités par le GPU. Aucune bibliothèque 3D n'est chargée. Pas de `filter: blur()` : un flou plein écran re-rastérisé à chaque image coûtait à lui seul plus d'une seconde de calcul de style. L'effet est désactivé sous `prefers-reduced-motion` et aplati sur mobile.
+- **Contrastes** : les jetons de couleur ont été assombris au minimum nécessaire pour atteindre le seuil AA (4,5:1 pour le texte, 3:1 pour le reste). Teintes conservées, ratios notés en commentaire dans `app/globals.css`.
+- **Préconnexion** au CDN d'images pour retirer un aller-retour DNS + TLS du chemin critique.
+
+---
+
+## 🧪 Tests
 
 ```bash
-# Build + run avec MySQL
+npm run typecheck        # types
+npm run lint             # ESLint (next/core-web-vitals)
+npm run test:unit        # Vitest — 53 tests
+npm run build:e2e        # build de production avec l'URL de test
+npm run test:e2e         # Playwright — parcours, SEO, perf, responsive
+npm run test:seo         # uniquement les assertions SEO
+npm run test:lighthouse  # Lighthouse CI (seuils dans lighthouserc.js)
+```
+
+Les tests end-to-end tournent sur le **build de production** (`next start`), seul reflet fidèle du rendu statique, des métadonnées finales et du poids réel des bundles. Ils utilisent le port `3178` (`E2E_PORT` pour en changer).
+
+> `npm run build:e2e` fige `NEXT_PUBLIC_APP_URL` sur l'URL de test. Ne pas enchaîner un `next build` ordinaire après lui : il réécrirait les canoniques avec l'URL du `.env` et ferait échouer les assertions SEO.
+
+### Résultats Lighthouse mesurés
+
+Sur le build de production, preset desktop, machine au repos :
+
+| Page | Performance | Accessibilité | Bonnes pratiques | SEO | LCP | CLS |
+|---|---|---|---|---|---|---|
+| Accueil `/fr` | 97 | **100** | **100** | **100** | 0,8 s | 0 |
+| Catalogue | 82 | **100** | **100** | **100** | 1,0 s | 0,001 |
+| Fiche produit | 97 | **100** | **100** | **100** | 0,9 s | 0 |
+
+Les seuils de CI sont volontairement asymétriques : accessibilité, bonnes pratiques, SEO et CLS sont **bloquants** (déterministes, tenus à 100) ; le score de performance, le LCP et le TBT sont des **avertissements**, parce qu'ils dépendent de la charge de la machine et de la latence d'Unsplash au premier appel de l'optimiseur d'images — sur un même build, la performance mesurée ici varie de 31 à 97 selon ce qui tourne à côté.
+
+### Visuels distants
+
+```bash
+npm run check:images
+```
+
+Vérifie que chaque photo Unsplash référencée répond encore. Volontairement hors CI : le résultat dépend d'un service tiers. À lancer avant une mise en production.
+
+---
+
+## 💳 Flux paiement
+
+Quatre processeurs interchangeables (Stripe, Mollie, Adyen, SumUp), sélectionnés depuis `/admin/payment` et stockés en base. Le virement bancaire affiche l'IBAN configuré dans `/admin/bank-accounts`.
+
+Le sous-total est **recalculé côté serveur** depuis la base à chaque commande : le panier du navigateur ne contient que des slugs et des quantités, un panier trafiqué ne peut pas modifier le montant facturé.
+
+---
+
+## 🔐 Admin
+
+`/admin` → `/admin/login` si non connecté. Aucun lien public n'y mène, et l'espace est exclu de `robots.txt`. NextAuth avec un unique fournisseur `Credentials`, sessions JWT de 8 h. Identifiants initialisés par `npm run db:seed` depuis `ADMIN_EMAIL` / `ADMIN_PASSWORD`.
+
+**Changer le mot de passe avant la mise en production.**
+
+---
+
+## 🐳 Docker & déploiement
+
+```bash
 docker compose up -d --build
-
-# Push du schéma
 docker compose exec app npx prisma db push
-
-# Seed
 docker compose exec app npm run db:seed
 ```
 
-Le `Dockerfile` est multi-stage (deps → builder → runner) et utilise `output: 'standalone'` de Next.js, ce qui réduit l'image runtime à ~150 Mo.
+`npm run build` (`scripts/build.mjs`) ne synchronise le schéma **que** pour un déploiement de production (`VERCEL_ENV=production`). Ailleurs — preview de pull request, CI, build local — il se contente de générer le client Prisma et de compiler.
 
----
+> Ce garde-fou répare deux défauts. D'une part, chaque preview poussait le schéma de sa branche dans la base de **production** avec `--accept-data-loss` : une colonne supprimée sur une branche d'essai emportait les données correspondantes, sans revue. D'autre part, tout build dépendait d'une base joignable, si bien qu'une indisponibilité faisait échouer la compilation d'un code pourtant valide.
 
-## ☁️ Déploiement Hostinger
+Pour appliquer un changement de schéma à la main : `npm run db:push`.
 
-1. Sur le VPS Hostinger, installer Docker, Docker Compose et Nginx.
-2. Copier `nginx.conf` vers `/etc/nginx/sites-available/kitchenprime`, créer le symlink, puis `nginx -t && systemctl reload nginx`.
-3. Émettre le certificat SSL Let's Encrypt (`certbot --nginx -d kitchenprime.com -d www.kitchenprime.com`) et décommenter le bloc `443` de `nginx.conf`.
-4. Créer un dossier de déploiement (`/var/www/kitchenprime`) et y placer `.env`.
-5. Configurer les secrets GitHub : `DEPLOY_HOST`, `DEPLOY_USER`, `DEPLOY_PATH`, `DEPLOY_SSH_KEY`, plus `DATABASE_URL`, `NEXTAUTH_SECRET`, `NEXTAUTH_URL`, `NEXT_PUBLIC_APP_URL`.
-6. Push sur `main` → GitHub Actions rsync + `docker compose build && up`.
+Le `Dockerfile` est multi-stage et s'appuie sur `output: 'standalone'`, activé par `BUILD_STANDALONE=true`.
 
 ---
 
@@ -152,18 +183,16 @@ Le `Dockerfile` est multi-stage (deps → builder → runner) et utilise `output
 
 | Script | Action |
 |---|---|
-| `npm run dev` | Dev server (port 3000) |
-| `npm run build` | `prisma generate` + build Next.js |
-| `npm start` | Serveur prod (après `build`) |
-| `npm run db:push` | Push du schéma Prisma sur la DB |
-| `npm run db:seed` | Seed produits + admin |
-| `npm run db:studio` | Prisma Studio (explorateur de DB) |
-| `npm run lint` | Next.js lint |
+| `dev` | serveur de développement |
+| `build` | build ; ne touche à la base qu'en déploiement de production |
+| `build:e2e` | build de production pour les tests |
+| `build:icons` | régénère le sprite d'icônes |
+| `start` | serveur de production |
+| `lint` · `typecheck` | qualité statique |
+| `test` · `test:unit` · `test:e2e` · `test:seo` · `test:perf` · `test:lighthouse` | tests |
+| `check:images` | vérifie que les visuels distants répondent |
+| `db:push` · `db:seed` · `db:studio` | base de données |
 
 ---
 
-## 📎 Référence design
-
-Le fichier `kitchenprime_v3_clean.html` (fourni séparément) est la source canonique. Tout ce qui s'éloigne de ce template doit être réaligné — pas l'inverse.
-
-© 2026 Vanio.dev pour KitchenPrime SAS.
+© 2026 KitchenPrime.

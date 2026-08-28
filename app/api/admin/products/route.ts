@@ -17,11 +17,11 @@ export async function GET() {
 
 export async function PATCH(req: Request) {
   if (!(await requireAuth())) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  const { slug, priceCents, oldPriceCents, active, badge, badgeLabel } = await req.json();
+  const { slug, priceCents, oldPriceCents, active, badge, badgeKey } = await req.json();
   if (!slug) return NextResponse.json({ error: 'slug required' }, { status: 400 });
   const updated = await prisma.product.update({
     where: { slug },
-    data: { priceCents, oldPriceCents, active, badge, badgeLabel },
+    data: { priceCents, oldPriceCents, active, badge, badgeKey },
   });
   return NextResponse.json({ product: updated });
 }

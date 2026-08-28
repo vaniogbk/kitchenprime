@@ -4,28 +4,29 @@ import { createMollieCheckout } from './mollie';
 import { createAdyenCheckout } from './adyen';
 import { createSumUpCheckout } from './sumup';
 import type { CheckoutParams, CheckoutResult, ProcessorName } from './types';
+import type { IconName } from '@/components/ui/Icon';
 
 export type { ProcessorName, CheckoutParams, CheckoutResult };
 
-export const PROCESSORS: Record<ProcessorName, { label: string; icon: string; envKeys: string[] }> = {
+export const PROCESSORS: Record<ProcessorName, { label: string; icon: IconName; envKeys: string[] }> = {
   stripe: {
     label: 'Stripe',
-    icon: 'fa-brands fa-stripe',
+    icon: 'stripe',
     envKeys: ['STRIPE_SECRET_KEY', 'STRIPE_PUBLISHABLE_KEY', 'STRIPE_WEBHOOK_SECRET'],
   },
   mollie: {
     label: 'Mollie',
-    icon: 'fa-solid fa-m',
+    icon: 'm',
     envKeys: ['MOLLIE_API_KEY'],
   },
   adyen: {
     label: 'Adyen',
-    icon: 'fa-solid fa-a',
+    icon: 'a',
     envKeys: ['ADYEN_API_KEY', 'ADYEN_MERCHANT_ACCOUNT', 'ADYEN_WEBHOOK_HMAC'],
   },
   sumup: {
     label: 'SumUp',
-    icon: 'fa-solid fa-s',
+    icon: 's',
     envKeys: ['SUMUP_API_KEY', 'SUMUP_MERCHANT_CODE'],
   },
 };

@@ -1,119 +1,118 @@
-'use client';
-import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
-import {
-  type Product,
-  categoryIcon,
-  formatEUR,
-  unsplashUrl,
-} from '@/lib/products';
+import { getTranslations } from 'next-intl/server';
+import { type Product, categoryIcon, formatEUR } from '@/lib/products';
 import { waOrderUrl } from '@/lib/whatsapp';
+import { BCP47 } from '@/lib/seo';
 import { type Locale } from '@/lib/i18n';
+import { Icon } from '@/components/ui/Icon';
+import { RemoteImage } from '@/components/ui/RemoteImage';
+import { WishButton } from './WishButton';
+import { AddToCartButton } from './AddToCartButton';
 
-const WL_KEY = 'kp_wishlist';
+export type CardContent = { name: string; badgeLabel: string };
 
-function getWishlist(): string[] {
-  try { return JSON.parse(localStorage.getItem(WL_KEY) || '[]'); } catch { return []; }
-}
-
-export function ProductCard({
+/**
+ * Vignette produit — **composant serveur**.
+ *
+ * Seuls le cœur « favori » et le bouton « ajouter » sont des îlots client.
+ * Auparavant la carte entière était cliente : le catalogue hydratait vingt
+ * composants complets au chargement, ce qui dominait le temps de blocage du
+ * thread principal.
+ */
+export async function ProductCard({
   product,
+  content,
   locale,
+  /** Vrai pour les cartes visibles d'emblée : leur visuel ne doit pas être différé. */
+  eager = false,
+  /**
+   * Niveau du titre de la carte.
+   *
+   * `h2` quand la grille suit directement le `h1` de la page (catalogue,
+   * favoris), `h3` quand elle est introduite par un `h2` de section
+   * (« Produits populaires », « Dans la même catégorie »). Sauter un niveau
+   * casse la navigation par titres des lecteurs d'écran.
+   */
+  headingLevel = 3,
 }: {
   product: Product;
+  content: CardContent;
   locale: Locale;
+  eager?: boolean;
+  headingLevel?: 2 | 3;
 }) {
-  const t = useTranslations();
-  const tWa = useTranslations('wa');
-  const localeMap: Record<Locale, string> = {
-    fr: 'fr-FR',
-    de: 'de-DE',
-    it: 'it-IT',
-    en: 'en-GB',
-  };
-  const numLocale = localeMap[locale];
-  const [wished, setWished] = useState(false);
+  const t = await getTranslations({ locale });
+  const tCard = await getTranslations({ locale, namespace: 'card' });
+  const tWa = await getTranslations({ locale, namespace: 'wa' });
 
-  useEffect(() => {
-    setWished(getWishlist().includes(product.slug));
-  }, [product.slug]);
-
-  function toggleWish(e: React.MouseEvent) {
-    e.preventDefault();
-    e.stopPropagation();
-    const list = getWishlist();
-    const next = wished
-      ? list.filter((s) => s !== product.slug)
-      : [...list, product.slug];
-    localStorage.setItem(WL_KEY, JSON.stringify(next));
-    setWished(!wished);
-  }
-
+  const numLocale = BCP47[locale];
   const badgeClass =
     product.badge === 'new' ? 'b-new'
     : product.badge === 'pack' ? 'b-pack'
     : product.badge === 'copper' ? 'b-copper'
     : '';
 
-  const catLabel = t(`categories.${product.category}`);
   const href = `/${locale}/produit/${product.slug}`;
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
 
+  /* La carte n'est pas un <a> englobant : un lien ne peut contenir ni un
+     autre lien ni un bouton. Le titre porte le lien et l'étend à toute la
+     carte via ::after (`.pname-link`) ; les actions repassent au-dessus. */
   return (
-    <Link href={href} className="pcard">
+    <article className="pcard">
       <div className="pcard-img">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={unsplashUrl(product.imageId, 500, 75)} alt={product.name} />
-        {product.badge && product.badgeLabel && (
-          <div className={`pbadge ${badgeClass}`}>{product.badgeLabel}</div>
+        <RemoteImage
+          imageId={product.imageId}
+          alt={content.name}
+          sizes="(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 33vw"
+          priority={eager}
+        />
+        {product.badge && content.badgeLabel && (
+          <p className={`pbadge ${badgeClass}`}>{content.badgeLabel}</p>
         )}
-        <button
-          type="button"
-          className={`pwish${wished ? ' on' : ''}`}
-          onClick={toggleWish}
-          aria-label={wished ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-        >
-          <i className={wished ? 'fa-solid fa-heart' : 'fa-regular fa-heart'} />
-        </button>
+        <WishButton
+          slug={product.slug}
+          labelAdd={tCard('wish', { name: content.name })}
+          labelRemove={tCard('unwish', { name: content.name })}
+        />
       </div>
       <div className="pbody">
-        <div className="pcat">
-          <i className={`fa-solid ${categoryIcon(product.category)}`} /> {catLabel}
-        </div>
-        <div className="pname">{product.name}</div>
-        <div className="pstars">
-          <i className="fa-solid fa-star" />
-          <span>{product.rating.toFixed(1)} ({product.reviewsCount})</span>
-        </div>
-        <div className="pprice-row">
+        <p className="pcat">
+          <Icon name={categoryIcon(product.category)} /> {t(`categories.${product.category}`)}
+        </p>
+        <Heading className="pname">
+          <Link href={href} className="pname-link">{content.name}</Link>
+        </Heading>
+        <p className="pstars">
+          <Icon name="star" />
+          <span>
+            {product.rating.toFixed(1)}
+            <span className="sr-only"> {tCard('ratingOutOf5')} </span>({product.reviewsCount})
+          </span>
+        </p>
+        <p className="pprice-row">
           <span className="pprice">{formatEUR(product.priceCents, numLocale)}</span>
           {product.oldPriceCents && (
             <span className="pold">{formatEUR(product.oldPriceCents, numLocale)}</span>
           )}
-        </div>
+        </p>
         <div className="pactions">
-          <button
-            type="button"
-            className="pbtn-buy"
-            onClick={(e) => {
-              e.preventDefault();
-              window.location.href = `/${locale}/checkout?p=${product.slug}`;
-            }}
-          >
-            <i className="fa-solid fa-cart-plus" /> {t('catalog.add')}
-          </button>
+          <AddToCartButton
+            slug={product.slug}
+            label={t('catalog.add')}
+            addedLabel={tCard('added')}
+          />
           <a
-            href={waOrderUrl(product.name, tWa.raw('msg') as string)}
+            href={waOrderUrl(content.name, tWa.raw('msg') as string)}
             target="_blank"
             rel="noopener noreferrer"
             className="pbtn-wa"
-            onClick={(e) => e.stopPropagation()}
-            aria-label="WhatsApp"
+            aria-label={tCard('orderWa', { name: content.name })}
           >
-            <i className="fa-brands fa-whatsapp" />
+            <Icon name="whatsapp" />
           </a>
         </div>
       </div>
-    </Link>
+    </article>
   );
 }

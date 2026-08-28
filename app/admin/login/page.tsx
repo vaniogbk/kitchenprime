@@ -2,6 +2,7 @@
 import { useState, FormEvent } from 'react';
 import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
+import { Icon } from '@/components/ui/Icon';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -39,7 +40,7 @@ export default function AdminLogin() {
         </div>
         {error && <div style={{ color: 'var(--copper-dark)', fontSize: 13, marginBottom: 10 }}>{error}</div>}
         <button type="submit" disabled={submitting} className="btn-buy" style={{ width: '100%', padding: 13, opacity: submitting ? 0.6 : 1 }}>
-          <i className="fa-solid fa-lock" /> {submitting ? '…' : 'Se connecter'}
+          <Icon name="lock" /> {submitting ? '…' : 'Se connecter'}
         </button>
       </form>
     </div>

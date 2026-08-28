@@ -1,13 +1,13 @@
 'use client';
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { waOrderUrl } from '@/lib/whatsapp';
 import { formatEUR } from '@/lib/products';
+import { BCP47 } from '@/lib/seo';
 import { type Locale } from '@/lib/i18n';
-
-const localeMap: Record<Locale, string> = {
-  fr: 'fr-FR', de: 'de-DE', it: 'it-IT', en: 'en-GB',
-};
+import { Icon } from '@/components/ui/Icon';
+import { useCart } from '@/components/shop/CartProvider';
 
 export function PDPActions({
   productName,
@@ -22,32 +22,53 @@ export function PDPActions({
 }) {
   const t = useTranslations('pdp');
   const tWa = useTranslations('wa');
+  const router = useRouter();
+  const { add } = useCart();
   const [qty, setQty] = useState(1);
   const total = priceCents * qty;
+
+  function addAndGoToCart() {
+    add(productSlug, qty);
+    router.push(`/${locale}/panier`);
+  }
 
   return (
     <>
       <div className="qty">
-        <span className="qty-label">{t('qty')}</span>
+        <label className="qty-label" htmlFor="pdp-qty">{t('qty')}</label>
         <div className="qty-ctrl">
-          <button type="button" className="qbtn" onClick={() => setQty(Math.max(1, qty - 1))}>
-            <i className="fa-solid fa-minus" style={{ fontSize: 10 }} />
+          <button
+            type="button"
+            className="qbtn"
+            onClick={() => setQty(Math.max(1, qty - 1))}
+            aria-label={t('qtyMinus')}
+          >
+            <Icon name="minus" style={{ fontSize: 10 }} />
           </button>
-          <span className="qval">{qty}</span>
-          <button type="button" className="qbtn" onClick={() => setQty(qty + 1)}>
-            <i className="fa-solid fa-plus" style={{ fontSize: 10 }} />
+          {/* Champ nombre plutôt qu'un simple affichage : saisissable au clavier
+              et annoncé correctement par les lecteurs d'écran. */}
+          <input
+            id="pdp-qty"
+            className="qval"
+            type="number"
+            min={1}
+            max={99}
+            value={qty}
+            onChange={(e) => setQty(Math.min(99, Math.max(1, Number(e.target.value) || 1)))}
+          />
+          <button
+            type="button"
+            className="qbtn"
+            onClick={() => setQty(Math.min(99, qty + 1))}
+            aria-label={t('qtyPlus')}
+          >
+            <Icon name="plus" style={{ fontSize: 10 }} />
           </button>
         </div>
       </div>
       <div className="pdp-cta">
-        <button
-          type="button"
-          className="btn-buy"
-          onClick={() => {
-            window.location.href = `/${locale}/checkout?p=${productSlug}&qty=${qty}`;
-          }}
-        >
-          <i className="fa-solid fa-bag-shopping" /> {t('addToCart')} · {formatEUR(total, localeMap[locale])}
+        <button type="button" className="btn-buy" onClick={addAndGoToCart}>
+          <Icon name="bag-shopping" /> {t('addToCart')} · {formatEUR(total, BCP47[locale])}
         </button>
         <a
           href={waOrderUrl(productName, tWa.raw('msg') as string)}
@@ -55,7 +76,7 @@ export function PDPActions({
           rel="noopener noreferrer"
           className="btn-wa"
         >
-          <i className="fa-brands fa-whatsapp" style={{ fontSize: 16 }} /> {t('orderWa')}
+          <Icon name="whatsapp" style={{ fontSize: 16 }} /> {t('orderWa')}
         </a>
       </div>
     </>

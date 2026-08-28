@@ -1,49 +1,76 @@
 import Link from 'next/link';
-import { useTranslations } from 'next-intl';
-import { unstable_setRequestLocale } from 'next-intl/server';
+import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
 import { Hero } from '@/components/shop/Hero';
 import { TrustStrip } from '@/components/shop/TrustStrip';
 import { ProductCard } from '@/components/shop/ProductCard';
 import { Testimonials } from '@/components/shop/Testimonials';
 import { PRODUCTS } from '@/lib/products';
+import { getProductContent } from '@/lib/product-content';
+import { buildCardContent } from '@/lib/catalog-view';
+import { itemListLd, jsonLdGraph, absoluteUrl, pageMetadata } from '@/lib/seo';
+import { JsonLd } from '@/components/seo/JsonLd';
+import { Icon } from '@/components/ui/Icon';
 import { type Locale } from '@/lib/i18n';
 
-export default function HomePage({ params: { locale } }: { params: { locale: Locale } }) {
+const POPULAR = ['thermomix-tm7', 'pack-tm7-complet', 'samsung-family-hub'];
+
+export async function generateMetadata({ params: { locale } }: { params: { locale: Locale } }) {
+  const t = await getTranslations({ locale, namespace: 'meta' });
+  return pageMetadata({
+    locale,
+    path: '/',
+    title: t('homeTitle'),
+    description: t('homeDesc'),
+  });
+}
+
+export default async function HomePage({ params: { locale } }: { params: { locale: Locale } }) {
   unstable_setRequestLocale(locale);
-  const popular = [
-    PRODUCTS.find((p) => p.slug === 'thermomix-tm7')!,
-    PRODUCTS.find((p) => p.slug === 'pack-tm7-complet')!,
-    PRODUCTS.find((p) => p.slug === 'varoma-xl-steam-set')!,
-  ];
+  const t = await getTranslations({ locale, namespace: 'home' });
+  const tBadges = await getTranslations({ locale, namespace: 'badges' });
+
+  const popular = POPULAR
+    .map((slug) => PRODUCTS.find((p) => p.slug === slug))
+    .filter((p): p is (typeof PRODUCTS)[number] => Boolean(p));
+
+  const ld = itemListLd(
+    popular.map((p) => ({
+      name: getProductContent(p.slug, locale).name,
+      url: absoluteUrl(`/${locale}/produit/${p.slug}`),
+    })),
+    t('popularTitle'),
+  );
 
   return (
     <>
       <Hero locale={locale} />
       <TrustStrip />
-      <PopularSection locale={locale} products={popular} />
-      <Testimonials />
-    </>
-  );
-}
 
-function PopularSection({ locale, products }: { locale: Locale; products: typeof PRODUCTS }) {
-  const t = useTranslations('home');
-  return (
-    <div className="section">
-      <div className="sec-head">
-        <div>
-          <div className="sec-eyebrow"><i className="fa-solid fa-star" /> {t('popularEyebrow')}</div>
-          <div className="sec-title">{t('popularTitle')}</div>
+      <section className="section" aria-labelledby="popular-title">
+        <div className="sec-head">
+          <div>
+            <p className="sec-eyebrow"><Icon name="star" /> {t('popularEyebrow')}</p>
+            <h2 className="sec-title" id="popular-title">{t('popularTitle')}</h2>
+          </div>
+          <Link href={`/${locale}/catalogue`} className="see-all">
+            {t('seeAll')} <Icon name="arrow-right" />
+          </Link>
         </div>
-        <Link href={`/${locale}/catalogue`} className="see-all">
-          {t('seeAll')} <i className="fa-solid fa-arrow-right" />
-        </Link>
-      </div>
-      <div className="grid">
-        {products.map((p) => (
-          <ProductCard key={p.slug} product={p} locale={locale} />
-        ))}
-      </div>
-    </div>
+        <div className="grid">
+          {popular.map((p, i) => (
+            <ProductCard
+              key={p.slug}
+              product={p}
+              content={buildCardContent(p, locale, tBadges)}
+              locale={locale}
+              eager={i === 0}
+            />
+          ))}
+        </div>
+      </section>
+
+      <Testimonials />
+      <JsonLd json={jsonLdGraph(ld)} />
+    </>
   );
 }

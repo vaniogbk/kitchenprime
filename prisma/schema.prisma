@@ -12,6 +12,7 @@ enum Category {
   acc
   livres
   packs
+  maison
 }
 
 enum OrderStatus {
@@ -34,12 +35,13 @@ model Product {
   slug          String    @unique
   name          String
   category      Category
+  brand         String    @default("Thermomix")
   ref           String    @unique
   priceCents    Int
   oldPriceCents Int?
   imageId       String
   badge         String?
-  badgeLabel    String?
+  badgeKey      String?
   rating        Float     @default(4.8)
   reviewsCount  Int       @default(0)
   active        Boolean   @default(true)

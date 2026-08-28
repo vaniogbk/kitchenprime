@@ -1,11 +1,18 @@
 import type { MetadataRoute } from 'next';
+import { absoluteUrl, siteUrl } from '@/lib/seo';
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://kitchenprime.com';
   return {
     rules: [
-      { userAgent: '*', allow: '/', disallow: ['/api/', '/admin/'] },
+      {
+        userAgent: '*',
+        allow: '/',
+        // Pages sans valeur d'entrée : elles consommeraient du budget
+        // d'exploration sans jamais pouvoir se positionner.
+        disallow: ['/api/', '/admin', '/admin/', '/*/checkout', '/*/panier', '/*/favoris'],
+      },
     ],
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: absoluteUrl('/sitemap.xml'),
+    host: siteUrl(),
   };
 }

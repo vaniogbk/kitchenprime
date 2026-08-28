@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+// La route interroge la base : elle ne peut pas être pré-rendue à la
+// construction (aucune base n'est joignable pendant le build).
+export const dynamic = 'force-dynamic';
+
 // Public endpoint — retourne uniquement le compte par défaut actif pour l'afficher au checkout
 export async function GET() {
   const account = await prisma.bankAccount.findFirst({

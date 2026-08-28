@@ -1,15 +1,26 @@
-import { useTranslations } from 'next-intl';
 import { unstable_setRequestLocale, getTranslations } from 'next-intl/server';
 import { CheckoutForm } from '@/components/shop/CheckoutForm';
-import { getProductBySlug, PRODUCTS } from '@/lib/products';
+import { PRODUCTS, getProductBySlug } from '@/lib/products';
+import { getProductContent } from '@/lib/product-content';
+import { pageMetadata } from '@/lib/seo';
+import { Icon } from '@/components/ui/Icon';
+import { type CartCatalogEntry } from '@/components/shop/CartView';
 import { type Locale } from '@/lib/i18n';
 
 export async function generateMetadata({ params: { locale } }: { params: { locale: Locale } }) {
   const t = await getTranslations({ locale, namespace: 'meta' });
-  return { title: t('checkoutTitle') };
+  return pageMetadata({
+    locale,
+    path: '/checkout',
+    title: t('checkoutTitle'),
+    description: t('checkoutDesc'),
+    // Le tunnel de commande ne doit jamais remonter dans les résultats :
+    // il n'a aucune valeur d'entrée et diluerait le budget d'exploration.
+    noIndex: true,
+  });
 }
 
-export default function CheckoutPage({
+export default async function CheckoutPage({
   params: { locale },
   searchParams,
 }: {
@@ -17,35 +28,43 @@ export default function CheckoutPage({
   searchParams: { p?: string; qty?: string };
 }) {
   unstable_setRequestLocale(locale);
-  const slug = searchParams.p || 'thermomix-tm7';
-  const product = getProductBySlug(slug) || PRODUCTS[0];
-  const qty = Math.max(1, Number(searchParams.qty || 1));
+  const t = await getTranslations({ locale, namespace: 'checkout' });
+
+  const catalog: CartCatalogEntry[] = PRODUCTS.map((p) => ({
+    slug: p.slug,
+    name: getProductContent(p.slug, locale).name,
+    ref: p.ref,
+    priceCents: p.priceCents,
+    imageId: p.imageId,
+  }));
+
+  // `?p=slug` = achat direct depuis une fiche produit ; sans ce paramètre, on
+  // facture le panier.
+  const direct = searchParams.p ? getProductBySlug(searchParams.p) : undefined;
+  const directLine = direct
+    ? { slug: direct.slug, qty: Math.min(99, Math.max(1, Number(searchParams.qty) || 1)) }
+    : null;
 
   return (
     <div className="checkout">
-      <CheckoutHeader />
-      <CheckoutForm product={product} qty={qty} locale={locale} />
-    </div>
-  );
-}
-
-function CheckoutHeader() {
-  const t = useTranslations('checkout');
-  return (
-    <>
-      <div style={{
-        fontSize: 10, fontWeight: 800, letterSpacing: '.12em',
-        textTransform: 'uppercase', color: 'var(--copper)', marginBottom: 8,
-        display: 'flex', alignItems: 'center', gap: 6,
-      }}>
-        <i className="fa-solid fa-lock" /> {t('secure')}
-      </div>
-      <div style={{
-        fontFamily: "var(--font-outfit), 'Outfit', sans-serif",
-        fontSize: 26, fontWeight: 900, color: 'var(--ink)',
-      }}>
+      <p
+        style={{
+          fontSize: 10, fontWeight: 800, letterSpacing: '.12em',
+          textTransform: 'uppercase', color: 'var(--copper)', marginBottom: 8,
+          display: 'flex', alignItems: 'center', gap: 6,
+        }}
+      >
+        <Icon name="lock" /> {t('secure')}
+      </p>
+      <h1
+        style={{
+          fontFamily: "var(--font-outfit), 'Outfit', sans-serif",
+          fontSize: 26, fontWeight: 900, color: 'var(--ink)',
+        }}
+      >
         {t('title')}
-      </div>
-    </>
+      </h1>
+      <CheckoutForm catalog={catalog} directLine={directLine} locale={locale} />
+    </div>
   );
 }

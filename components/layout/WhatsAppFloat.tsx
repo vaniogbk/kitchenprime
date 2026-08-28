@@ -2,6 +2,7 @@
 import { useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { waOrderUrl } from '@/lib/whatsapp';
+import { Icon } from '@/components/ui/Icon';
 
 export function WhatsAppFloat() {
   const t = useTranslations('wa');
@@ -81,7 +82,7 @@ export function WhatsAppFloat() {
       aria-label={t('label')}
       title={t('label')}
     >
-      <i className="fa-brands fa-whatsapp" />
+      <Icon name="whatsapp" />
       <span className="wa-float-label">{t('label')}</span>
     </div>
   );

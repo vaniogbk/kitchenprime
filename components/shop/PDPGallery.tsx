@@ -1,24 +1,35 @@
 'use client';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { RemoteImage } from '@/components/ui/RemoteImage';
 
 export function PDPGallery({ imageIds, alt }: { imageIds: string[]; alt: string }) {
-  const [active, setActive] = useState(imageIds[0]);
+  const t = useTranslations('pdp');
+  const [active, setActive] = useState(0);
+
   return (
     <div className="pdp-gallery">
       <div className="pdp-main">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={`https://images.unsplash.com/${active}?w=800&q=80`} alt={alt} />
+        {/* Visuel LCP de la fiche produit. */}
+        <RemoteImage
+          imageId={imageIds[active]}
+          alt={alt}
+          sizes="(max-width: 900px) 100vw, 45vw"
+          priority
+          quality={80}
+        />
       </div>
       <div className="pdp-thumbs">
-        {imageIds.map((id) => (
+        {imageIds.map((id, i) => (
           <button
             key={id}
             type="button"
-            className={`pdp-thumb${id === active ? ' on' : ''}`}
-            onClick={() => setActive(id)}
+            className={`pdp-thumb${i === active ? ' on' : ''}`}
+            onClick={() => setActive(i)}
+            aria-label={t('viewImage', { n: i + 1 })}
+            aria-pressed={i === active}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`https://images.unsplash.com/${id}?w=150&q=70`} alt="" />
+            <RemoteImage imageId={id} alt="" sizes="120px" quality={60} />
           </button>
         ))}
       </div>
