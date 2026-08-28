@@ -207,7 +207,10 @@
     "total": "Total",
     "totalNote": "Livraison offerte · TVA incluse",
     "checkout": "Passer commande",
-    "continue": "Continuer mes achats"
+    "continue": "Continuer mes achats",
+    "decrease": "Diminuer la quantité de {name}",
+    "increase": "Augmenter la quantité de {name}",
+    "itemCount": "{count, plural, one {# article} other {# articles}}"
   },
   "wishlist": {
     "eyebrow": "Mis de côté",
@@ -215,5 +218,12 @@
     "subtitle": "Les produits que vous avez enregistrés depuis ce navigateur.",
     "empty": "Vous n’avez encore aucun favori.",
     "emptyCta": "Découvrir le catalogue"
+  },
+  "steps": {
+    "label": "Étapes de la commande",
+    "cart": "Panier",
+    "details": "Livraison & paiement",
+    "confirmation": "Confirmation",
+    "currentSuffix": "(étape en cours)"
   }
 }

@@ -1,5 +1,6 @@
 import { unstable_setRequestLocale, getTranslations } from 'next-intl/server';
 import { CheckoutForm } from '@/components/shop/CheckoutForm';
+import { CheckoutSteps } from '@/components/shop/CheckoutSteps';
 import { PRODUCTS, getProductBySlug } from '@/lib/products';
 import { getProductContent } from '@/lib/product-content';
 import { pageMetadata } from '@/lib/seo';
@@ -46,25 +47,17 @@ export default async function CheckoutPage({
     : null;
 
   return (
+    <>
+      <CheckoutSteps current={2} locale={locale} />
     <div className="checkout">
-      <p
-        style={{
-          fontSize: 10, fontWeight: 800, letterSpacing: '.12em',
-          textTransform: 'uppercase', color: 'var(--copper)', marginBottom: 8,
-          display: 'flex', alignItems: 'center', gap: 6,
-        }}
-      >
-        <Icon name="lock" /> {t('secure')}
-      </p>
-      <h1
-        style={{
-          fontFamily: "var(--font-outfit), 'Outfit', sans-serif",
-          fontSize: 26, fontWeight: 900, color: 'var(--ink)',
-        }}
-      >
-        {t('title')}
-      </h1>
+      <header className="ck-head">
+        <p className="ck-eyebrow">
+          <Icon name="lock" /> {t('secure')}
+        </p>
+        <h1 className="ck-title">{t('title')}</h1>
+      </header>
       <CheckoutForm catalog={catalog} directLine={directLine} locale={locale} />
     </div>
+    </>
   );
 }

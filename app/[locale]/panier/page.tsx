@@ -1,5 +1,6 @@
 import { unstable_setRequestLocale, getTranslations } from 'next-intl/server';
 import { CartView, type CartCatalogEntry } from '@/components/shop/CartView';
+import { CheckoutSteps } from '@/components/shop/CheckoutSteps';
 import { PRODUCTS } from '@/lib/products';
 import { getProductContent } from '@/lib/product-content';
 import { pageMetadata } from '@/lib/seo';
@@ -34,14 +35,15 @@ export default async function CartPage({ params: { locale } }: { params: { local
 
   return (
     <>
-      <div className="page-head">
-        <p className="page-eyebrow">
-          <Icon name="bag-shopping" /> {t('eyebrow')}
-        </p>
-        <h1 className="page-title">{t('title')}</h1>
-        <p className="page-sub">{t('subtitle')}</p>
-      </div>
+      <CheckoutSteps current={1} locale={locale} />
       <div className="cart-page">
+        <header className="ck-head">
+          <p className="ck-eyebrow">
+            <Icon name="bag-shopping" /> {t('eyebrow')}
+          </p>
+          <h1 className="ck-title">{t('title')}</h1>
+          <p className="ck-sub">{t('subtitle')}</p>
+        </header>
         <CartView catalog={catalog} locale={locale} />
       </div>
     </>

@@ -207,7 +207,10 @@
     "total": "Totale",
     "totalNote": "Spedizione gratuita · IVA inclusa",
     "checkout": "Vai all’ordine",
-    "continue": "Continua gli acquisti"
+    "continue": "Continua gli acquisti",
+    "decrease": "Diminuisci la quantità di {name}",
+    "increase": "Aumenta la quantità di {name}",
+    "itemCount": "{count, plural, one {# articolo} other {# articoli}}"
   },
   "wishlist": {
     "eyebrow": "Messi da parte",
@@ -215,5 +218,12 @@
     "subtitle": "I prodotti che hai salvato da questo browser.",
     "empty": "Non hai ancora nessun preferito.",
     "emptyCta": "Scopri il catalogo"
+  },
+  "steps": {
+    "label": "Fasi dell'ordine",
+    "cart": "Carrello",
+    "details": "Consegna e pagamento",
+    "confirmation": "Conferma",
+    "currentSuffix": "(fase corrente)"
   }
 }

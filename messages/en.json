@@ -207,7 +207,10 @@
     "total": "Total",
     "totalNote": "Free shipping · VAT included",
     "checkout": "Place order",
-    "continue": "Continue shopping"
+    "continue": "Continue shopping",
+    "decrease": "Decrease quantity of {name}",
+    "increase": "Increase quantity of {name}",
+    "itemCount": "{count, plural, one {# item} other {# items}}"
   },
   "wishlist": {
     "eyebrow": "Saved",
@@ -215,5 +218,12 @@
     "subtitle": "The products you saved from this browser.",
     "empty": "You have no favourites yet.",
     "emptyCta": "Explore the catalogue"
+  },
+  "steps": {
+    "label": "Order steps",
+    "cart": "Cart",
+    "details": "Delivery & payment",
+    "confirmation": "Confirmation",
+    "currentSuffix": "(current step)"
   }
 }

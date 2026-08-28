@@ -1,0 +1,12 @@
+import { chromium } from '@playwright/test';
+const [,, base, out, mobile] = process.argv;
+const b = await chromium.launch();
+const p = await b.newPage({ viewport: mobile ? { width: 390, height: 1400 } : { width: 1280, height: 1100 } });
+await p.goto(`${base}/fr/produit/thermomix-tm7`);
+await p.getByRole('button', { name: /ajouter au panier/i }).click();
+await p.waitForURL(/panier/);
+await p.goto(`${base}/fr/checkout`);
+await p.waitForTimeout(1800);
+await p.screenshot({ path: out, fullPage: true });
+await b.close();
+console.log('ok', out);

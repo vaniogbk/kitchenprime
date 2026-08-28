@@ -207,7 +207,10 @@
     "total": "Gesamt",
     "totalNote": "Versandkostenfrei · inkl. MwSt.",
     "checkout": "Zur Kasse",
-    "continue": "Weiter einkaufen"
+    "continue": "Weiter einkaufen",
+    "decrease": "Menge von {name} verringern",
+    "increase": "Menge von {name} erhöhen",
+    "itemCount": "{count, plural, one {# Artikel} other {# Artikel}}"
   },
   "wishlist": {
     "eyebrow": "Vorgemerkt",
@@ -215,5 +218,12 @@
     "subtitle": "Die Produkte, die Sie in diesem Browser gespeichert haben.",
     "empty": "Sie haben noch keine Favoriten.",
     "emptyCta": "Katalog entdecken"
+  },
+  "steps": {
+    "label": "Bestellschritte",
+    "cart": "Warenkorb",
+    "details": "Lieferung & Zahlung",
+    "confirmation": "Bestätigung",
+    "currentSuffix": "(aktueller Schritt)"
   }
 }
