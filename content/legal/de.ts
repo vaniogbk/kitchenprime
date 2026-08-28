@@ -55,12 +55,10 @@ export const de: LegalContent = {
           {
             t: 'ul',
             items: [
-              'Kreditkarte (Visa, Mastercard)',
               'Banküberweisung (SEPA und international)',
-              'Apple Pay',
             ],
           },
-          { t: 'p', text: 'Die Zahlung ist per SSL/TLS verschlüsselt. KitchenPrime speichert keinerlei Bankdaten.' },
+          { t: 'p', text: 'Die Bankverbindung des Empfängers wird Ihnen bei der Bestellung angezeigt und anschließend per E-Mail bestätigt. Der Versand erfolgt nach Eingang der Überweisung. KitchenPrime erhebt und speichert keinerlei Zahlungsdaten der Kundschaft.' },
         ],
       },
       {

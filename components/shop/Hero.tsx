@@ -2,7 +2,6 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { waOrderUrl } from '@/lib/whatsapp';
 import { type Locale } from '@/lib/i18n';
 import { Icon } from '@/components/ui/Icon';
 import { RemoteImage } from '@/components/ui/RemoteImage';
@@ -19,7 +18,6 @@ const TILT = 9;
 
 export function Hero({ locale }: { locale: Locale }) {
   const t = useTranslations('hero');
-  const tWa = useTranslations('wa');
   const [active, setActive] = useState(0);
   // Deux refs : la scène capte le pointeur et porte la perspective, l'étage
   // reçoit la rotation. Transformer la scène elle-même annulerait sa
@@ -139,14 +137,6 @@ export function Hero({ locale }: { locale: Locale }) {
           <Link href={`/${locale}/produit/thermomix-tm7`} className="btn-buy">
             <Icon name="bag-shopping" /> {t('cta1')}
           </Link>
-          <a
-            href={waOrderUrl('Thermomix TM7', tWa.raw('msg') as string)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-wa"
-          >
-            <Icon name="whatsapp" style={{ fontSize: 15 }} /> {t('cta2')}
-          </a>
         </div>
         <div className="hero-trust">
           <div className="htrust"><Icon name="shield-halved" /> {t('trust1')}</div>

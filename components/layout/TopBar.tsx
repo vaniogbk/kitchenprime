@@ -1,6 +1,7 @@
 'use client';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { locales, type Locale } from '@/lib/i18n';
 import { Icon } from '@/components/ui/Icon';
 
@@ -13,14 +14,13 @@ const LANG_NAME: Record<Locale, string> = {
 
 export function TopBar({ currentLocale }: { currentLocale: Locale }) {
   const t = useTranslations('topbar');
-  const router = useRouter();
   const pathname = usePathname();
 
-  function switchTo(loc: Locale) {
-    if (loc === currentLocale) return;
+  /** Même chemin, autre préfixe de locale. */
+  function pathFor(loc: Locale) {
     const segments = pathname.split('/');
     segments[1] = loc;
-    router.push(segments.join('/') || `/${loc}`);
+    return segments.join('/') || `/${loc}`;
   }
 
   return (
@@ -28,24 +28,29 @@ export function TopBar({ currentLocale }: { currentLocale: Locale }) {
       <div className="topbar-left">
         <Icon name="truck-fast" /> {t('trust')}
       </div>
-      {/* De vrais <button> : le précédent <span role="button"> n'était pas
-          activable au clavier, ce qui rendait le site monolingue au lecteur
-          d'écran. */}
-      <div className="topbar-locs" role="group" aria-label={t('language')}>
+      {/*
+        Des liens, et non des boutons pilotés par `router.push` : l'adresse est
+        présente dans le HTML servi, donc le changement de langue fonctionne
+        avant même l'hydratation — un clic trop précoce ne se perdait plus dans
+        le vide. Les moteurs y voient aussi des liens réels entre les versions
+        linguistiques, ce qui renforce les hreflang, et l'ouverture dans un
+        nouvel onglet redevient possible.
+      */}
+      <nav className="topbar-locs" aria-label={t('language')}>
         {locales.map((l) => (
-          <button
+          <Link
             key={l}
-            type="button"
+            href={pathFor(l)}
             className={`tloc${l === currentLocale ? ' on' : ''}`}
-            onClick={() => switchTo(l)}
+            hrefLang={l}
             lang={l}
             aria-label={LANG_NAME[l]}
             aria-current={l === currentLocale ? 'true' : undefined}
           >
             {l.toUpperCase()}
-          </button>
+          </Link>
         ))}
-      </div>
+      </nav>
     </div>
   );
 }

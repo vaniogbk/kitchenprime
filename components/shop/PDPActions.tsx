@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { waOrderUrl } from '@/lib/whatsapp';
 import { formatEUR } from '@/lib/products';
 import { BCP47 } from '@/lib/seo';
 import { type Locale } from '@/lib/i18n';
@@ -10,18 +9,15 @@ import { Icon } from '@/components/ui/Icon';
 import { useCart } from '@/components/shop/CartProvider';
 
 export function PDPActions({
-  productName,
   productSlug,
   priceCents,
   locale,
 }: {
-  productName: string;
   productSlug: string;
   priceCents: number;
   locale: Locale;
 }) {
   const t = useTranslations('pdp');
-  const tWa = useTranslations('wa');
   const router = useRouter();
   const { add } = useCart();
   const [qty, setQty] = useState(1);
@@ -70,14 +66,6 @@ export function PDPActions({
         <button type="button" className="btn-buy" onClick={addAndGoToCart}>
           <Icon name="bag-shopping" /> {t('addToCart')} · {formatEUR(total, BCP47[locale])}
         </button>
-        <a
-          href={waOrderUrl(productName, tWa.raw('msg') as string)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="btn-wa"
-        >
-          <Icon name="whatsapp" style={{ fontSize: 16 }} /> {t('orderWa')}
-        </a>
       </div>
     </>
   );

@@ -7,6 +7,12 @@ import { type Locale } from '@/lib/i18n';
 import { Icon } from '@/components/ui/Icon';
 import { RemoteImage } from '@/components/ui/RemoteImage';
 import { useCart } from '@/components/shop/CartProvider';
+import {
+  ENABLED_PAYMENT_METHODS,
+  DEFAULT_PAYMENT_METHOD,
+  formatIban,
+  type PaymentMethod,
+} from '@/lib/payment';
 import { type CartCatalogEntry } from '@/components/shop/CartView';
 
 const CK_KEY = 'kp_customer';
@@ -14,7 +20,7 @@ const CK_KEY = 'kp_customer';
 type CustomerData = {
   name: string; email: string; phone: string;
   address: string; city: string; zip: string; country: string;
-  method: 'card' | 'wise';
+  method: PaymentMethod;
 };
 
 type BankInfo = {
@@ -37,7 +43,9 @@ export function CheckoutForm({
   const t = useTranslations('checkout');
   const tCart = useTranslations('cart');
   const { lines: cartLines, clear, ready } = useCart();
-  const [method, setMethod] = useState<'card' | 'wise'>('card');
+  const [method, setMethod] = useState<PaymentMethod>(DEFAULT_PAYMENT_METHOD);
+  // Un seul moyen actif : pas de choix à présenter, on l'annonce simplement.
+  const singleMethod = ENABLED_PAYMENT_METHODS.length === 1;
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState<CustomerData | null>(null);
@@ -67,7 +75,12 @@ export function CheckoutForm({
       if (rawSaved) {
         const data = JSON.parse(rawSaved) as CustomerData;
         setSaved(data);
-        setMethod(data.method || 'card');
+        // Un moyen enregistré mais désormais désactivé ne doit pas resurgir.
+        setMethod(
+          data.method && ENABLED_PAYMENT_METHODS.includes(data.method)
+            ? data.method
+            : DEFAULT_PAYMENT_METHOD,
+        );
       }
     } catch {
       /* stockage indisponible : on repart d'un formulaire vierge */
@@ -220,46 +233,60 @@ export function CheckoutForm({
 
             <div className="fcard">
               <h2 className="fcard-title">
-                <Icon name="credit-card" /> {t('paymentTitle')}
+                <Icon name="building-columns" /> {t('paymentTitle')}
               </h2>
-              <label className={`pm-opt${method === 'card' ? ' on' : ''}`}>
-                <input type="radio" name="pm" checked={method === 'card'} onChange={() => setMethod('card')} />
-                <div>
-                  <div className="pm-name">
-                    <Icon name="credit-card" /> {t('pmCard')}
-                    <span className="pm-rec">{t('pmCardRec')}</span>
-                  </div>
-                  <div className="pm-sub">{t('pmCardSub')}</div>
-                </div>
-              </label>
-              <label className={`pm-opt${method === 'wise' ? ' on' : ''}`}>
-                <input type="radio" name="pm" checked={method === 'wise'} onChange={() => setMethod('wise')} />
-                <div className="pm-wise-body">
-                  <div className="pm-name">
-                    <Icon name="building-columns" /> {t('pmWise')}
-                  </div>
-                  <div className="pm-sub">{t('pmWiseSub')}</div>
-                  {method === 'wise' && bankInfo && (
-                    <div className="ck-iban-box">
-                      <div className="ck-iban-label">
-                        <Icon name="circle-info" /> {t('ibanTitle')}
-                      </div>
-                      <table className="ck-iban-table">
-                        <tbody>
-                          <tr><td>{t('beneficiary')}</td><td><strong>{bankInfo.holder}</strong></td></tr>
-                          {bankInfo.bank && <tr><td>{t('bank')}</td><td>{bankInfo.bank}</td></tr>}
-                          <tr><td>IBAN</td><td><span className="ck-iban-mono">{bankInfo.iban.replace(/(.{4})/g, '$1 ').trim()}</span></td></tr>
-                          {bankInfo.bic && <tr><td>BIC</td><td><span className="ck-iban-mono">{bankInfo.bic}</span></td></tr>}
-                        </tbody>
-                      </table>
-                      <div className="ck-iban-note">{t('ibanNote')}</div>
+
+              {ENABLED_PAYMENT_METHODS.includes('card') && (
+                <label className={`pm-opt${method === 'card' ? ' on' : ''}`}>
+                  <input type="radio" name="pm" checked={method === 'card'} onChange={() => setMethod('card')} />
+                  <div>
+                    <div className="pm-name">
+                      <Icon name="credit-card" /> {t('pmCard')}
+                      <span className="pm-rec">{t('pmCardRec')}</span>
                     </div>
-                  )}
-                  {method === 'wise' && !bankInfo && (
-                    <div className="ck-iban-note ck-iban-note--fallback">{t('ibanFallback')}</div>
-                  )}
-                </div>
-              </label>
+                    <div className="pm-sub">{t('pmCardSub')}</div>
+                  </div>
+                </label>
+              )}
+
+              {ENABLED_PAYMENT_METHODS.includes('wise') && (
+                <label className={`pm-opt on${singleMethod ? ' pm-opt--only' : ''}`}>
+                  {/* Moyen unique : la case reste dans le DOM pour les lecteurs
+                      d'écran, mais elle est masquée — il n'y a rien à choisir. */}
+                  <input
+                    type="radio"
+                    name="pm"
+                    checked={method === 'wise'}
+                    onChange={() => setMethod('wise')}
+                    className={singleMethod ? 'sr-only' : undefined}
+                  />
+                  <div className="pm-wise-body">
+                    <div className="pm-name">
+                      <Icon name="building-columns" /> {t('pmWise')}
+                    </div>
+                    <div className="pm-sub">{t('pmWiseSub')}</div>
+                    {method === 'wise' && bankInfo && (
+                      <div className="ck-iban-box">
+                        <div className="ck-iban-label">
+                          <Icon name="circle-info" /> {t('ibanTitle')}
+                        </div>
+                        <table className="ck-iban-table">
+                          <tbody>
+                            <tr><td>{t('beneficiary')}</td><td><strong>{bankInfo.holder}</strong></td></tr>
+                            {bankInfo.bank && <tr><td>{t('bank')}</td><td>{bankInfo.bank}</td></tr>}
+                            <tr><td>IBAN</td><td><span className="ck-iban-mono">{formatIban(bankInfo.iban)}</span></td></tr>
+                            {bankInfo.bic && <tr><td>BIC</td><td><span className="ck-iban-mono">{bankInfo.bic}</span></td></tr>}
+                          </tbody>
+                        </table>
+                        <div className="ck-iban-note">{t('ibanNote')}</div>
+                      </div>
+                    )}
+                    {method === 'wise' && !bankInfo && (
+                      <div className="ck-iban-note ck-iban-note--fallback">{t('ibanFallback')}</div>
+                    )}
+                  </div>
+                </label>
+              )}
             </div>
 
             {error && <p className="ck-error" role="alert">{error}</p>}

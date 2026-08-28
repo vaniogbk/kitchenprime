@@ -78,7 +78,7 @@ export function CartView({
               </div>
             </div>
             <input
-              className="qval"
+              className="cart-qty"
               type="number"
               min={1}
               max={99}

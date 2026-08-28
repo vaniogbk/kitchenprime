@@ -45,14 +45,14 @@ export function Footer() {
           </div>
         </div>
       </div>
+      {/* Ces badges annonçaient Visa, Mastercard, Apple Pay et Klarna alors
+          que la boutique n'encaisse que par virement : afficher des moyens
+          qu'on n'accepte pas est une promesse commerciale qu'on ne tient pas,
+          et un motif d'abandon au moment de payer. */}
       <div className="f-pay">
         <div className="f-pay-label"><Icon name="lock" /> {t('securePay')}</div>
-        <div className="pmb"><Icon name="cc-visa" /> Visa</div>
-        <div className="pmb"><Icon name="cc-mastercard" /> Mastercard</div>
-        <div className="pmb"><Icon name="apple-pay" /> Apple Pay</div>
-        <div className="pmb"><Icon name="building-columns" /> SEPA</div>
-        <div className="pmb">Klarna</div>
-        <div className="pmb"><Icon name="globe" /> Wise</div>
+        <div className="pmb"><Icon name="building-columns" /> {t('payTransfer')}</div>
+        <div className="pmb">SEPA</div>
       </div>
       <div className="f-bot">
         <div className="f-copy">{t('copy')}</div>

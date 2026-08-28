@@ -55,12 +55,10 @@ export const fr: LegalContent = {
           {
             t: 'ul',
             items: [
-              'Carte bancaire (Visa, Mastercard)',
               'Virement bancaire (SEPA et international)',
-              'Apple Pay',
             ],
           },
-          { t: 'p', text: 'Le paiement est sécurisé par chiffrement SSL/TLS. KitchenPrime ne conserve aucune donnée bancaire.' },
+          { t: 'p', text: 'Les coordonnées bancaires du bénéficiaire vous sont affichées au moment de la commande, puis rappelées par e-mail. La commande est expédiée dès réception du virement. KitchenPrime ne détient ni ne conserve aucune donnée de paiement du client.' },
         ],
       },
       {

@@ -55,12 +55,10 @@ export const it: LegalContent = {
           {
             t: 'ul',
             items: [
-              'Carta di credito (Visa, Mastercard)',
               'Bonifico bancario (SEPA e internazionale)',
-              'Apple Pay',
             ],
           },
-          { t: 'p', text: 'Il pagamento è protetto da cifratura SSL/TLS. KitchenPrime non conserva alcun dato bancario.' },
+          { t: 'p', text: 'Le coordinate bancarie del beneficiario ti vengono mostrate al momento dell’ordine e poi confermate per e-mail. L’ordine è spedito al ricevimento del bonifico. KitchenPrime non detiene né conserva alcun dato di pagamento del cliente.' },
         ],
       },
       {

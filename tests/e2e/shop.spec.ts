@@ -38,18 +38,29 @@ test.describe('Navigation', () => {
 
   test('le sélecteur de langue conserve le chemin courant', async ({ page }) => {
     await page.goto('/fr/catalogue');
-    await page.getByRole('button', { name: 'Deutsch' }).click();
+    await page.getByRole('link', { name: 'Deutsch' }).click();
     await expect(page).toHaveURL(/\/de\/catalogue/);
     await expect(page.locator('html')).toHaveAttribute('lang', 'de');
   });
 
   test('le sélecteur de langue est utilisable au clavier', async ({ page }) => {
-    // L'ancien sélecteur était un <span> : inatteignable au clavier.
+    // L'origine était un <span> : inatteignable au clavier.
     await page.goto('/fr');
-    const btn = page.getByRole('button', { name: 'Italiano' });
-    await btn.focus();
+    const link = page.getByRole('link', { name: 'Italiano' });
+    await link.focus();
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\/it$/);
+  });
+
+  test('le sélecteur de langue fonctionne sans JavaScript', async ({ browser }) => {
+    // Ce sont des liens et non des boutons pilotés par script : l'adresse est
+    // dans le HTML servi, donc un clic avant hydratation aboutit.
+    const ctx = await browser.newContext({ javaScriptEnabled: false });
+    const p = await ctx.newPage();
+    await p.goto('/fr/catalogue');
+    const href = await p.getByRole('link', { name: 'Deutsch' }).getAttribute('href');
+    expect(href).toBe('/de/catalogue');
+    await ctx.close();
   });
 
   test('une fiche produit inconnue renvoie 404', async ({ page }) => {
@@ -172,7 +183,7 @@ test.describe('Panier', () => {
   test('la quantité recalcule le total', async ({ page }) => {
     await page.goto('/fr/produit/thermostat-nest');
     await page.getByRole('button', { name: /ajouter au panier/i }).click();
-    await page.locator('.cart-line input[type="number"]').fill('3');
+    await page.locator('.cart-qty').fill('3');
     await expect(page.locator('.cart-total')).toContainText('510');
   });
 
@@ -186,8 +197,35 @@ test.describe('Panier', () => {
   test('un panier vide affiche un appel à l’action', async ({ page }) => {
     await page.goto('/fr/panier');
     await expect(page.getByText(/panier est vide/i)).toBeVisible();
-    await page.getByRole('link', { name: /catalogue/i }).first().click();
+    // Ciblé sur l'encart lui-même : `.first()` sur toute la page attrapait
+    // aussi le lien « Catalogue » du menu, ce qui ne testait plus l'appel
+    // à l'action du panier vide.
+    await page.locator('.cart-empty').getByRole('link').click();
     await expect(page).toHaveURL(/\/fr\/catalogue/);
+  });
+});
+
+test.describe('Quantité', () => {
+  test('les champs de quantité sont lisibles', async ({ page }) => {
+    // `.qval` imposait du texte blanc : passé de <span> à <input>, il se
+    // retrouvait blanc sur le fond blanc par défaut du navigateur.
+    await page.goto('/fr/produit/thermomix-tm7');
+    const pdp = page.locator('.qval');
+    await expect(pdp).toHaveValue('1');
+    const contrast = await pdp.evaluate((el) => {
+      const s = getComputedStyle(el);
+      return { color: s.color, background: s.backgroundColor };
+    });
+    // Champ transparent posé sur le bandeau indigo : le texte blanc ressort.
+    expect(contrast.background).toMatch(/rgba\(0, 0, 0, 0\)|transparent/);
+
+    await page.goto('/fr/produit/thermostat-nest');
+    await page.getByRole('button', { name: /ajouter au panier/i }).click();
+    const cart = page.locator('.cart-qty');
+    await expect(cart).toHaveValue('1');
+    const cartStyle = await cart.evaluate((el) => getComputedStyle(el).color);
+    // Sur la carte blanche du panier, le texte doit être sombre.
+    expect(cartStyle).not.toBe('rgb(255, 255, 255)');
   });
 });
 
@@ -261,4 +299,55 @@ test.describe('Traductions de l’interface', () => {
       );
     });
   }
+});
+
+test.describe('Paiement', () => {
+  test('seul le virement bancaire est proposé', async ({ page }) => {
+    await page.goto('/fr/checkout?p=thermostat-nest');
+    const options = page.locator('.pm-opt');
+    await expect(options).toHaveCount(1);
+    await expect(options).toContainText(/virement/i);
+    await expect(page.getByText(/carte/i)).toHaveCount(0);
+  });
+
+  test('l’API refuse un moyen de paiement désactivé', async ({ request }) => {
+    // L'interface ne propose plus la carte : l'API ne doit pas l'accepter
+    // davantage, sans quoi la restriction ne tiendrait qu'au niveau visuel.
+    const res = await request.post('/api/orders', {
+      data: {
+        paymentMethod: 'card',
+        locale: 'fr',
+        customer: {
+          name: 'Test', email: 'test@example.com', address: '1 rue',
+          city: 'Nantes', zip: '44000', country: 'FR',
+        },
+        items: [{ productSlug: 'thermostat-nest', quantity: 1 }],
+      },
+    });
+    expect(res.status()).toBe(400);
+    expect((await res.json()).error).toMatch(/not available/i);
+  });
+});
+
+test.describe('WhatsApp', () => {
+  const PAGES = ['/fr', '/fr/catalogue', '/fr/produit/thermomix-tm7'];
+
+  for (const path of PAGES) {
+    test(`${path} ne propose plus de commande par WhatsApp`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page.locator('.wa-float')).toHaveCount(0);
+      await expect(page.locator('.btn-wa, .pbtn-wa')).toHaveCount(0);
+      // Aucun lien de commande pré-rempli ne doit subsister.
+      const wa = await page
+        .locator('a[href*="wa.me"]')
+        .evaluateAll((els) => els.map((e) => e.getAttribute('href') ?? ''));
+      expect(wa.filter((h) => h.includes('text=')), 'lien de commande WhatsApp restant').toEqual([]);
+    });
+  }
+
+  test('le contact WhatsApp reste joignable depuis le pied de page', async ({ page }) => {
+    // Retirer le canal de commande ne doit pas couper le support client.
+    await page.goto('/fr');
+    await expect(page.locator('footer a[href*="wa.me"]')).toHaveCount(1);
+  });
 });

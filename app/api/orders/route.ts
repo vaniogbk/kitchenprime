@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { prisma } from '@/lib/prisma';
 import { createCheckout } from '@/lib/processors';
 import { sendEmail } from '@/lib/email';
+import { ENABLED_PAYMENT_METHODS, isPaymentMethodEnabled } from '@/lib/payment';
 
 const OrderSchema = z.object({
   paymentMethod: z.enum(['card', 'wise']),
@@ -34,6 +35,15 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: 'Invalid input', details: parsed.error.flatten() }, { status: 400 });
   }
   const data = parsed.data;
+
+  // Le moyen de paiement est revérifié ici : l'interface ne propose que les
+  // moyens activés, mais rien n'empêche d'appeler l'API directement.
+  if (!isPaymentMethodEnabled(data.paymentMethod)) {
+    return NextResponse.json(
+      { error: 'Payment method not available', enabled: ENABLED_PAYMENT_METHODS },
+      { status: 400 },
+    );
+  }
 
   const slugs = data.items.map((i) => i.productSlug);
   const products = await prisma.product.findMany({ where: { slug: { in: slugs }, active: true } });

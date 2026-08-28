@@ -136,7 +136,6 @@ export default async function ProductPage({
           </div>
 
           <PDPActions
-            productName={content.name}
             productSlug={product.slug}
             priceCents={product.priceCents}
             locale={locale}

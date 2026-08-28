@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 import { type Product, categoryIcon, formatEUR } from '@/lib/products';
-import { waOrderUrl } from '@/lib/whatsapp';
 import { BCP47 } from '@/lib/seo';
 import { type Locale } from '@/lib/i18n';
 import { Icon } from '@/components/ui/Icon';
@@ -43,7 +42,6 @@ export async function ProductCard({
 }) {
   const t = await getTranslations({ locale });
   const tCard = await getTranslations({ locale, namespace: 'card' });
-  const tWa = await getTranslations({ locale, namespace: 'wa' });
 
   const numLocale = BCP47[locale];
   const badgeClass =
@@ -102,15 +100,6 @@ export async function ProductCard({
             label={t('catalog.add')}
             addedLabel={tCard('added')}
           />
-          <a
-            href={waOrderUrl(content.name, tWa.raw('msg') as string)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="pbtn-wa"
-            aria-label={tCard('orderWa', { name: content.name })}
-          >
-            <Icon name="whatsapp" />
-          </a>
         </div>
       </div>
     </article>

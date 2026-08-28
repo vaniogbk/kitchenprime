@@ -38,7 +38,6 @@
     "titleHighlight": "tua.",
     "desc": "KitchenPrime seleziona le migliori attrezzature per la tua cucina. Thermomix TM7 — 22 funzioni, consegna express 48h in Europa.",
     "cta1": "Ordina il TM7",
-    "cta2": "WhatsApp",
     "trust1": "Garanzia 2 anni",
     "trust2": "Consegna 48h",
     "trust3": "Reso 14 giorni",
@@ -86,7 +85,6 @@
     "save": "Risparmi €{amount}",
     "qty": "Quantità",
     "addToCart": "Aggiungi al carrello",
-    "orderWa": "Ordina via WhatsApp",
     "feat1": "22 funzioni — mixer, cottura a vapore, bilancia integrata",
     "feat2": "Schermo touch 6,8\" + guida Wi-Fi Cookidoo",
     "feat3": "Motore 1550W · Bilancia precisa ±1g",
@@ -172,11 +170,8 @@
     "copy": "© 2026 KitchenPrime SAS. Tutti i diritti riservati.",
     "legal": "Note legali",
     "privacy": "Privacy",
-    "home": "Casa"
-  },
-  "wa": {
-    "label": "Ordina · WhatsApp",
-    "msg": "Ciao KitchenPrime, vorrei ordinare: {product}"
+    "home": "Casa",
+    "payTransfer": "Bonifico bancario"
   },
   "categories": {
     "robots": "Robot da cucina",
@@ -191,7 +186,6 @@
   "card": {
     "wish": "Aggiungi {name} ai preferiti",
     "unwish": "Rimuovi {name} dai preferiti",
-    "orderWa": "Ordina {name} via WhatsApp",
     "added": "Aggiunto",
     "ratingOutOf5": "su 5",
     "fiveOutOfFive": "5 stelle su 5"

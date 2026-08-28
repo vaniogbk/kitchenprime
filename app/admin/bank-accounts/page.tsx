@@ -1,5 +1,6 @@
 'use client';
 import { useState, useEffect, FormEvent } from 'react';
+import { formatIban, normalizeIban, validateIban, validateBic } from '@/lib/payment';
 import Link from 'next/link';
 import { Icon } from '@/components/ui/Icon';
 
@@ -20,9 +21,9 @@ const card: React.CSSProperties = {
   borderRadius: 12, padding: 20, marginBottom: 16,
 };
 
-function ibanFormat(raw: string) {
-  return raw.replace(/(.{4})/g, '$1 ').trim();
-}
+// Le formatage et la validation viennent de `lib/payment`, partagés avec
+// l'API et la vitrine : une seule définition de ce qu'est un IBAN valide.
+const ibanFormat = formatIban;
 
 export default function BankAccountsPage() {
   const [accounts, setAccounts] = useState<BankAccount[]>([]);
@@ -61,9 +62,24 @@ export default function BankAccountsPage() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
-    setSaving(true);
     setError(null);
-    const body = { ...form, iban: form.iban.replace(/\s+/g, '') };
+
+    // Contrôle avant l'envoi : l'API revalide de toute façon, mais un retour
+    // immédiat évite d'enregistrer un IBAN erroné par inattention — sur une
+    // boutique payée par virement, c'est la donnée la plus critique du site.
+    const ibanCheck = validateIban(form.iban);
+    if (!ibanCheck.valid) {
+      setError(`IBAN invalide — ${ibanCheck.reason}`);
+      return;
+    }
+    const bicCheck = validateBic(form.bic || '');
+    if (!bicCheck.valid) {
+      setError(bicCheck.reason);
+      return;
+    }
+
+    setSaving(true);
+    const body = { ...form, iban: normalizeIban(form.iban) };
 
     const url = editTarget
       ? `/api/admin/bank-accounts/${editTarget.id}`

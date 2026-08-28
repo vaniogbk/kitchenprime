@@ -59,6 +59,9 @@ test.describe('hreflang', () => {
   }
 
   test('les alternates sont réciproques entre langues', async ({ page }) => {
+    // Quatre navigations dans un seul test : la marge par défaut est trop
+    // juste quand la machine exécute déjà le reste de la suite en parallèle.
+    test.setTimeout(90_000);
     // Google ignore un hreflang non confirmé par la page cible.
     for (const from of LOCALES) {
       await page.goto(`/${from}/catalogue`);

@@ -55,12 +55,10 @@ export const en: LegalContent = {
           {
             t: 'ul',
             items: [
-              'Payment card (Visa, Mastercard)',
               'Bank transfer (SEPA and international)',
-              'Apple Pay',
             ],
           },
-          { t: 'p', text: 'Payment is secured by SSL/TLS encryption. KitchenPrime stores no banking data.' },
+          { t: 'p', text: 'The beneficiary’s bank details are shown at checkout and confirmed by email. Your order ships as soon as the transfer arrives. KitchenPrime neither holds nor stores any customer payment data.' },
         ],
       },
       {

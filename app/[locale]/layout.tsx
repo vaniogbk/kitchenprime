@@ -15,7 +15,6 @@ import { JsonLd } from '@/components/seo/JsonLd';
 import { TopBar } from '@/components/layout/TopBar';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { WhatsAppFloat } from '@/components/layout/WhatsAppFloat';
 import { CartProvider } from '@/components/shop/CartProvider';
 
 const outfit = Outfit({ subsets: ['latin'], variable: '--font-outfit', display: 'swap' });
@@ -87,7 +86,6 @@ export default async function LocaleLayout({ children, params: { locale } }: Pro
               <main id="content">{children}</main>
               <Footer />
             </div>
-            <WhatsAppFloat />
           </CartProvider>
         </NextIntlClientProvider>
         <JsonLd json={jsonLdGraph(organizationLd(), webSiteLd(locale as Locale))} />
