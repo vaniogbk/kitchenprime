@@ -65,3 +65,6 @@ Thumbs.db
 /playwright/.cache/
 /.lighthouseci/
 /lighthouse-reports/
+
+# Artefact Windows : `vercel env pull /dev/null` crée un fichier nommé `nul`
+nul
