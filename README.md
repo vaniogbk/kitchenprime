@@ -173,6 +173,8 @@ docker compose exec app npm run db:seed
 
 > Ce garde-fou répare deux défauts. D'une part, chaque preview poussait le schéma de sa branche dans la base de **production** avec `--accept-data-loss` : une colonne supprimée sur une branche d'essai emportait les données correspondantes, sans revue. D'autre part, tout build dépendait d'une base joignable, si bien qu'une indisponibilité faisait échouer la compilation d'un code pourtant valide.
 
+En production, **un échec de synchronisation n'interrompt pas le build** : aucune page publique ne lit la base — catalogue, fiches produit et pages légales sont rendus depuis `lib/` et `content/`. Seuls les routes `/api` et l'espace `/admin` en dépendent, et ils sont de toute façon hors service quand la base ne répond pas. Bloquer le build reviendrait à laisser l'ancienne version en ligne sans rien réparer.
+
 Pour appliquer un changement de schéma à la main : `npm run db:push`.
 
 Le `Dockerfile` est multi-stage et s'appuie sur `output: 'standalone'`, activé par `BUILD_STANDALONE=true`.

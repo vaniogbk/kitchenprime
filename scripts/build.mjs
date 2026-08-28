@@ -23,18 +23,44 @@ import { spawnSync } from 'node:child_process';
 
 const isProductionDeploy = process.env.VERCEL_ENV === 'production';
 
-function run(label, command, args) {
+function run(label, command, args, { fatal = true } = {}) {
   console.log(`\n▸ ${label}`);
   const res = spawnSync(command, args, { stdio: 'inherit', shell: true, env: process.env });
-  if (res.status !== 0) process.exit(res.status ?? 1);
+  if (res.status !== 0 && fatal) process.exit(res.status ?? 1);
+  return res.status === 0;
 }
 
 if (isProductionDeploy) {
-  run(
+  /*
+   * L'échec de la synchronisation n'interrompt pas le build.
+   *
+   * Aucune page publique ne lit la base : le catalogue, les fiches produit et
+   * les pages légales sont rendus depuis `lib/` et `content/`. Seuls les
+   * routes /api et l'espace /admin en dépendent, et ils sont de toute façon
+   * hors service quand la base est injoignable.
+   *
+   * Bloquer le build dans ce cas revient donc à laisser l'ancienne version en
+   * ligne — sans rien réparer — au lieu de publier une vitrine qui fonctionne.
+   */
+  const ok = run(
     'Synchronisation du schéma (déploiement de production)',
     'npx',
     ['prisma', 'db', 'push', '--skip-generate', '--accept-data-loss'],
+    { fatal: false },
   );
+  if (!ok) {
+    console.warn(
+      [
+        '',
+        '⚠  SCHÉMA NON SYNCHRONISÉ — la base est injoignable.',
+        '   La vitrine est publiée normalement (elle ne lit pas la base),',
+        '   mais les commandes, les webhooks de paiement et l’espace admin',
+        '   resteront hors service tant que la base ne répond pas.',
+        '   Une fois la base rétablie : npm run db:push',
+        '',
+      ].join('\n'),
+    );
+  }
 } else {
   console.log(
     `\n▸ Schéma non synchronisé (VERCEL_ENV=${process.env.VERCEL_ENV ?? 'absent'}).` +
