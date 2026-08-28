@@ -169,7 +169,11 @@ docker compose exec app npx prisma db push
 docker compose exec app npm run db:seed
 ```
 
-`npm run build` exécute `prisma db push` avant le build : c'est la commande utilisée par Vercel, elle synchronise le schéma à chaque déploiement. Pour un build local sans base, utiliser `npm run build:app`.
+`npm run build` (`scripts/build.mjs`) ne synchronise le schéma **que** pour un déploiement de production (`VERCEL_ENV=production`). Ailleurs — preview de pull request, CI, build local — il se contente de générer le client Prisma et de compiler.
+
+> Ce garde-fou répare deux défauts. D'une part, chaque preview poussait le schéma de sa branche dans la base de **production** avec `--accept-data-loss` : une colonne supprimée sur une branche d'essai emportait les données correspondantes, sans revue. D'autre part, tout build dépendait d'une base joignable, si bien qu'une indisponibilité faisait échouer la compilation d'un code pourtant valide.
+
+Pour appliquer un changement de schéma à la main : `npm run db:push`.
 
 Le `Dockerfile` est multi-stage et s'appuie sur `output: 'standalone'`, activé par `BUILD_STANDALONE=true`.
 
@@ -180,8 +184,7 @@ Le `Dockerfile` est multi-stage et s'appuie sur `output: 'standalone'`, activé 
 | Script | Action |
 |---|---|
 | `dev` | serveur de développement |
-| `build` | `prisma db push` + build (déploiement) |
-| `build:app` | build sans base |
+| `build` | build ; ne touche à la base qu'en déploiement de production |
 | `build:e2e` | build de production pour les tests |
 | `build:icons` | régénère le sprite d'icônes |
 | `start` | serveur de production |
