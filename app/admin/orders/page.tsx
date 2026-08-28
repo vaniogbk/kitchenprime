@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { formatEUR } from '@/lib/products';
+import { Icon } from '@/components/ui/Icon';
 
 export default async function AdminOrders() {
   const session = await getServerSession(authOptions);
@@ -18,7 +19,7 @@ export default async function AdminOrders() {
   return (
     <div>
       <Link href="/admin/dashboard" style={{ fontSize: 13, color: 'var(--indigo)', textDecoration: 'none' }}>
-        <i className="fa-solid fa-arrow-left" /> Tableau de bord
+        <Icon name="arrow-left" /> Tableau de bord
       </Link>
       <h1 style={{ fontFamily: 'var(--font-outfit)', fontSize: 24, fontWeight: 900, margin: '12px 0 18px' }}>Commandes</h1>
       <div style={{ background: '#fff', border: '1px solid var(--line)', borderRadius: 12, overflow: 'hidden' }}>
@@ -57,7 +58,7 @@ export default async function AdminOrders() {
                 <td style={{ padding: 12, color: 'var(--mute)', fontSize: 12 }}>{o.createdAt.toLocaleDateString('fr-FR')}</td>
                 <td style={{ padding: 12 }}>
                   <a href={`/api/orders/${o.id}/receipt`} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--indigo)', fontSize: 12 }}>
-                    <i className="fa-solid fa-file-pdf" /> PDF
+                    <Icon name="file-pdf" /> PDF
                   </a>
                 </td>
               </tr>

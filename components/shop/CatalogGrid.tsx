@@ -1,73 +1,102 @@
-'use client';
-import { useState, useMemo } from 'react';
-import { useTranslations } from 'next-intl';
-import { ProductCard } from './ProductCard';
+import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
+import { ProductCard, type CardContent } from './ProductCard';
 import { type Product, type Category } from '@/lib/products';
 import { type Locale } from '@/lib/i18n';
+import { Icon, type IconName } from '@/components/ui/Icon';
 
-type Filter = 'all' | Category;
+export type Filter = 'all' | Category;
+export type CatalogItem = { product: Product; content: CardContent };
 
-export function CatalogGrid({
-  products,
+/**
+ * Grille du catalogue — **composant serveur**.
+ *
+ * Le filtrage passe par l'URL (`?cat=`) plutôt que par un état React. Deux
+ * bénéfices : la grille et ses vingt vignettes n'embarquent plus de
+ * JavaScript, et chaque catégorie devient une adresse réelle que les moteurs
+ * peuvent explorer. La canonique de la page reste `/catalogue` sans
+ * paramètre, ce qui consolide le référencement sur une seule adresse au lieu
+ * de créer des quasi-doublons.
+ */
+export async function CatalogGrid({
+  items,
   locale,
-  initialFilter = 'all',
+  filter = 'all',
   query,
 }: {
-  products: Product[];
+  items: CatalogItem[];
   locale: Locale;
-  initialFilter?: Filter;
+  filter?: Filter;
   query?: string;
 }) {
-  const t = useTranslations('catalog');
-  const [filter, setFilter] = useState<Filter>(initialFilter);
+  const t = await getTranslations({ locale, namespace: 'catalog' });
 
-  const filtered = useMemo(() => {
-    let list = products;
-    if (filter !== 'all') list = list.filter((p) => p.category === filter);
-    if (query?.trim()) {
-      const q = query.trim().toLowerCase();
-      list = list.filter((p) => p.name.toLowerCase().includes(q));
-    }
-    return list;
-  }, [products, filter, query]);
+  let filtered = filter === 'all' ? items : items.filter((i) => i.product.category === filter);
+  if (query?.trim()) {
+    // La recherche porte sur le nom traduit ET la référence catalogue.
+    const q = query.trim().toLowerCase();
+    filtered = filtered.filter(
+      (i) => i.content.name.toLowerCase().includes(q) || i.product.ref.toLowerCase().includes(q),
+    );
+  }
 
-  const counts = useMemo(() => {
-    return {
-      all: products.length,
-      robots: products.filter((p) => p.category === 'robots').length,
-      acc: products.filter((p) => p.category === 'acc').length,
-      livres: products.filter((p) => p.category === 'livres').length,
-      packs: products.filter((p) => p.category === 'packs').length,
-    };
-  }, [products]);
+  const count = (c: Category) => items.filter((i) => i.product.category === c).length;
 
-  const chips: Array<{ key: Filter; label: string; icon: string }> = [
-    { key: 'all',    label: `${t('filterAll')} (${counts.all})`,        icon: 'fa-border-all' },
-    { key: 'robots', label: `${t('filterRobots')} (${counts.robots})`, icon: 'fa-blender' },
-    { key: 'acc',    label: `${t('filterAcc')} (${counts.acc})`,        icon: 'fa-kitchen-set' },
-    { key: 'livres', label: `${t('filterBooks')} (${counts.livres})`,   icon: 'fa-book-open' },
-    { key: 'packs',  label: `${t('filterPacks')} (${counts.packs})`,    icon: 'fa-boxes-stacked' },
+  const chips: Array<{ key: Filter; label: string; icon: IconName }> = [
+    { key: 'all',    label: `${t('filterAll')} (${items.length})`,       icon: 'border-all' },
+    { key: 'robots', label: `${t('filterRobots')} (${count('robots')})`, icon: 'blender' },
+    { key: 'acc',    label: `${t('filterAcc')} (${count('acc')})`,       icon: 'kitchen-set' },
+    { key: 'livres', label: `${t('filterBooks')} (${count('livres')})`,  icon: 'book-open' },
+    { key: 'packs',  label: `${t('filterPacks')} (${count('packs')})`,   icon: 'boxes-stacked' },
+    { key: 'maison', label: `${t('filterHome')} (${count('maison')})`,   icon: 'house' },
   ];
+
+  /** Conserve la recherche en cours lorsqu'on change de catégorie. */
+  const chipHref = (key: Filter) => {
+    const params = new URLSearchParams();
+    if (key !== 'all') params.set('cat', key);
+    if (query?.trim()) params.set('q', query.trim());
+    const qs = params.toString();
+    return `/${locale}/catalogue${qs ? `?${qs}` : ''}`;
+  };
 
   return (
     <div className="section" style={{ paddingTop: 24 }}>
-      <div className="cat-bar">
+      <nav className="cat-bar" aria-label={t('filterLabel')}>
         {chips.map((c) => (
-          <button
+          <Link
             key={c.key}
-            type="button"
+            href={chipHref(c.key)}
             className={`cat-chip${filter === c.key ? '' : ' alt'}`}
-            onClick={() => setFilter(c.key)}
+            aria-current={filter === c.key ? 'page' : undefined}
           >
-            <i className={`fa-solid ${c.icon}`} /> {c.label}
-          </button>
+            <Icon name={c.icon} /> {c.label}
+          </Link>
         ))}
-      </div>
-      <div className="grid">
-        {filtered.map((p) => (
-          <ProductCard key={p.slug} product={p} locale={locale} />
-        ))}
-      </div>
+      </nav>
+
+      {filtered.length === 0 ? (
+        <div className="cart-empty">
+          <Icon name="magnifying-glass" />
+          <p>{t('noResults', { query: query ?? '' })}</p>
+        </div>
+      ) : (
+        <>
+          <p className="sr-only">{t('resultCount', { count: filtered.length })}</p>
+          <div className="grid">
+            {filtered.map((i, idx) => (
+              <ProductCard
+                key={i.product.slug}
+                product={i.product}
+                content={i.content}
+                locale={locale}
+                eager={idx < 3}
+                headingLevel={2}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }

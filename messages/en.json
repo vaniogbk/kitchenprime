@@ -1,21 +1,38 @@
 {
   "meta": {
-    "homeTitle": "KitchenPrime — Thermomix TM7 & premium accessories in Europe",
-    "homeDesc": "Official Thermomix TM7 reseller. Free 48h delivery in Europe, 2-year warranty, secure payment.",
-    "catalogTitle": "Full catalog — Thermomix TM7",
-    "checkoutTitle": "Complete your order"
+    "homeTitle": "KitchenPrime — Thermomix TM7, appliances & smart home",
+    "homeDesc": "Refurbished Thermomix TM7, home appliances and smart home. Free 48-hour delivery across Europe, 24-month warranty, secure payment.",
+    "catalogTitle": "Full catalogue — 20 products",
+    "checkoutTitle": "Complete your order",
+    "catalogDesc": "Food processors, accessories, recipe books, bundles and smart home: all 20 KitchenPrime products, delivered in 48 hours with a 24-month warranty.",
+    "checkoutDesc": "Complete your KitchenPrime order securely.",
+    "cartTitle": "My cart",
+    "cartDesc": "The items in your KitchenPrime cart.",
+    "wishlistTitle": "My favourites",
+    "wishlistDesc": "The KitchenPrime products you have saved.",
+    "contactTitle": "Contact & support",
+    "contactDesc": "Reach KitchenPrime by WhatsApp, email or post. Guaranteed reply within 24 hours on working days.",
+    "cgvTitle": "Terms and conditions of sale",
+    "cgvDesc": "Pricing, ordering, delivery, right of withdrawal and warranties: the KitchenPrime terms and conditions of sale.",
+    "legalTitle": "Legal notice",
+    "legalDesc": "Publisher, hosting, intellectual property and personal data for KitchenPrime.",
+    "returnsTitle": "Return policy",
+    "returnsDesc": "14 days to change your mind, free returns and a refund within 14 days. The KitchenPrime return policy."
   },
   "topbar": {
-    "trust": "Free delivery in Europe · Official reseller · 2-year warranty"
+    "trust": "Free delivery across Europe · Certified refurbished · 24-month warranty",
+    "language": "Language selection"
   },
   "nav": {
     "home": "Home",
     "catalog": "Catalog",
     "search": "Search a product…",
-    "cart": "Cart"
+    "cart": "Cart",
+    "primary": "Main navigation",
+    "cartWithCount": "Cart, {count} items"
   },
   "hero": {
-    "eyebrow": "Official reseller Europe",
+    "eyebrow": "Certified refurbished",
     "titlePre": "Culinary excellence,",
     "titleHighlightPre": "delivered to ",
     "titleHighlight": "you.",
@@ -25,15 +42,17 @@
     "trust1": "2-year warranty",
     "trust2": "48h delivery",
     "trust3": "14-day returns",
-    "badge": "New · −€200"
+    "badge": "New · −€200",
+    "imageAlt": "Thermomix TM7 food processor on a kitchen worktop",
+    "viewImage": "View image {n}"
   },
   "strip": {
     "shippingLabel": "Free delivery",
     "shippingVal": "48h Express Europe",
     "warrantyLabel": "Official warranty",
-    "warrantyVal": "2 years included",
-    "resellerLabel": "Reseller",
-    "resellerVal": "Officially certified",
+    "warrantyVal": "24 months included",
+    "resellerLabel": "Refurbished",
+    "resellerVal": "42-point inspection",
     "directLabel": "Direct order",
     "directVal": "WhatsApp 7d/7"
   },
@@ -46,15 +65,19 @@
     "verified": "Verified purchase"
   },
   "catalog": {
-    "eyebrow": "Full catalog · 20 products",
+    "eyebrow": "Full catalogue · 20 products",
     "title": "All our products",
-    "subtitle": "Robots · Accessories · Books · Packs — the complete Thermomix TM7 range.",
+    "subtitle": "Robots · Accessories · Books · Bundles · Home — all 20 KitchenPrime products.",
     "filterAll": "All",
     "filterRobots": "Robots",
     "filterAcc": "Accessories",
     "filterBooks": "Books",
     "filterPacks": "Packs",
-    "add": "Add"
+    "add": "Add",
+    "filterHome": "Home",
+    "filterLabel": "Filter by category",
+    "resultCount": "{count, plural, =0 {No products} one {1 product} other {# products}}",
+    "noResults": "No product matches your search."
   },
   "pdp": {
     "breadHome": "Home",
@@ -67,7 +90,15 @@
     "feat1": "22 functions — blender, steamer, integrated scale",
     "feat2": "6.8\" touchscreen + Wi-Fi Cookidoo guidance",
     "feat3": "1550W motor · Precise scale ±1g",
-    "feat4": "2-year manufacturer warranty included"
+    "feat4": "2-year manufacturer warranty included",
+    "viewImage": "View image {n}",
+    "descriptionTitle": "Description",
+    "featuresTitle": "Key points",
+    "relatedTitle": "In the same category",
+    "brandLabel": "Brand",
+    "refLabel": "Ref.",
+    "qtyMinus": "Decrease quantity",
+    "qtyPlus": "Increase quantity"
   },
   "checkout": {
     "secure": "Secure SSL payment",
@@ -103,10 +134,30 @@
     "trustPay": "100% secure payment",
     "trustShip": "Free 48h delivery",
     "trustReturn": "14-day return policy",
-    "trustWarranty": "2-year warranty"
+    "trustWarranty": "2-year warranty",
+    "greeting": "Hello, {name}!",
+    "savedPmCard": "Secure card payment",
+    "savedPmWise": "Bank transfer",
+    "changeCard": "Edit my details",
+    "useSaved": "Use my saved details",
+    "processing": "Processing…",
+    "order": "Order",
+    "ibanTitle": "Bank details for your transfer",
+    "ibanNote": "Quote your order number as the reference. We ship as soon as the transfer arrives.",
+    "ibanFallback": "We will email you the bank details after confirmation.",
+    "beneficiary": "Beneficiary",
+    "bank": "Bank",
+    "secureNote": "100% secure payment — SSL-encrypted data",
+    "lineSub": "Ref. {ref} · Qty {qty}",
+    "genericError": "The order could not be saved. Please try again in a moment.",
+    "countryFR": "France",
+    "countryDE": "Germany",
+    "countryIT": "Italy",
+    "countryBE": "Belgium",
+    "countryCH": "Switzerland"
   },
   "footer": {
-    "tagline": "Premium reseller of the Thermomix TM7 in Europe. France · Belgium · Germany · Italy · Switzerland.",
+    "tagline": "Specialist in refurbished Thermomix TM7 and home appliances across Europe. France · Belgium · Germany · Italy · Switzerland.",
     "products": "Products",
     "support": "Support",
     "robots": "Robots",
@@ -120,7 +171,8 @@
     "securePay": "Secure payment:",
     "copy": "© 2026 KitchenPrime SAS. All rights reserved.",
     "legal": "Legal notice",
-    "privacy": "Privacy"
+    "privacy": "Privacy",
+    "home": "Home & appliances"
   },
   "wa": {
     "label": "Order · WhatsApp",
@@ -130,6 +182,44 @@
     "robots": "Kitchen robot",
     "acc": "Accessory",
     "livres": "Book",
-    "packs": "Exclusive bundle"
+    "packs": "Exclusive bundle",
+    "maison": "Home & appliances"
+  },
+  "a11y": {
+    "skipToContent": "Skip to main content"
+  },
+  "card": {
+    "wish": "Add {name} to favourites",
+    "unwish": "Remove {name} from favourites",
+    "orderWa": "Order {name} via WhatsApp",
+    "added": "Added",
+    "ratingOutOf5": "out of 5",
+    "fiveOutOfFive": "5 out of 5 stars"
+  },
+  "badges": {
+    "new": "New",
+    "promo": "Sale",
+    "bestseller": "Best seller",
+    "pack": "Bundle −€{amount}"
+  },
+  "cart": {
+    "eyebrow": "Your selection",
+    "title": "My cart",
+    "subtitle": "Check your items before placing the order.",
+    "empty": "Your cart is empty.",
+    "emptyCta": "Browse the catalogue",
+    "remove": "Remove {name} from the cart",
+    "qty": "Quantity for {name}",
+    "total": "Total",
+    "totalNote": "Free shipping · VAT included",
+    "checkout": "Place order",
+    "continue": "Continue shopping"
+  },
+  "wishlist": {
+    "eyebrow": "Saved",
+    "title": "My favourites",
+    "subtitle": "The products you saved from this browser.",
+    "empty": "You have no favourites yet.",
+    "emptyCta": "Explore the catalogue"
   }
 }

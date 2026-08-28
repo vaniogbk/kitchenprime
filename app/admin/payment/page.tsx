@@ -2,8 +2,9 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import type { ProcessorName } from '@/lib/processors/types';
+import { Icon, type IconName } from '@/components/ui/Icon';
 
-type ProcessorInfo = { label: string; icon: string; envKeys: string[] };
+type ProcessorInfo = { label: string; icon: IconName; envKeys: string[] };
 type SettingsData = { active: ProcessorName; processors: Record<ProcessorName, ProcessorInfo> };
 
 const WEBHOOK_PATHS: Record<ProcessorName, string> = {
@@ -106,9 +107,9 @@ export default function PaymentPage() {
 
       <div style={{ ...card, background: 'var(--indigo-50)', border: '1.5px solid var(--indigo)', marginBottom: 20 }}>
         <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-          <i className="fa-solid fa-bolt" style={{ color: 'var(--indigo)', fontSize: 18, marginTop: 2 }} />
+          <Icon name="bolt" style={{ color: 'var(--indigo)', fontSize: 18, marginTop: 2 }} />
           <div style={{ fontSize: 13, color: 'var(--slate)', lineHeight: 1.6 }}>
-            <strong style={{ color: 'var(--ink)' }}>Basculement instantané.</strong> Cliquez sur "Activer" pour changer de processeur —
+            <strong style={{ color: 'var(--ink)' }}>Basculement instantané.</strong> Cliquez sur « Activer » pour changer de processeur —
             toutes les nouvelles commandes card utiliseront ce processeur immédiatement, sans redéploiement.
             Les commandes en cours ne sont pas affectées.
           </div>
@@ -136,7 +137,7 @@ export default function PaymentPage() {
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     color: '#fff', fontSize: 20, flexShrink: 0,
                   }}>
-                    <i className={info.icon} />
+                    <Icon name={info.icon} />
                   </div>
                   <div>
                     <div style={{ fontWeight: 800, fontSize: 16, color: 'var(--ink)', display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -148,7 +149,7 @@ export default function PaymentPage() {
                       )}
                     </div>
                     <a href={guide.url} target="_blank" rel="noopener" style={{ fontSize: 12, color: 'var(--mute)', textDecoration: 'none' }}>
-                      {guide.url} <i className="fa-solid fa-arrow-up-right-from-square" style={{ fontSize: 10 }} />
+                      {guide.url} <Icon name="arrow-up-right-from-square" style={{ fontSize: 10 }} />
                     </a>
                   </div>
                 </div>
@@ -168,7 +169,7 @@ export default function PaymentPage() {
                   )}
                   {isActive && (
                     <span style={{ fontSize: 12, color, fontWeight: 800 }}>
-                      <i className="fa-solid fa-circle-check" /> En service
+                      <Icon name="circle-check" /> En service
                     </span>
                   )}
                 </div>
@@ -202,7 +203,7 @@ export default function PaymentPage() {
               {/* Guide d'activation */}
               <details style={{ marginTop: 14 }}>
                 <summary style={{ fontSize: 12, color: 'var(--indigo)', fontWeight: 700, cursor: 'pointer', userSelect: 'none' }}>
-                  Guide d'activation {info.label}
+                  Guide d&rsquo;activation {info.label}
                 </summary>
                 <ol style={{ fontSize: 12, color: 'var(--slate)', lineHeight: 1.7, margin: '10px 0 0 16px', padding: 0 }}>
                   {guide.steps.map((step, i) => <li key={i}>{step}</li>)}

@@ -1,61 +1,72 @@
 import { useTranslations } from 'next-intl';
+import { Icon } from '@/components/ui/Icon';
+import { RemoteImage } from '@/components/ui/RemoteImage';
 
+/** Les avis restent dans leur langue d'origine — c'est ce qui les rend crédibles. */
 const REVIEWS = [
   {
-    text: '"Le TM7 a transformé ma cuisine. Livraison 48h, emballage impeccable. Service au top."',
+    key: 'r1',
+    lang: 'fr',
+    text: 'Le TM7 a transformé ma cuisine. Livraison 48 h, emballage impeccable. Service au top.',
     name: 'Marie Laurent',
     location: 'Paris, FR',
-    avatar: 'photo-1494790108755-2616b612b789',
+    avatar: 'photo-1580489944761-15a19d654956',
   },
   {
-    text: '"Perfekte Qualität, blitzschnelle Lieferung. KitchenPrime ist mein bevorzugter Shop."',
+    key: 'r2',
+    lang: 'de',
+    text: 'Perfekte Qualität, blitzschnelle Lieferung. KitchenPrime ist mein bevorzugter Shop.',
     name: 'Hans Müller',
     location: 'München, DE',
     avatar: 'photo-1472099645785-5658abf4ff4e',
   },
   {
-    text: '"Prodotto fantastico! Consegna rapidissima. Il servizio clienti è eccezionale."',
+    key: 'r3',
+    lang: 'it',
+    text: 'Prodotto fantastico! Consegna rapidissima. Il servizio clienti è eccezionale.',
     name: 'Sofia Bianchi',
     location: 'Milano, IT',
     avatar: 'photo-1438761681033-6461ffad8d80',
   },
-];
+] as const;
 
 export function Testimonials() {
   const t = useTranslations('home');
+  const tCard = useTranslations('card');
+
   return (
-    <div className="testi">
-      <div className="sec-eyebrow">
-        <i className="fa-solid fa-comments" /> {t('reviewsEyebrow')}
-      </div>
-      <div className="sec-title">{t('reviewsTitle')}</div>
+    <section className="testi" aria-labelledby="reviews-title">
+      <p className="sec-eyebrow">
+        <Icon name="comments" /> {t('reviewsEyebrow')}
+      </p>
+      <h2 className="sec-title" id="reviews-title">{t('reviewsTitle')}</h2>
       <div className="testi-grid">
         {REVIEWS.map((r) => (
-          <div className="tc" key={r.name}>
-            <div className="tc-stars">
+          <figure className="tc" key={r.key}>
+            {/* `role="img"` : sans rôle explicite, aria-label est interdit sur un <p>. */}
+            <p className="tc-stars" role="img" aria-label={tCard('fiveOutOfFive')}>
               {Array.from({ length: 5 }).map((_, i) => (
-                <i key={i} className="fa-solid fa-star" />
+                <Icon name="star" key={i} />
               ))}
-            </div>
-            <div className="tc-text">{r.text}</div>
-            <div className="tc-author">
+            </p>
+            <blockquote className="tc-text" lang={r.lang}>“{r.text}”</blockquote>
+            <figcaption className="tc-author">
               <div className="tc-av">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={`https://images.unsplash.com/${r.avatar}?w=80&q=80`} alt="" />
+                <RemoteImage imageId={r.avatar} alt="" sizes="36px" quality={60} />
               </div>
               <div>
                 <div className="tc-name">{r.name}</div>
                 <div className="tc-meta">
-                  <i className="fa-solid fa-location-dot" /> {r.location}
+                  <Icon name="location-dot" /> {r.location}
                 </div>
                 <div className="tc-verif">
-                  <i className="fa-solid fa-circle-check" /> {t('verified')}
+                  <Icon name="circle-check" /> {t('verified')}
                 </div>
               </div>
-            </div>
-          </div>
+            </figcaption>
+          </figure>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

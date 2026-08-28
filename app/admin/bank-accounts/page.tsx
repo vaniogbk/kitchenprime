@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect, FormEvent } from 'react';
 import Link from 'next/link';
+import { Icon } from '@/components/ui/Icon';
 
 type BankAccount = {
   id: string;
@@ -124,16 +125,16 @@ export default function BankAccountsPage() {
           </div>
         </div>
         <button className="btn-buy" onClick={openNew}>
-          <i className="fa-solid fa-plus" /> Nouveau compte
+          <Icon name="plus" /> Nouveau compte
         </button>
       </div>
 
       {/* Info banner */}
       <div style={{ ...card, background: 'var(--indigo-50)', border: '1.5px solid var(--indigo)', marginBottom: 20 }}>
         <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start' }}>
-          <i className="fa-solid fa-circle-info" style={{ color: 'var(--indigo)', fontSize: 18, marginTop: 2 }} />
+          <Icon name="circle-info" style={{ color: 'var(--indigo)', fontSize: 18, marginTop: 2 }} />
           <div style={{ fontSize: 13, color: 'var(--slate)', lineHeight: 1.6 }}>
-            <strong style={{ color: 'var(--ink)' }}>Le compte marqué "Défaut"</strong> est celui affiché
+            <strong style={{ color: 'var(--ink)' }}>Le compte marqué « Défaut »</strong> est celui affiché
             aux clients lors du paiement par virement. Vous pouvez en ajouter autant que vous voulez
             (BNP, Wise, CIC, LCL…) et changer le défaut à tout moment — sans redéploiement.
           </div>
@@ -212,7 +213,7 @@ export default function BankAccountsPage() {
         <div style={{ textAlign: 'center', padding: 40, color: 'var(--mute)' }}>Chargement…</div>
       ) : accounts.length === 0 ? (
         <div style={{ ...card, textAlign: 'center', padding: 48, color: 'var(--mute)' }}>
-          <i className="fa-solid fa-building-columns" style={{ fontSize: 36, marginBottom: 12, display: 'block', opacity: .3 }} />
+          <Icon name="building-columns" style={{ fontSize: 36, marginBottom: 12, display: 'block', opacity: .3 }} />
           Aucun compte configuré. Ajoutez votre premier IBAN.
         </div>
       ) : (
@@ -225,7 +226,7 @@ export default function BankAccountsPage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
               <div style={{ flex: 1 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 6 }}>
-                  <i className="fa-solid fa-building-columns" style={{ color: 'var(--indigo)' }} />
+                  <Icon name="building-columns" style={{ color: 'var(--indigo)' }} />
                   <span style={{ fontWeight: 800, fontSize: 15, color: 'var(--ink)' }}>{a.label}</span>
                   {a.isDefault && (
                     <span style={{ fontSize: 10, fontWeight: 800, background: 'var(--indigo)', color: '#fff', padding: '2px 9px', borderRadius: 20 }}>
@@ -252,23 +253,23 @@ export default function BankAccountsPage() {
               <div style={{ display: 'flex', flexDirection: 'column', gap: 7, flexShrink: 0 }}>
                 {!a.isDefault && (
                   <button className="btn-buy" style={{ fontSize: 11, padding: '6px 12px' }} onClick={() => setDefault(a.id)}>
-                    <i className="fa-solid fa-star" /> Définir défaut
+                    <Icon name="star" /> Définir défaut
                   </button>
                 )}
                 <button className="btn-copper" style={{ fontSize: 11, padding: '6px 12px' }} onClick={() => openEdit(a)}>
-                  <i className="fa-solid fa-pen" /> Modifier
+                  <Icon name="pen" /> Modifier
                 </button>
                 <button
                   style={{ fontSize: 11, padding: '6px 12px', background: 'var(--indigo-50)', color: 'var(--slate)', border: 'none', borderRadius: 8, cursor: 'pointer', fontWeight: 700 }}
                   onClick={() => toggleActive(a)}
                 >
-                  {a.isActive ? <><i className="fa-solid fa-eye-slash" /> Désactiver</> : <><i className="fa-solid fa-eye" /> Activer</>}
+                  {a.isActive ? <><Icon name="eye-slash" /> Désactiver</> : <><Icon name="eye" /> Activer</>}
                 </button>
                 <button
                   style={{ fontSize: 11, padding: '6px 12px', background: '#FEE', color: '#C00', border: '1px solid #FCC', borderRadius: 8, cursor: 'pointer', fontWeight: 700 }}
                   onClick={() => deleteAccount(a.id)}
                 >
-                  <i className="fa-solid fa-trash" /> Supprimer
+                  <Icon name="trash" /> Supprimer
                 </button>
               </div>
             </div>

@@ -13,14 +13,14 @@
     --indigo-deep: #2E3E9E;
     --indigo-50: #EEF0FA;
     --indigo-100: #DDE1F5;
-    --copper: #B8622A;
+    --copper: #A85520;        /* 5,3:1 sur blanc — #B8622A n'atteignait que 4,4:1 */
     --copper-dark: #9E4E1E;
     --copper-50: #F5E8DF;
-    --wa: #25D366;
-    --wa-dark: #1EBE5A;
+    --wa: #118348;            /* 4,8:1 avec du blanc — #25D366 n'atteignait que 2,0:1 */
+    --wa-dark: #0B6634;
     --ink: #1A1F5E;
     --slate: #4A5070;
-    --mute: #8A90B0;
+    --mute: #6B7190;          /* 4,8:1 sur blanc — #8A90B0 n'atteignait que 3,1:1 */
     --bg: #F7F8FD;
     --surface: #ffffff;
     --line: #D0D5EE;
@@ -32,6 +32,19 @@
     background: var(--bg);
     color: var(--ink);
   }
+
+  /* Icônes SVG inline (composant <Icon>) — remplace Font Awesome CDN.
+     Le wrapper <i class="ico"> conserve les sélecteurs CSS existants
+     (`.strip-item i { color; font-size }`…) ; le SVG hérite de la couleur
+     via currentColor et se dimensionne en 1em. */
+  .ico {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+  .ico > svg { display: block; }
 
   ::-webkit-scrollbar { width: 8px; }
   ::-webkit-scrollbar-track { background: var(--indigo-50); }
@@ -208,6 +221,7 @@
     flex: 1; aspect-ratio: 1; border-radius: 8px; overflow: hidden;
     border: 2px solid transparent; cursor: pointer;
     transition: border-color .15s; background: none; padding: 0;
+    position: relative;
   }
   .hthumb.on, .hthumb:hover { border-color: var(--indigo); }
   .hthumb img { width: 100%; height: 100%; object-fit: cover; }
@@ -290,7 +304,9 @@
   .b-pack { background: var(--ink); color: #fff; }
   .pwish {
     position: absolute; top: 10px; right: 10px;
-    width: 30px; height: 30px; background: #fff; border-radius: 50%;
+    /* 36 px : au-dessus du minimum de 24 px exigé pour une cible tactile,
+       avec de la marge pour l'espacement au voisin. */
+    width: 36px; height: 36px; background: #fff; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     color: var(--copper); font-size: 13px; cursor: pointer;
     transition: all .15s; border: none;
@@ -328,14 +344,14 @@
   .pactions { display: flex; gap: 7px; }
   .pbtn-buy {
     flex: 1; background: var(--indigo); color: #fff;
-    font-size: 11px; font-weight: 700; padding: 9px 0;
+    font-size: 11px; font-weight: 700; padding: 9px 0; min-height: 36px;
     border: none; border-radius: 8px; cursor: pointer;
     transition: background .15s; display: flex;
     align-items: center; justify-content: center; gap: 6px;
   }
   .pbtn-buy:hover { background: var(--indigo-deep); }
   .pbtn-wa {
-    width: 38px; background: var(--wa); color: #fff;
+    width: 38px; min-height: 36px; background: var(--wa); color: #fff;
     border: none; border-radius: 8px; cursor: pointer;
     font-size: 14px; display: flex; align-items: center; justify-content: center;
     transition: background .15s; text-decoration: none;
@@ -367,6 +383,7 @@
   .tc-av {
     width: 36px; height: 36px; border-radius: 50%;
     overflow: hidden; border: 2px solid var(--indigo-100);
+    position: relative; flex-shrink: 0;
   }
   .tc-av img { width: 100%; height: 100%; object-fit: cover; }
   .tc-name { font-size: 12px; font-weight: 700; color: var(--ink); }
@@ -386,9 +403,11 @@
     font-family: var(--font-outfit), 'Outfit', sans-serif;
     font-size: 20px; font-weight: 900; color: #fff; margin-bottom: 10px;
   }
-  .f-logo span { color: var(--copper); }
+  /* Le cuivre est trop sombre sur l'indigo foncé (2,8:1) : version éclaircie
+     réservée aux fonds sombres. */
+  .f-logo span { color: #D98A4E; }
   .f-tag {
-    font-size: 12px; line-height: 1.6; color: #6C73A8;
+    font-size: 12px; line-height: 1.6; color: #A2AAD8;   /* 6,6:1 (était 3,3:1) */
     margin-bottom: 14px; max-width: 340px;
   }
   .f-socials { display: flex; gap: 8px; }
@@ -396,33 +415,33 @@
     width: 34px; height: 34px;
     border: 1px solid #2E356E; border-radius: 9px;
     display: flex; align-items: center; justify-content: center;
-    color: #6C73A8; cursor: pointer; font-size: 14px;
+    color: #A2AAD8; cursor: pointer; font-size: 14px;   /* 6,6:1 (était 3,3:1) */
     transition: all .15s; text-decoration: none; background: none;
   }
-  .fsoc:hover { border-color: var(--copper); color: var(--copper); }
+  .fsoc:hover { border-color: #D98A4E; color: #D98A4E; }
   .f-col-title {
     font-size: 10px; font-weight: 800; letter-spacing: .1em;
-    text-transform: uppercase; color: #6C73A8; margin-bottom: 13px;
+    text-transform: uppercase; color: #A2AAD8; margin-bottom: 13px;   /* 6,6:1 (était 3,3:1) */
   }
   .f-links { display: flex; flex-direction: column; gap: 9px; }
   .flink {
-    font-size: 12px; color: #8088BC; cursor: pointer;
+    font-size: 12px; color: #A8B0DC; cursor: pointer;   /* 7,1:1 (était 4,4:1) */
     transition: color .15s; display: flex; align-items: center; gap: 6px;
     text-decoration: none;
   }
   .flink:hover { color: #fff; }
-  .flink i { font-size: 10px; color: #3E4480; }
+  .flink i { font-size: 10px; color: #A8B0DC; }   /* 7,1:1 — #3E4480 n'atteignait que 1,7:1 */
   .f-pay {
     border-top: 1px solid #252B5E; padding: 14px 0 0;
     display: flex; align-items: center; gap: 8px;
     flex-wrap: wrap; margin-bottom: 12px;
   }
   .f-pay-label {
-    font-size: 10px; color: #4E5490; font-weight: 700;
+    font-size: 10px; color: #A2AAD8; font-weight: 700;   /* 6,6:1 (était 2,1:1) */
     margin-right: 4px; display: flex; align-items: center; gap: 5px;
   }
   .pmb {
-    border: 1px solid #2E356E; color: #8088BC;
+    border: 1px solid #3A4180; color: #A8B0DC;   /* 7,1:1 (était 4,4:1) */
     font-size: 10px; padding: 3px 9px; border-radius: 5px;
     font-weight: 600; display: flex; align-items: center; gap: 4px;
   }
@@ -430,10 +449,10 @@
     border-top: 1px solid #252B5E; padding-top: 12px;
     display: flex; justify-content: space-between; align-items: center;
   }
-  .f-copy { font-size: 11px; color: #4E5490; }
+  .f-copy { font-size: 11px; color: #9AA2D0; }   /* 6,0:1 (était 2,1:1) */
   .f-bot-links { display: flex; gap: 16px; }
   .f-bot-links a {
-    font-size: 11px; color: #4E5490; cursor: pointer;
+    font-size: 11px; color: #9AA2D0; cursor: pointer;   /* 6,0:1 (était 2,1:1) */
     text-decoration: none;
   }
   .f-bot-links a:hover { color: #fff; }
@@ -471,14 +490,14 @@
   .pdp-gallery { display: flex; flex-direction: column; gap: 10px; }
   .pdp-main {
     aspect-ratio: 1; border-radius: 12px; overflow: hidden;
-    border: 1px solid var(--line);
+    border: 1px solid var(--line); position: relative;
   }
   .pdp-main img { width: 100%; height: 100%; object-fit: cover; }
   .pdp-thumbs { display: flex; gap: 8px; }
   .pdp-thumb {
     flex: 1; aspect-ratio: 1; border-radius: 8px; overflow: hidden;
     border: 2px solid transparent; cursor: pointer;
-    background: none; padding: 0;
+    background: none; padding: 0; position: relative;
   }
   .pdp-thumb.on, .pdp-thumb:hover { border-color: var(--indigo); }
   .pdp-thumb img { width: 100%; height: 100%; object-fit: cover; }
@@ -583,6 +602,7 @@
   .sum-img {
     width: 50px; height: 50px; border-radius: 8px;
     border: 1px solid var(--line); overflow: hidden; flex-shrink: 0;
+    position: relative;
   }
   .sum-img img { width: 100%; height: 100%; object-fit: cover; }
   .sum-iname { font-size: 12px; font-weight: 700; color: var(--ink); }
@@ -857,4 +877,297 @@
   .grid { grid-template-columns: 1fr; }
   .logo { font-size: 18px; }
   .nav { height: 52px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Ajouts : accessibilité, carte produit non imbriquée, panier, favoris,
+   description produit. Placés après le bloc principal pour rester lisibles
+   à la relecture.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@layer components {
+  /* ===== Lien d'évitement (accessibilité clavier) ===== */
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 100;
+    background: var(--ink); color: #fff; padding: 10px 18px;
+    border-radius: 0 0 8px 0; font-size: 13px; font-weight: 700;
+    text-decoration: none;
+  }
+  .skip-link:focus { left: 0; }
+
+  /* Anneau de focus visible et homogène — la maquette n'en définissait aucun. */
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 3px solid var(--copper);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* ===== Carte produit : lien étendu ===== */
+  .pcard { position: relative; }
+  .pname { margin-bottom: 5px; }
+  .pname-link { color: inherit; text-decoration: none; }
+  .pname-link::after { content: ''; position: absolute; inset: 0; z-index: 0; }
+  .pname-link:focus-visible { outline: none; }
+  .pname-link:focus-visible::after { outline: 3px solid var(--copper); outline-offset: -3px; border-radius: 12px; }
+  /* Les actions repassent au-dessus de l'overlay du lien étendu. Le cœur
+     garde son `position: absolute` d'origine : le remplacer par `relative` le
+     décrochait de son coin et le faisait chevaucher le badge. */
+  .pwish { z-index: 1; }
+  .pactions { position: relative; z-index: 1; }
+
+  /* ===== Description produit (PDP) ===== */
+  .pdp-desc { margin-top: 26px; }
+  .pdp-desc h2 {
+    font-family: var(--font-outfit), 'Outfit', sans-serif;
+    font-size: 16px; font-weight: 800; color: var(--ink); margin-bottom: 10px;
+  }
+  .pdp-desc p { font-size: 13.5px; line-height: 1.75; color: var(--slate); margin-bottom: 12px; }
+  .pdp-desc ul { list-style: none; display: grid; gap: 8px; }
+  .pdp-desc li {
+    display: flex; align-items: flex-start; gap: 9px;
+    font-size: 13px; color: var(--slate);
+  }
+  .pdp-desc li i { color: var(--copper); margin-top: 3px; }
+
+  /* ===== Titres de page (catalogue, panier, favoris) ===== */
+  .page-head { background: var(--indigo-dark); padding: 32px; }
+  .page-eyebrow {
+    font-size: 10px; font-weight: 800; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--gold); margin-bottom: 9px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .page-title {
+    font-family: var(--font-outfit), 'Outfit', sans-serif;
+    font-size: 30px; font-weight: 900; color: #fff; letter-spacing: -.5px;
+  }
+  .page-sub { font-size: 13px; color: #9098C8; margin-top: 5px; }
+
+  /* ===== Panier ===== */
+  .cart-page { padding: 32px; background: var(--bg); min-height: 320px; }
+  .cart-lines { display: grid; gap: 10px; margin-bottom: 20px; }
+  .cart-line {
+    background: #fff; border: 1px solid var(--line); border-radius: 12px;
+    padding: 12px; display: grid;
+    grid-template-columns: 72px 1fr auto auto; gap: 14px; align-items: center;
+  }
+  .cart-line-img {
+    width: 72px; height: 72px; border-radius: 9px; overflow: hidden;
+    position: relative; border: 1px solid var(--line); background: var(--indigo-50);
+  }
+  .cart-line-img img { width: 100%; height: 100%; object-fit: cover; }
+  .cart-line-name {
+    font-family: var(--font-outfit), 'Outfit', sans-serif;
+    font-size: 14px; font-weight: 700; color: var(--ink); text-decoration: none;
+  }
+  .cart-line-name:hover { color: var(--indigo); }
+  .cart-line-ref { font-size: 11px; color: var(--mute); margin-top: 3px; }
+  .cart-line-price {
+    font-family: var(--font-outfit), 'Outfit', sans-serif;
+    font-size: 16px; font-weight: 800; color: var(--ink); white-space: nowrap;
+  }
+  .cart-remove {
+    background: none; border: 1px solid var(--line); color: var(--mute);
+    width: 32px; height: 32px; border-radius: 8px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+  }
+  .cart-remove:hover { border-color: var(--copper); color: var(--copper); }
+  .cart-foot {
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 14px;
+    background: #fff; border: 1px solid var(--line);
+    border-radius: 12px; padding: 16px;
+  }
+  .cart-total-label { font-size: 12px; color: var(--slate); font-weight: 600; }
+  .cart-total {
+    font-family: var(--font-outfit), 'Outfit', sans-serif;
+    font-size: 26px; font-weight: 900; color: var(--ink);
+  }
+  .cart-empty { text-align: center; padding: 48px 16px; color: var(--slate); }
+  .cart-empty i { font-size: 36px; color: var(--indigo-100); display: block; margin-bottom: 14px; }
+  .cart-empty p { font-size: 14px; margin-bottom: 18px; }
+
+  /* ===== Favoris ===== */
+  .wl-page { padding: 32px; background: var(--bg); min-height: 320px; }
+
+  /* Squelette affiché tant que le localStorage n'est pas lu. */
+  .kp-skeleton {
+    background: linear-gradient(90deg, var(--indigo-50) 25%, #fff 50%, var(--indigo-50) 75%);
+    background-size: 200% 100%;
+    animation: kp-shimmer 1.2s linear infinite;
+    border-radius: 12px;
+  }
+  @keyframes kp-shimmer {
+    from { background-position: 200% 0; }
+    to { background-position: -200% 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .kp-skeleton { animation: none; }
+    .pcard, .pcard-img img, .btn-buy, .btn-wa, .cart-remove { transition: none; }
+    .pcard:hover { transform: none; }
+  }
+}
+
+@media (max-width: 640px) {
+  .cart-line { grid-template-columns: 56px 1fr auto; grid-template-areas: 'img body remove' 'img qty price'; }
+  .cart-line-img { width: 56px; height: 56px; grid-area: img; }
+  .cart-page, .wl-page { padding: 16px; }
+  .page-head { padding: 24px 16px; }
+  .page-title { font-size: 24px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Accueil animé en 3D.
+
+   Tout repose sur `transform` et `opacity` : ce sont les deux seules
+   propriétés que le navigateur anime sur le compositeur, sans recalcul de
+   mise en page ni repeinture. Aucune bibliothèque 3D n'est chargée, le coût
+   sur le poids de page est nul.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@layer components {
+  .hero--3d {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .hero-copy { position: relative; z-index: 2; }
+  .hero-copy > * { animation: kp-rise .7s cubic-bezier(.22,.9,.3,1) both; }
+  .hero-copy > *:nth-child(1) { animation-delay: .02s; }
+  .hero-copy > *:nth-child(2) { animation-delay: .08s; }
+  .hero-copy > *:nth-child(3) { animation-delay: .14s; }
+  .hero-copy > *:nth-child(4) { animation-delay: .20s; }
+  .hero-copy > *:nth-child(5) { animation-delay: .26s; }
+
+  @keyframes kp-rise {
+    from { opacity: 0; transform: translate3d(0, 14px, 0); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ── Halos d'ambiance ───────────────────────────────────────────────── */
+  /* Pas de `filter: blur()` ici : un flou sur une surface plein écran est
+     re-rastérisé à chaque image d'animation, ce qui coûtait à lui seul plus
+     d'une seconde de calcul de style au chargement. Un dégradé radial produit
+     le même dégradé doux pour un coût nul, et `will-change` isole les halos
+     sur leur propre couche pour que l'animation reste purement compositée. */
+  .hero-aura {
+    position: absolute; inset: -20%;
+    z-index: 0; pointer-events: none;
+    opacity: .5;
+  }
+  .hero-orb {
+    position: absolute; display: block;
+    width: 46%; aspect-ratio: 1; border-radius: 50%;
+    will-change: transform;
+  }
+  .hero-orb--indigo {
+    background: radial-gradient(circle, rgba(110,124,224,.85) 0%, rgba(110,124,224,.35) 45%, transparent 72%);
+    top: 4%; left: 46%;
+    animation: kp-drift-a 15s ease-in-out infinite alternate;
+  }
+  .hero-orb--copper {
+    background: radial-gradient(circle, rgba(227,154,98,.8) 0%, rgba(227,154,98,.3) 45%, transparent 72%);
+    bottom: 2%; left: 30%;
+    animation: kp-drift-b 19s ease-in-out infinite alternate;
+  }
+  @keyframes kp-drift-a {
+    from { transform: translate3d(0, 0, 0) scale(1); }
+    to   { transform: translate3d(-9%, 7%, 0) scale(1.12); }
+  }
+  @keyframes kp-drift-b {
+    from { transform: translate3d(0, 0, 0) scale(1.08); }
+    to   { transform: translate3d(8%, -6%, 0) scale(.94); }
+  }
+
+  /* ── Scène 3D ───────────────────────────────────────────────────────── */
+  .hero-scene {
+    position: relative; z-index: 2;
+    perspective: 1100px;
+    perspective-origin: 50% 45%;
+  }
+
+  .hero-stage {
+    /* --rx / --ry sont pilotées par le pointeur (voir Hero.tsx). */
+    --rx: 0deg;
+    --ry: 0deg;
+    transform-style: preserve-3d;
+    transform: rotateX(var(--rx)) rotateY(var(--ry));
+    animation: kp-float 7s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  @keyframes kp-float {
+    from { translate: 0 -6px; }
+    to   { translate: 0 6px; }
+  }
+
+  .hero--3d .hero-gallery { transform-style: preserve-3d; }
+
+  .hero--3d .hero-main {
+    transform: translateZ(38px);
+    transform-style: preserve-3d;
+    box-shadow:
+      0 26px 50px -22px rgba(26, 31, 94, .55),
+      0 8px 18px -10px rgba(26, 31, 94, .35);
+    transition: box-shadow .3s ease;
+  }
+  .hero-scene:hover .hero--3d .hero-main,
+  .hero--3d .hero-scene:hover .hero-main {
+    box-shadow:
+      0 40px 70px -26px rgba(26, 31, 94, .6),
+      0 12px 26px -12px rgba(26, 31, 94, .4);
+  }
+
+  /* Reflet qui balaie le visuel principal. */
+  .hero-shine {
+    position: absolute; inset: 0;
+    background: linear-gradient(105deg, transparent 38%, rgba(255,255,255,.42) 50%, transparent 62%);
+    transform: translateX(-120%);
+    animation: kp-shine 5.5s ease-in-out 1.2s infinite;
+    pointer-events: none;
+  }
+  @keyframes kp-shine {
+    0%   { transform: translateX(-120%); }
+    45%  { transform: translateX(120%); }
+    100% { transform: translateX(120%); }
+  }
+
+  /* Le badge flotte plus près du lecteur que l'image. */
+  .hero--3d .hero-badge {
+    transform: translateZ(72px);
+    box-shadow: 0 10px 22px -8px rgba(158, 78, 30, .7);
+  }
+
+  .hero--3d .hero-thumbs { transform: translateZ(18px); transform-style: preserve-3d; }
+  .hero--3d .hthumb {
+    transition: transform .25s cubic-bezier(.22,.9,.3,1), border-color .15s;
+  }
+  .hero--3d .hthumb:hover { transform: translateZ(26px) scale(1.05); }
+  .hero--3d .hthumb.on { transform: translateZ(16px); }
+
+  /* ── Respect du réglage système ──────────────────────────────────────── */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-copy > *,
+    .hero-orb,
+    .hero-stage,
+    .hero-shine { animation: none; }
+    .hero-copy > * { opacity: 1; transform: none; }
+    .hero-shine { display: none; }
+    .hero-stage { transform: none; }
+    .hero--3d .hthumb:hover,
+    .hero--3d .hthumb.on { transform: none; }
+  }
+}
+
+/* Sur mobile la scène 3D est aplatie : pas de survol, et l'inclinaison
+   mangerait de la largeur utile sur un écran étroit. */
+@media (max-width: 900px) {
+  .hero-scene { perspective: none; }
+  .hero-stage { transform: none; animation: none; }
+  .hero--3d .hero-main,
+  .hero--3d .hero-badge,
+  .hero--3d .hero-thumbs { transform: none; }
+  .hero-aura { opacity: .35; }
 }

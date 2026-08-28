@@ -8,7 +8,7 @@ export async function GET(req: Request) {
   const q = url.searchParams.get('q');
 
   const where: { active: boolean; category?: Category; name?: { contains: string } } = { active: true };
-  if (cat && ['robots', 'acc', 'livres', 'packs'].includes(cat)) {
+  if (cat && ['robots', 'acc', 'livres', 'packs', 'maison'].includes(cat)) {
     where.category = cat as Category;
   }
   if (q) where.name = { contains: q };

@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { formatEUR } from '@/lib/products';
+import { Icon } from '@/components/ui/Icon';
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
@@ -33,13 +34,13 @@ export default async function AdminDashboard() {
           <div style={{ fontSize: 12, color: 'var(--mute)' }}>Connecté · {session.user.email}</div>
         </div>
         <div style={{ display: 'flex', gap: 10 }}>
-          <Link href="/admin/orders" className="btn-buy"><i className="fa-solid fa-receipt" /> Commandes</Link>
-          <Link href="/admin/products" className="btn-copper"><i className="fa-solid fa-box" /> Produits</Link>
+          <Link href="/admin/orders" className="btn-buy"><Icon name="receipt" /> Commandes</Link>
+          <Link href="/admin/products" className="btn-copper"><Icon name="box" /> Produits</Link>
           <Link href="/admin/bank-accounts" style={{ fontSize: 13, padding: '8px 14px', background: 'var(--indigo-50)', color: 'var(--indigo)', borderRadius: 8, fontWeight: 800, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <i className="fa-solid fa-building-columns" /> IBAN
+            <Icon name="building-columns" /> IBAN
           </Link>
           <Link href="/admin/payment" style={{ fontSize: 13, padding: '8px 14px', background: '#F0FDF4', color: '#15803D', borderRadius: 8, fontWeight: 800, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-            <i className="fa-solid fa-credit-card" /> Paiement
+            <Icon name="credit-card" /> Paiement
           </Link>
         </div>
       </div>
@@ -81,7 +82,7 @@ export default async function AdminDashboard() {
               </tr>
             ))}
             {recent.length === 0 && (
-              <tr><td colSpan={5} style={{ padding: 16, textAlign: 'center', color: 'var(--mute)' }}>Aucune commande pour l'instant.</td></tr>
+              <tr><td colSpan={5} style={{ padding: 16, textAlign: 'center', color: 'var(--mute)' }}>Aucune commande pour l&rsquo;instant.</td></tr>
             )}
           </tbody>
         </table>

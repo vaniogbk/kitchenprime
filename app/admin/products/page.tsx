@@ -4,6 +4,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { formatEUR } from '@/lib/products';
+import { Icon } from '@/components/ui/Icon';
 
 export default async function AdminProducts() {
   const session = await getServerSession(authOptions);
@@ -14,11 +15,11 @@ export default async function AdminProducts() {
   return (
     <div>
       <Link href="/admin/dashboard" style={{ fontSize: 13, color: 'var(--indigo)', textDecoration: 'none' }}>
-        <i className="fa-solid fa-arrow-left" /> Tableau de bord
+        <Icon name="arrow-left" /> Tableau de bord
       </Link>
       <h1 style={{ fontFamily: 'var(--font-outfit)', fontSize: 24, fontWeight: 900, margin: '12px 0 18px' }}>Produits</h1>
       <div style={{ fontSize: 12, color: 'var(--mute)', marginBottom: 16 }}>
-        Les modifications passent par l'API <code>PATCH /api/admin/products</code> (slug + champs). Une interface d'édition complète peut être ajoutée ici.
+        Les modifications passent par l&rsquo;API <code>PATCH /api/admin/products</code> (slug + champs). Une interface d&rsquo;édition complète peut être ajoutée ici.
       </div>
       <div style={{ background: '#fff', border: '1px solid var(--line)', borderRadius: 12, overflow: 'hidden' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
@@ -41,7 +42,7 @@ export default async function AdminProducts() {
                 <td style={{ padding: 12 }}>{p.category}</td>
                 <td style={{ padding: 12, fontWeight: 700 }}>{formatEUR(p.priceCents)}</td>
                 <td style={{ padding: 12, color: 'var(--mute)' }}>{p.oldPriceCents ? formatEUR(p.oldPriceCents) : '—'}</td>
-                <td style={{ padding: 12 }}>{p.badgeLabel || '—'}</td>
+                <td style={{ padding: 12 }}>{p.badgeKey || '—'}</td>
                 <td style={{ padding: 12 }}>{p.active ? '✓' : '✗'}</td>
               </tr>
             ))}

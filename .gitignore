@@ -57,3 +57,10 @@ Thumbs.db
 .vercel
 .env.prod
 .env.railway
+
+# tests
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/.lighthouseci/

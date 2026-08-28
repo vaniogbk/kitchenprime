@@ -1,21 +1,38 @@
 {
   "meta": {
-    "homeTitle": "KitchenPrime — Thermomix TM7 & accessoires premium en Europe",
-    "homeDesc": "Revendeur officiel Thermomix TM7. Livraison gratuite 48h en Europe, garantie 2 ans, paiement sécurisé.",
-    "catalogTitle": "Catalogue complet — Thermomix TM7",
-    "checkoutTitle": "Finaliser ma commande"
+    "homeTitle": "KitchenPrime — Thermomix TM7, électroménager & maison connectée",
+    "homeDesc": "Thermomix TM7 reconditionné, électroménager et maison connectée. Livraison gratuite 48 h en Europe, garantie 24 mois, paiement sécurisé.",
+    "catalogTitle": "Catalogue complet — 20 produits",
+    "checkoutTitle": "Finaliser ma commande",
+    "catalogDesc": "Robots culinaires, accessoires, livres de recettes, packs et maison connectée : les 20 références KitchenPrime, livrées en 48 h et garanties 24 mois.",
+    "checkoutDesc": "Finalisez votre commande KitchenPrime en toute sécurité.",
+    "cartTitle": "Mon panier",
+    "cartDesc": "Les articles de votre panier KitchenPrime.",
+    "wishlistTitle": "Mes favoris",
+    "wishlistDesc": "Les produits KitchenPrime que vous avez mis de côté.",
+    "contactTitle": "Contact & assistance",
+    "contactDesc": "Contactez KitchenPrime par WhatsApp, e-mail ou courrier. Réponse garantie sous 24 h en jours ouvrés.",
+    "cgvTitle": "Conditions générales de vente",
+    "cgvDesc": "Prix, commande, livraison, droit de rétractation et garanties : les conditions générales de vente de KitchenPrime.",
+    "legalTitle": "Mentions légales",
+    "legalDesc": "Éditeur, hébergeur, propriété intellectuelle et données personnelles de KitchenPrime.",
+    "returnsTitle": "Politique de retour",
+    "returnsDesc": "14 jours pour changer d’avis, retour gratuit et remboursement sous 14 jours. La politique de retour KitchenPrime."
   },
   "topbar": {
-    "trust": "Livraison gratuite en Europe · Revendeur officiel · Garantie 2 ans"
+    "trust": "Livraison gratuite en Europe · Reconditionné certifié · Garantie 24 mois",
+    "language": "Choix de la langue"
   },
   "nav": {
     "home": "Accueil",
     "catalog": "Catalogue",
     "search": "Rechercher un produit…",
-    "cart": "Panier"
+    "cart": "Panier",
+    "primary": "Navigation principale",
+    "cartWithCount": "Panier, {count} articles"
   },
   "hero": {
-    "eyebrow": "Revendeur officiel Europe",
+    "eyebrow": "Reconditionné certifié Europe",
     "titlePre": "L'excellence culinaire,",
     "titleHighlightPre": "livrée chez ",
     "titleHighlight": "vous.",
@@ -25,15 +42,17 @@
     "trust1": "Garantie 2 ans",
     "trust2": "Livraison 48h",
     "trust3": "Retour 14 jours",
-    "badge": "Nouveau · −€200"
+    "badge": "Nouveau · −€200",
+    "imageAlt": "Robot culinaire Thermomix TM7 posé sur un plan de travail",
+    "viewImage": "Voir le visuel {n}"
   },
   "strip": {
     "shippingLabel": "Livraison gratuite",
     "shippingVal": "Express 48h Europe",
     "warrantyLabel": "Garantie officielle",
-    "warrantyVal": "2 ans incluse",
-    "resellerLabel": "Revendeur",
-    "resellerVal": "Officiel certifié",
+    "warrantyVal": "24 mois incluse",
+    "resellerLabel": "Reconditionné",
+    "resellerVal": "Contrôle 42 points",
     "directLabel": "Commande directe",
     "directVal": "WhatsApp 7j/7"
   },
@@ -48,13 +67,17 @@
   "catalog": {
     "eyebrow": "Catalogue complet · 20 produits",
     "title": "Tous nos produits",
-    "subtitle": "Robots · Accessoires · Livres · Packs — la gamme Thermomix TM7 complète.",
+    "subtitle": "Robots · Accessoires · Livres · Packs · Maison — les 20 références KitchenPrime.",
     "filterAll": "Tous",
     "filterRobots": "Robots",
     "filterAcc": "Accessoires",
     "filterBooks": "Livres",
     "filterPacks": "Packs",
-    "add": "Ajouter"
+    "add": "Ajouter",
+    "filterHome": "Maison",
+    "filterLabel": "Filtrer par catégorie",
+    "resultCount": "{count, plural, =0 {Aucun produit} one {1 produit} other {# produits}}",
+    "noResults": "Aucun produit ne correspond à votre recherche."
   },
   "pdp": {
     "breadHome": "Accueil",
@@ -67,7 +90,15 @@
     "feat1": "22 fonctions — mixeur, cuit-vapeur, balance intégrée",
     "feat2": "Écran tactile 6,8\" + guidage Wi-Fi Cookidoo",
     "feat3": "Moteur 1550W · Balance précise ±1g",
-    "feat4": "Garantie constructeur 2 ans incluse"
+    "feat4": "Garantie constructeur 2 ans incluse",
+    "viewImage": "Voir le visuel {n}",
+    "descriptionTitle": "Description",
+    "featuresTitle": "Points clés",
+    "relatedTitle": "Dans la même catégorie",
+    "brandLabel": "Marque",
+    "refLabel": "Réf.",
+    "qtyMinus": "Diminuer la quantité",
+    "qtyPlus": "Augmenter la quantité"
   },
   "checkout": {
     "secure": "Paiement sécurisé SSL",
@@ -103,10 +134,30 @@
     "trustPay": "Paiement 100% sécurisé",
     "trustShip": "Livraison gratuite 48h",
     "trustReturn": "Retour sous 14 jours",
-    "trustWarranty": "Garantie 2 ans"
+    "trustWarranty": "Garantie 2 ans",
+    "greeting": "Bonjour, {name} !",
+    "savedPmCard": "Paiement par carte sécurisée",
+    "savedPmWise": "Virement bancaire",
+    "changeCard": "Modifier mes informations",
+    "useSaved": "Utiliser mes informations enregistrées",
+    "processing": "Traitement…",
+    "order": "Commander",
+    "ibanTitle": "Coordonnées bancaires pour votre virement",
+    "ibanNote": "Indiquez votre numéro de commande en référence. Nous expédions dès réception du virement.",
+    "ibanFallback": "Les coordonnées bancaires vous seront envoyées par e-mail après confirmation.",
+    "beneficiary": "Bénéficiaire",
+    "bank": "Banque",
+    "secureNote": "Paiement 100 % sécurisé — données chiffrées SSL",
+    "lineSub": "Réf. {ref} · Qté {qty}",
+    "genericError": "La commande n’a pas pu être enregistrée. Réessayez dans un instant.",
+    "countryFR": "France",
+    "countryDE": "Allemagne",
+    "countryIT": "Italie",
+    "countryBE": "Belgique",
+    "countryCH": "Suisse"
   },
   "footer": {
-    "tagline": "Revendeur premium du Thermomix TM7 en Europe. France · Belgique · Allemagne · Italie · Suisse.",
+    "tagline": "Spécialiste du Thermomix TM7 reconditionné et de l’électroménager en Europe. France · Belgique · Allemagne · Italie · Suisse.",
     "products": "Produits",
     "support": "Support",
     "robots": "Robots",
@@ -120,7 +171,8 @@
     "securePay": "Paiement sécurisé :",
     "copy": "© 2026 KitchenPrime SAS. Tous droits réservés.",
     "legal": "Mentions légales",
-    "privacy": "Confidentialité"
+    "privacy": "Confidentialité",
+    "home": "Maison"
   },
   "wa": {
     "label": "Commander · WhatsApp",
@@ -130,6 +182,44 @@
     "robots": "Robot culinaire",
     "acc": "Accessoire",
     "livres": "Livre",
-    "packs": "Bundle exclusif"
+    "packs": "Bundle exclusif",
+    "maison": "Maison & électroménager"
+  },
+  "a11y": {
+    "skipToContent": "Aller au contenu principal"
+  },
+  "card": {
+    "wish": "Ajouter {name} aux favoris",
+    "unwish": "Retirer {name} des favoris",
+    "orderWa": "Commander {name} via WhatsApp",
+    "added": "Ajouté",
+    "ratingOutOf5": "sur 5",
+    "fiveOutOfFive": "5 étoiles sur 5"
+  },
+  "badges": {
+    "new": "Nouveau",
+    "promo": "Promo",
+    "bestseller": "Best-seller",
+    "pack": "Pack −{amount} €"
+  },
+  "cart": {
+    "eyebrow": "Votre sélection",
+    "title": "Mon panier",
+    "subtitle": "Vérifiez vos articles avant de passer commande.",
+    "empty": "Votre panier est vide.",
+    "emptyCta": "Parcourir le catalogue",
+    "remove": "Retirer {name} du panier",
+    "qty": "Quantité pour {name}",
+    "total": "Total",
+    "totalNote": "Livraison offerte · TVA incluse",
+    "checkout": "Passer commande",
+    "continue": "Continuer mes achats"
+  },
+  "wishlist": {
+    "eyebrow": "Mis de côté",
+    "title": "Mes favoris",
+    "subtitle": "Les produits que vous avez enregistrés depuis ce navigateur.",
+    "empty": "Vous n’avez encore aucun favori.",
+    "emptyCta": "Découvrir le catalogue"
   }
 }
