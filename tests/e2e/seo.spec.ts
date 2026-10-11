@@ -285,8 +285,8 @@ test.describe('robots.txt et sitemap', () => {
     expect(xml.startsWith('<?xml')).toBe(true);
 
     const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-    // 4 locales × (6 pages statiques + 20 produits)
-    expect(urls.length).toBe(4 * 26);
+    // 4 locales × (6 pages statiques + 27 produits)
+    expect(urls.length).toBe(4 * 33);
     expect(new Set(urls).size, 'URL en double dans le sitemap').toBe(urls.length);
 
     for (const l of LOCALES) {

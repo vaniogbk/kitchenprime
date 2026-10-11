@@ -264,13 +264,19 @@ export function productLd(p: ProductLdInput): JsonLdObject {
         returnFees: 'https://schema.org/FreeReturn',
       },
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: p.rating.toFixed(1),
-      reviewCount: p.reviewsCount,
-      bestRating: 5,
-      worstRating: 1,
-    },
+    // Aucune note sans avis réels : Google sanctionne les AggregateRating
+    // fictifs, et le droit européen interdit les faux avis.
+    ...(p.reviewsCount > 0 && p.rating > 0
+      ? {
+          aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: p.rating.toFixed(1),
+            reviewCount: p.reviewsCount,
+            bestRating: 5,
+            worstRating: 1,
+          },
+        }
+      : {}),
   };
 }
 

@@ -4,7 +4,7 @@ import { unstable_setRequestLocale, getTranslations } from 'next-intl/server';
 import { PDPGallery } from '@/components/shop/PDPGallery';
 import { PDPActions } from '@/components/shop/PDPActions';
 import { ProductCard } from '@/components/shop/ProductCard';
-import { PRODUCTS, getProductBySlug, formatEUR, savingsEuros } from '@/lib/products';
+import { PRODUCTS, getProductBySlug, formatEUR, savingsEuros, hasReviews } from '@/lib/products';
 import { getProductContent } from '@/lib/product-content';
 import { buildCardContent } from '@/lib/catalog-view';
 import {
@@ -112,16 +112,18 @@ export default async function ProductPage({
           </p>
           <h1 className="pdp-name">{content.name}</h1>
 
-          <p className="pdp-stars">
-            <span className="si">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <Icon name="star" key={i} />
-              ))}
-            </span>
-            <span>
-              {product.rating.toFixed(1)}/5 · {t('reviewsCount', { count: product.reviewsCount })}
-            </span>
-          </p>
+          {hasReviews(product) && (
+            <p className="pdp-stars">
+              <span className="si">
+                {Array.from({ length: 5 }).map((_, i) => (
+                  <Icon name="star" key={i} />
+                ))}
+              </span>
+              <span>
+                {product.rating.toFixed(1)}/5 · {t('reviewsCount', { count: product.reviewsCount })}
+              </span>
+            </p>
+          )}
 
           <div className="pdp-price-box">
             <p className="pdp-price">{formatEUR(product.priceCents, numLocale)}</p>

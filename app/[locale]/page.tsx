@@ -53,7 +53,7 @@ export default async function HomePage({ params: { locale } }: { params: { local
             <h2 className="sec-title" id="popular-title">{t('popularTitle')}</h2>
           </div>
           <Link href={`/${locale}/catalogue`} className="see-all">
-            {t('seeAll')} <Icon name="arrow-right" />
+            {t('seeAll', { count: PRODUCTS.length })} <Icon name="arrow-right" />
           </Link>
         </div>
         <div className="grid">

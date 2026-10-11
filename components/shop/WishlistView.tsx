@@ -104,13 +104,17 @@ export function WishlistView({
             <h2 className="pname">
               <Link href={e.href} className="pname-link">{e.name}</Link>
             </h2>
-            <p className="pstars">
-              <Icon name="star" />
-              <span>
-                {e.rating}
-                <span className="sr-only"> {tCard('ratingOutOf5')} </span>({e.reviewsCount})
-              </span>
-            </p>
+            {e.reviewsCount > 0 ? (
+              <p className="pstars">
+                <Icon name="star" />
+                <span>
+                  {e.rating}
+                  <span className="sr-only"> {tCard('ratingOutOf5')} </span>({e.reviewsCount})
+                </span>
+              </p>
+            ) : (
+              <p className="pstars pstars--none">{tCard('noReviews')}</p>
+            )}
             <p className="pprice-row">
               <span className="pprice">{e.price}</span>
               {e.oldPrice && <span className="pold">{e.oldPrice}</span>}

@@ -2,9 +2,9 @@
   "meta": {
     "homeTitle": "KitchenPrime — Thermomix TM7, Haushaltsgeräte & Smart Home",
     "homeDesc": "Generalüberholter Thermomix TM7, Haushaltsgeräte und Smart Home. Kostenloser 48-Stunden-Versand in Europa, 24 Monate Garantie, sichere Zahlung.",
-    "catalogTitle": "Vollständiger Katalog — 20 Produkte",
+    "catalogTitle": "Vollständiger Katalog — {count} Produkte",
     "checkoutTitle": "Bestellung abschließen",
-    "catalogDesc": "Küchenmaschinen, Zubehör, Kochbücher, Pakete und Smart Home: die 20 Artikel von KitchenPrime, in 48 Stunden geliefert und 24 Monate garantiert.",
+    "catalogDesc": "Küchenmaschinen, Zubehör, Kochbücher, Pakete und Smart Home: die {count} Artikel von KitchenPrime, in 48 Stunden geliefert und 24 Monate garantiert.",
     "checkoutDesc": "Schließen Sie Ihre KitchenPrime-Bestellung sicher ab.",
     "cartTitle": "Mein Warenkorb",
     "cartDesc": "Die Artikel in Ihrem KitchenPrime-Warenkorb.",
@@ -58,15 +58,15 @@
   "home": {
     "popularEyebrow": "KitchenPrime Auswahl",
     "popularTitle": "Beliebte Produkte",
-    "seeAll": "Alle 20 Produkte ansehen",
+    "seeAll": "Alle {count} Produkte ansehen",
     "reviewsEyebrow": "Geprüfte Bewertungen",
     "reviewsTitle": "Sie haben KitchenPrime gewählt",
     "verified": "Geprüfter Kauf"
   },
   "catalog": {
-    "eyebrow": "Vollständiger Katalog · 20 Produkte",
+    "eyebrow": "Vollständiger Katalog · {count} Produkte",
     "title": "Alle unsere Produkte",
-    "subtitle": "Roboter · Zubehör · Bücher · Pakete · Haushalt — die 20 Artikel von KitchenPrime.",
+    "subtitle": "Roboter · Zubehör · Bücher · Pakete · Haushalt — die {count} Artikel von KitchenPrime.",
     "filterAll": "Alle",
     "filterRobots": "Roboter",
     "filterAcc": "Zubehör",
@@ -188,7 +188,8 @@
     "unwish": "{name} aus den Favoriten entfernen",
     "added": "Hinzugefügt",
     "ratingOutOf5": "von 5",
-    "fiveOutOfFive": "5 von 5 Sternen"
+    "fiveOutOfFive": "5 von 5 Sternen",
+    "noReviews": "Noch keine Bewertungen"
   },
   "badges": {
     "new": "Neu",

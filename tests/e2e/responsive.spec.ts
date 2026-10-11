@@ -25,6 +25,15 @@ test.describe('Mise en page mobile', () => {
     });
   }
 
+  test('la recherche ne passe pas sous le bouton panier', async ({ page }) => {
+    // Avec une largeur fixe, le champ de recherche débordait sous le panier.
+    await page.goto('/fr');
+    const search = await page.locator('.nav .search').boundingBox();
+    const cart = await page.locator('.nav .cart-btn').boundingBox();
+    expect(search && cart).toBeTruthy();
+    expect(search!.x + search!.width, 'la recherche chevauche le panier').toBeLessThanOrEqual(cart!.x);
+  });
+
   test('la scène 3D est aplatie sur mobile', async ({ page }) => {
     await page.goto('/fr');
     const perspective = await page

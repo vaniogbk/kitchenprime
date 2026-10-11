@@ -70,9 +70,9 @@ test.describe('Navigation', () => {
 });
 
 test.describe('Catalogue', () => {
-  test('affiche les 20 produits', async ({ page }) => {
+  test('affiche les 27 produits', async ({ page }) => {
     await page.goto('/fr/catalogue');
-    await expect(page.locator('article.pcard')).toHaveCount(20);
+    await expect(page.locator('article.pcard')).toHaveCount(27);
   });
 
   test('le filtre par catégorie restreint la grille', async ({ page }) => {
@@ -120,6 +120,20 @@ test.describe('Catalogue', () => {
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\/fr\/catalogue\?q=nest/);
     await expect(page.locator('article.pcard')).toHaveCount(1);
+  });
+});
+
+test.describe('Avis', () => {
+  test('un produit sans avis n’affiche ni étoiles ni note', async ({ page }) => {
+    await page.goto('/fr/produit/kit-sous-vide-pompe-et-sachets');
+    await expect(page.locator('h1')).toHaveText('Kit sous-vide pompe et sachets');
+    await expect(page.locator('.pdp-stars')).toHaveCount(0);
+  });
+
+  test('la vignette d’un produit sans avis l’annonce sobrement', async ({ page }) => {
+    await page.goto('/fr/catalogue?q=sous-vide');
+    const card = page.locator('article.pcard').first();
+    await expect(card.locator('.pstars--none')).toHaveText(/pas encore d’avis/i);
   });
 });
 

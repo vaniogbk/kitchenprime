@@ -53,10 +53,20 @@ const raw: Array<Omit<Product, 'slug' | 'ref'>> = [
   // ── Maison & électroménager ───────────────────────────────────────────────
   // Ajoutés en fin de tableau : les réf. dérivent de l'index global, une
   // insertion au milieu renumériserait des références déjà vendues.
-  { name: 'Samsung Family Hub',             category: 'maison', brand: 'Samsung',   priceCents: 149000,                        imageId: 'photo-1643356472833-5b1f2cd4ca3c', badge: 'new',    badgeKey: 'new',       rating: 4.7, reviewsCount: 512 },
-  { name: 'Thermostat Nest',                category: 'maison', brand: 'Google Nest', priceCents: 17000,                       imageId: 'photo-1545259741-2ea3ebf61fa3',   badge: '',      badgeKey: '',          rating: 4.6, reviewsCount: 1204 },
-  { name: 'Dyson Hot+Cool',                 category: 'maison', brand: 'Dyson',     priceCents:  40000,                        imageId: 'photo-1768471569643-717e823b5f9a', badge: '',      badgeKey: '',          rating: 4.7, reviewsCount: 863 },
-  { name: 'Ninja Creami',                   category: 'maison', brand: 'Ninja',     priceCents:  39900, oldPriceCents:  64900, imageId: 'photo-1628815870980-f416105d89b3', badge: 'copper', badgeKey: 'promo',    rating: 4.8, reviewsCount: 391 },
+  { name: 'Samsung Family Hub',             category: 'maison', brand: 'Samsung',   priceCents: 149000,                        imageId: 'photo-1643356472833-5b1f2cd4ca3c', badge: 'new',    badgeKey: 'new',       rating: 0, reviewsCount: 0 },
+  { name: 'Thermostat Nest',                category: 'maison', brand: 'Google Nest', priceCents: 17000,                       imageId: 'photo-1545259741-2ea3ebf61fa3',   badge: '',      badgeKey: '',          rating: 0, reviewsCount: 0 },
+  { name: 'Dyson Hot+Cool',                 category: 'maison', brand: 'Dyson',     priceCents:  40000,                        imageId: 'photo-1768471569643-717e823b5f9a', badge: '',      badgeKey: '',          rating: 0, reviewsCount: 0 },
+  { name: 'Ninja Creami',                   category: 'maison', brand: 'Ninja',     priceCents:  39900, oldPriceCents:  64900, imageId: 'photo-1628815870980-f416105d89b3', badge: 'copper', badgeKey: 'promo',    rating: 0, reviewsCount: 0 },
+  // Accessoires de la gamme Thermomix, ajoutés en fin de tableau. Fiches et
+  // visuels propres à KitchenPrime : aucun texte ni aucune photo de Vorwerk.
+  // Sans avis à l'ajout — `rating: 0, reviewsCount: 0` masque les étoiles.
+  { name: 'Couvercle de bol mélangeur',     category: 'acc',    brand: 'Thermomix', priceCents:   2500,                        imageId: 'photo-1693038603562-bb6191269ecc', badge: '',      badgeKey: '',          rating: 0, reviewsCount: 0 },
+  { name: 'Protège-lame et éplucheur',      category: 'acc',    brand: 'Thermomix', priceCents:   2900,                        imageId: 'photo-1549716679-efce92a6bd12',   badge: '',      badgeKey: '',          rating: 0, reviewsCount: 0 },
+  { name: 'Pare-éclaboussures',             category: 'acc',    brand: 'Thermomix', priceCents:   1500,                        imageId: 'photo-1518737003272-dac7c4760d5e', badge: '',      badgeKey: '',          rating: 0, reviewsCount: 0 },
+  { name: 'Couvercle transparent Varoma',   category: 'acc',    brand: 'Thermomix', priceCents:   2900,                        imageId: 'photo-1592578630143-fac65cda7a67', badge: '',      badgeKey: '',          rating: 0, reviewsCount: 0 },
+  { name: 'Kit sous-vide pompe et sachets', category: 'acc',    brand: 'Thermomix', priceCents:   3500,                        imageId: 'photo-1763889107827-8e7d7960d68a', badge: 'new',    badgeKey: 'new',       rating: 0, reviewsCount: 0 },
+  { name: 'Tapis à pâtisserie',             category: 'acc',    brand: 'Thermomix', priceCents:   2900,                        imageId: 'photo-1517686469429-8bdb88b9f907', badge: '',      badgeKey: '',          rating: 0, reviewsCount: 0 },
+  { name: 'Moule à pain',                   category: 'acc',    brand: 'Thermomix', priceCents:   3900,                        imageId: 'photo-1681511230184-623f9f4dea9a', badge: '',      badgeKey: '',          rating: 0, reviewsCount: 0 },
 ];
 
 const refPrefix: Record<Category, string> = {
@@ -72,6 +82,17 @@ export const PRODUCTS: Product[] = raw.map((p, i) => ({
   slug: slugify(p.name),
   ref: `${refPrefix[p.category]}-${String(i + 1).padStart(3, '0')}`,
 }));
+
+/**
+ * Vrai si le produit a des avis réels à afficher.
+ *
+ * Une note n'est montrée — et transmise à Google — que si des avis existent.
+ * Afficher des étoiles sans avis, ou des avis inventés, est une pratique
+ * commerciale trompeuse (directive européenne 2019/2161) et contrevient aux
+ * règles de Google sur les données structurées d'avis.
+ */
+export const hasReviews = (p: Pick<Product, 'reviewsCount' | 'rating'>) =>
+  p.reviewsCount > 0 && p.rating > 0;
 
 export const getProductBySlug = (slug: string) =>
   PRODUCTS.find((p) => p.slug === slug);

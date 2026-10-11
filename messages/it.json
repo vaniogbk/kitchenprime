@@ -2,9 +2,9 @@
   "meta": {
     "homeTitle": "KitchenPrime — Thermomix TM7, elettrodomestici e casa connessa",
     "homeDesc": "Thermomix TM7 ricondizionato, elettrodomestici e casa connessa. Consegna gratuita in 48 ore in Europa, garanzia 24 mesi, pagamento sicuro.",
-    "catalogTitle": "Catalogo completo — 20 prodotti",
+    "catalogTitle": "Catalogo completo — {count} prodotti",
     "checkoutTitle": "Finalizza l'ordine",
-    "catalogDesc": "Robot da cucina, accessori, libri di ricette, pacchetti e casa connessa: i 20 articoli KitchenPrime, consegnati in 48 ore e garantiti 24 mesi.",
+    "catalogDesc": "Robot da cucina, accessori, libri di ricette, pacchetti e casa connessa: i {count} articoli KitchenPrime, consegnati in 48 ore e garantiti 24 mesi.",
     "checkoutDesc": "Completa il tuo ordine KitchenPrime in tutta sicurezza.",
     "cartTitle": "Il mio carrello",
     "cartDesc": "Gli articoli nel tuo carrello KitchenPrime.",
@@ -58,15 +58,15 @@
   "home": {
     "popularEyebrow": "Selezione KitchenPrime",
     "popularTitle": "Prodotti popolari",
-    "seeAll": "Vedi tutti i 20 prodotti",
+    "seeAll": "Vedi tutti i {count} prodotti",
     "reviewsEyebrow": "Recensioni verificate",
     "reviewsTitle": "Hanno scelto KitchenPrime",
     "verified": "Acquisto verificato"
   },
   "catalog": {
-    "eyebrow": "Catalogo completo · 20 prodotti",
+    "eyebrow": "Catalogo completo · {count} prodotti",
     "title": "Tutti i nostri prodotti",
-    "subtitle": "Robot · Accessori · Libri · Pacchetti · Casa — i 20 articoli KitchenPrime.",
+    "subtitle": "Robot · Accessori · Libri · Pacchetti · Casa — i {count} articoli KitchenPrime.",
     "filterAll": "Tutti",
     "filterRobots": "Robot",
     "filterAcc": "Accessori",
@@ -188,7 +188,8 @@
     "unwish": "Rimuovi {name} dai preferiti",
     "added": "Aggiunto",
     "ratingOutOf5": "su 5",
-    "fiveOutOfFive": "5 stelle su 5"
+    "fiveOutOfFive": "5 stelle su 5",
+    "noReviews": "Ancora nessuna recensione"
   },
   "badges": {
     "new": "Novità",

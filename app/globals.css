@@ -1526,9 +1526,13 @@
   /* Le champ de recherche avait une largeur fixe : sur un écran étroit il
      poussait le bouton panier hors du bandeau, jusqu'à passer dessous. Il
      devient élastique, avec un plancher de largeur pour rester utilisable. */
-  .search { flex: 1 1 auto; min-width: 0; max-width: 220px; }
+  /* La zone de droite peut RÉTRÉCIR mais ne s'étire pas : avec `flex-grow`,
+     elle absorbait tout l'espace libre et collait la navigation au logo sur
+     ordinateur. L'écart minimal garantit qu'aucun bloc ne touche son voisin. */
+  .nav { gap: 16px; }
+  .search { flex: 0 1 220px; min-width: 0; }
   .search input { min-width: 0; }
-  .nav-right { flex: 1 1 auto; justify-content: flex-end; min-width: 0; }
+  .nav-right { flex: 0 1 auto; justify-content: flex-end; min-width: 0; }
   .cart-btn { flex-shrink: 0; }
 
   /* Le sélecteur de quantité garde sa largeur naturelle plutôt que de
@@ -1542,4 +1546,11 @@
      panier hors du bandeau. */
   .search { padding: 8px 10px; }
   .cart-line-price { text-align: left; }
+}
+
+@layer components {
+  /* Produit sans avis : on l'annonce sobrement plutôt que d'afficher des
+     étoiles vides. La ligne garde la hauteur de .pstars pour que les cartes
+     d'une même rangée restent alignées. */
+  .pstars--none { color: var(--mute); font-size: 10.5px; font-weight: 600; }
 }

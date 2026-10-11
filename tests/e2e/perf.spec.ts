@@ -134,6 +134,20 @@ test.describe('Budget de poids', () => {
   });
 });
 
+test.describe('En-tête', () => {
+  test('le logo, la navigation et la zone de droite ne se touchent pas', async ({ page }) => {
+    // Un correctif mobile avait rendu la zone de droite extensible : sur
+    // ordinateur, elle absorbait l'espace et collait la navigation au logo.
+    await page.goto('/fr');
+    const logo = await page.locator('.nav .logo').boundingBox();
+    const links = await page.locator('.nav .nav-links').boundingBox();
+    const right = await page.locator('.nav .nav-right').boundingBox();
+    expect(logo && links && right).toBeTruthy();
+    expect(links!.x - (logo!.x + logo!.width), 'logo collé à la navigation').toBeGreaterThanOrEqual(16);
+    expect(right!.x - (links!.x + links!.width), 'navigation collée à la zone de droite').toBeGreaterThanOrEqual(16);
+  });
+});
+
 test.describe('Mise en page des vignettes', () => {
   test('le cœur des favoris reste dans le coin haut-droit, sans chevaucher le badge', async ({ page }) => {
     // Une règle du lien étendu avait remplacé son `position: absolute` par
