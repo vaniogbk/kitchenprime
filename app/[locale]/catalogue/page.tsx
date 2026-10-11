@@ -21,8 +21,8 @@ export async function generateMetadata({ params: { locale } }: { params: { local
   return pageMetadata({
     locale,
     path: '/catalogue',
-    title: t('catalogTitle'),
-    description: t('catalogDesc'),
+    title: t('catalogTitle', { count: PRODUCTS.length }),
+    description: t('catalogDesc', { count: PRODUCTS.length }),
   });
 }
 
@@ -65,10 +65,10 @@ export default async function CatalogPage({
     <>
       <div className="page-head">
         <p className="page-eyebrow">
-          <Icon name="table-cells-large" /> {t('eyebrow')}
+          <Icon name="table-cells-large" /> {t('eyebrow', { count: PRODUCTS.length })}
         </p>
         <h1 className="page-title">{t('title')}</h1>
-        <p className="page-sub">{t('subtitle')}</p>
+        <p className="page-sub">{t('subtitle', { count: PRODUCTS.length })}</p>
       </div>
       <CatalogGrid items={items} locale={locale} filter={filter} query={searchParams.q} />
       <JsonLd json={ld} />

@@ -2,9 +2,9 @@
   "meta": {
     "homeTitle": "KitchenPrime — Thermomix TM7, appliances & smart home",
     "homeDesc": "Refurbished Thermomix TM7, home appliances and smart home. Free 48-hour delivery across Europe, 24-month warranty, secure payment.",
-    "catalogTitle": "Full catalogue — 20 products",
+    "catalogTitle": "Full catalogue — {count} products",
     "checkoutTitle": "Complete your order",
-    "catalogDesc": "Food processors, accessories, recipe books, bundles and smart home: all 20 KitchenPrime products, delivered in 48 hours with a 24-month warranty.",
+    "catalogDesc": "Food processors, accessories, recipe books, bundles and smart home: all {count} KitchenPrime products, delivered in 48 hours with a 24-month warranty.",
     "checkoutDesc": "Complete your KitchenPrime order securely.",
     "cartTitle": "My cart",
     "cartDesc": "The items in your KitchenPrime cart.",
@@ -58,15 +58,15 @@
   "home": {
     "popularEyebrow": "KitchenPrime selection",
     "popularTitle": "Popular products",
-    "seeAll": "View all 20 products",
+    "seeAll": "View all {count} products",
     "reviewsEyebrow": "Verified reviews",
     "reviewsTitle": "They chose KitchenPrime",
     "verified": "Verified purchase"
   },
   "catalog": {
-    "eyebrow": "Full catalogue · 20 products",
+    "eyebrow": "Full catalogue · {count} products",
     "title": "All our products",
-    "subtitle": "Robots · Accessories · Books · Bundles · Home — all 20 KitchenPrime products.",
+    "subtitle": "Robots · Accessories · Books · Bundles · Home — all {count} KitchenPrime products.",
     "filterAll": "All",
     "filterRobots": "Robots",
     "filterAcc": "Accessories",
@@ -188,7 +188,8 @@
     "unwish": "Remove {name} from favourites",
     "added": "Added",
     "ratingOutOf5": "out of 5",
-    "fiveOutOfFive": "5 out of 5 stars"
+    "fiveOutOfFive": "5 out of 5 stars",
+    "noReviews": "No reviews yet"
   },
   "badges": {
     "new": "New",

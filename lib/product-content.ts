@@ -1045,6 +1045,363 @@ const CONTENT: Record<string, Entry> = {
       ],
     },
   },
+
+  'couvercle-de-bol-melangeur': {
+    fr: {
+      name: 'Couvercle de bol mélangeur',
+      tagline: 'Couvercle de rechange étanche pour bol TM5, TM6 et TM7, avec son joint.',
+      description:
+        "Le couvercle s'use au fil des fermetures : le joint se tasse, les ergots de verrouillage s'émoussent, et le robot finit par refuser de démarrer faute de détecter une fermeture correcte. Ce couvercle de rechange rétablit un verrouillage franc et une étanchéité complète.\n\nIl se monte sans outil sur le bol d'origine et accepte le gobelet doseur comme le panier vapeur. Passage au lave-vaisselle.",
+      features: [
+        'Compatible bols TM5, TM6 et TM7',
+        'Joint d’étanchéité intégré',
+        'Verrouillage franc reconnu par le robot',
+        'Passage au lave-vaisselle',
+      ],
+    },
+    de: {
+      name: 'Mixtopfdeckel',
+      tagline: 'Dichter Ersatzdeckel für Mixtöpfe TM5, TM6 und TM7, mit Dichtung.',
+      description:
+        'Der Deckel nutzt sich mit jedem Schließen ab: Die Dichtung setzt sich, die Verriegelungsnasen runden sich ab, und irgendwann startet das Gerät nicht mehr, weil es keine korrekte Verriegelung erkennt. Dieser Ersatzdeckel stellt eine saubere Verriegelung und volle Dichtheit wieder her.\n\nEr passt ohne Werkzeug auf den Original-Mixtopf und nimmt Messbecher wie Garkörbchen auf. Spülmaschinenfest.',
+      features: [
+        'Passend für Mixtöpfe TM5, TM6 und TM7',
+        'Integrierte Dichtung',
+        'Saubere Verriegelung, vom Gerät erkannt',
+        'Spülmaschinenfest',
+      ],
+    },
+    it: {
+      name: 'Coperchio del boccale',
+      tagline: 'Coperchio di ricambio a tenuta per boccali TM5, TM6 e TM7, con guarnizione.',
+      description:
+        "Il coperchio si consuma a ogni chiusura: la guarnizione si appiattisce, i nottolini di blocco si arrotondano e il robot finisce per non avviarsi perché non rileva una chiusura corretta. Questo coperchio di ricambio ripristina un blocco netto e una tenuta completa.\n\nSi monta senza attrezzi sul boccale originale e accoglie sia il misurino sia il cestello. Lavabile in lavastoviglie.",
+      features: [
+        'Compatibile con boccali TM5, TM6 e TM7',
+        'Guarnizione di tenuta integrata',
+        'Blocco netto riconosciuto dal robot',
+        'Lavabile in lavastoviglie',
+      ],
+    },
+    en: {
+      name: 'Mixing Bowl Lid',
+      tagline: 'Leak-proof replacement lid for TM5, TM6 and TM7 bowls, seal included.',
+      description:
+        'The lid wears with every closing: the seal flattens, the locking lugs round off, and eventually the machine refuses to start because it no longer detects a proper lock. This replacement lid restores a positive lock and a full seal.\n\nIt fits the original bowl without tools and takes both the measuring cup and the simmering basket. Dishwasher-safe.',
+      features: [
+        'Fits TM5, TM6 and TM7 bowls',
+        'Integrated sealing ring',
+        'Positive lock recognised by the machine',
+        'Dishwasher-safe',
+      ],
+    },
+  },
+
+  'protege-lame-et-eplucheur': {
+    fr: {
+      name: 'Protège-lame et éplucheur',
+      tagline: 'Recouvre le couteau pour mélanger sans hacher, et épluche pommes de terre et légumes.',
+      description:
+        "Posé sur le couteau, ce protège-lame transforme le bol en mélangeur doux : on remue une sauce, une purée ou un risotto sans jamais réduire les morceaux en bouillie. Retourné, il devient éplucheur — quelques minutes de rotation suffisent pour peler un kilo de pommes de terre.\n\nLa matière souple n'abîme pas le revêtement du bol, et la pièce se range dans le Varoma.",
+      features: [
+        'Mélange sans hacher : sauces, purées, risottos',
+        'Fonction épluchage pour pommes de terre et légumes',
+        'Matière souple qui préserve le bol',
+        'Compatible TM6 et TM7',
+      ],
+    },
+    de: {
+      name: 'Messerschutz und Schäler',
+      tagline: 'Deckt das Messer ab, um ohne Zerkleinern zu rühren, und schält Kartoffeln und Gemüse.',
+      description:
+        'Auf das Messer gesetzt, macht dieser Messerschutz aus dem Mixtopf einen sanften Rührer: Saucen, Pürees oder Risotto werden gerührt, ohne dass Stücke zu Brei werden. Umgedreht wird er zum Schäler — wenige Minuten Drehung genügen, um ein Kilo Kartoffeln zu schälen.\n\nDas weiche Material schont die Beschichtung des Mixtopfs, und das Teil lässt sich im Varoma verstauen.',
+      features: [
+        'Rührt ohne Zerkleinern: Saucen, Pürees, Risotto',
+        'Schälfunktion für Kartoffeln und Gemüse',
+        'Weiches Material schont den Mixtopf',
+        'Kompatibel mit TM6 und TM7',
+      ],
+    },
+    it: {
+      name: 'Coprilama e pelaverdure',
+      tagline: 'Copre il coltello per mescolare senza tritare e pela patate e verdure.',
+      description:
+        "Posato sul coltello, questo coprilama trasforma il boccale in un mescolatore delicato: si mescola una salsa, un purè o un risotto senza mai ridurre i pezzi in poltiglia. Capovolto diventa pelaverdure — pochi minuti di rotazione bastano per pelare un chilo di patate.\n\nIl materiale morbido non rovina il rivestimento del boccale e il pezzo si ripone nel Varoma.",
+      features: [
+        'Mescola senza tritare: salse, purè, risotti',
+        'Funzione pelatura per patate e verdure',
+        'Materiale morbido che preserva il boccale',
+        'Compatibile con TM6 e TM7',
+      ],
+    },
+    en: {
+      name: 'Blade Cover and Peeler',
+      tagline: 'Covers the blade to stir without chopping, and peels potatoes and vegetables.',
+      description:
+        'Placed over the blade, this cover turns the bowl into a gentle stirrer: sauces, mash or risotto get mixed without ever being reduced to a pulp. Flipped over, it becomes a peeler — a few minutes of rotation is enough to peel a kilo of potatoes.\n\nThe soft material protects the bowl’s finish, and the piece stores inside the Varoma.',
+      features: [
+        'Stirs without chopping: sauces, mash, risotto',
+        'Peeling function for potatoes and vegetables',
+        'Soft material that protects the bowl',
+        'Compatible with TM6 and TM7',
+      ],
+    },
+  },
+
+  'pare-eclaboussures': {
+    fr: {
+      name: 'Pare-éclaboussures',
+      tagline: 'Se pose sur le couvercle pour réduire en sauce sans projections sur le plan de travail.',
+      description:
+        "Réduire une sauce ou un coulis demande de retirer le gobelet pour laisser l'eau s'évaporer — et c'est là que les projections commencent. Le pare-éclaboussures se pose à la place du gobelet : la vapeur s'échappe, les gouttes restent dans le bol.\n\nIl simplifie surtout les confitures, les sauces tomate et les réductions longues, qui demandent de laisser le couvercle ouvert.",
+      features: [
+        'Laisse s’échapper la vapeur, retient les projections',
+        'Idéal pour réductions, confitures et coulis',
+        'Se pose à la place du gobelet doseur',
+        'Compatible TM6 et TM7',
+      ],
+    },
+    de: {
+      name: 'Spritzschutz',
+      tagline: 'Wird auf den Deckel gesetzt, um ohne Spritzer auf die Arbeitsfläche einzukochen.',
+      description:
+        'Zum Einkochen einer Sauce oder eines Coulis muss der Messbecher entfernt werden, damit Wasser verdampfen kann — und genau dann beginnen die Spritzer. Der Spritzschutz wird anstelle des Messbechers aufgesetzt: Der Dampf entweicht, die Tropfen bleiben im Mixtopf.\n\nEr erleichtert vor allem Konfitüren, Tomatensaucen und lange Reduktionen, bei denen der Deckel offen bleiben muss.',
+      features: [
+        'Lässt Dampf entweichen, hält Spritzer zurück',
+        'Ideal für Reduktionen, Konfitüren und Coulis',
+        'Wird anstelle des Messbechers aufgesetzt',
+        'Kompatibel mit TM6 und TM7',
+      ],
+    },
+    it: {
+      name: 'Paraschizzi',
+      tagline: 'Si posa sul coperchio per ridurre le salse senza schizzi sul piano di lavoro.',
+      description:
+        "Ridurre una salsa o un coulis richiede di togliere il misurino per lasciare evaporare l'acqua — ed è lì che cominciano gli schizzi. Il paraschizzi si posa al posto del misurino: il vapore esce, le gocce restano nel boccale.\n\nSemplifica soprattutto marmellate, sughi di pomodoro e riduzioni lunghe, che richiedono di lasciare il coperchio aperto.",
+      features: [
+        'Lascia uscire il vapore, trattiene gli schizzi',
+        'Ideale per riduzioni, marmellate e coulis',
+        'Si posa al posto del misurino',
+        'Compatibile con TM6 e TM7',
+      ],
+    },
+    en: {
+      name: 'Splash Guard',
+      tagline: 'Sits on the lid so you can reduce sauces without spattering the worktop.',
+      description:
+        'Reducing a sauce or coulis means removing the measuring cup to let the water evaporate — and that is when the spattering starts. The splash guard sits in place of the cup: steam escapes, droplets stay in the bowl.\n\nIt mainly simplifies jams, tomato sauces and long reductions, which call for the lid to stay open.',
+      features: [
+        'Lets steam out, keeps spatter in',
+        'Ideal for reductions, jams and coulis',
+        'Sits in place of the measuring cup',
+        'Compatible with TM6 and TM7',
+      ],
+    },
+  },
+
+  'couvercle-transparent-varoma': {
+    fr: {
+      name: 'Couvercle transparent Varoma',
+      tagline: 'Surveillez la cuisson vapeur sans soulever le couvercle ni perdre la chaleur.',
+      description:
+        "Chaque fois qu'on soulève le couvercle du Varoma pour vérifier la cuisson, la vapeur s'échappe et le temps de cuisson s'allonge. Ce couvercle transparent permet de juger d'un coup d'œil si les légumes sont tendres ou le poisson nacré, sans rien ouvrir.\n\nIl remplace le couvercle d'origine à l'identique et conserve les orifices qui régulent la pression.",
+      features: [
+        'Surveillance de la cuisson sans ouvrir',
+        'Aucune perte de vapeur ni de chaleur',
+        'Remplace le couvercle Varoma d’origine',
+        'Compatible Varoma TM6 et TM7',
+      ],
+    },
+    de: {
+      name: 'Transparenter Varoma-Deckel',
+      tagline: 'Den Dampfgarvorgang beobachten, ohne den Deckel anzuheben oder Wärme zu verlieren.',
+      description:
+        'Jedes Mal, wenn man den Varoma-Deckel anhebt, um nachzusehen, entweicht Dampf und die Garzeit verlängert sich. Dieser transparente Deckel zeigt auf einen Blick, ob das Gemüse zart oder der Fisch gar ist — ohne etwas zu öffnen.\n\nEr ersetzt den Originaldeckel passgenau und behält die Öffnungen, die den Druck regulieren.',
+      features: [
+        'Garkontrolle ohne Öffnen',
+        'Kein Verlust von Dampf oder Wärme',
+        'Ersetzt den Original-Varoma-Deckel',
+        'Kompatibel mit Varoma TM6 und TM7',
+      ],
+    },
+    it: {
+      name: 'Coperchio trasparente Varoma',
+      tagline: 'Controlla la cottura a vapore senza sollevare il coperchio né perdere calore.',
+      description:
+        "Ogni volta che si solleva il coperchio del Varoma per controllare la cottura, il vapore esce e il tempo di cottura si allunga. Questo coperchio trasparente permette di capire con un'occhiata se le verdure sono tenere o il pesce è cotto, senza aprire nulla.\n\nSostituisce il coperchio originale in modo identico e mantiene i fori che regolano la pressione.",
+      features: [
+        'Controllo della cottura senza aprire',
+        'Nessuna perdita di vapore né di calore',
+        'Sostituisce il coperchio Varoma originale',
+        'Compatibile con Varoma TM6 e TM7',
+      ],
+    },
+    en: {
+      name: 'Clear Varoma Lid',
+      tagline: 'Watch steaming progress without lifting the lid or losing heat.',
+      description:
+        'Every time you lift the Varoma lid to check on things, steam escapes and cooking takes longer. This clear lid lets you tell at a glance whether the vegetables are tender or the fish is done, without opening anything.\n\nIt is a like-for-like replacement for the original lid and keeps the vents that regulate pressure.',
+      features: [
+        'Check cooking without opening',
+        'No loss of steam or heat',
+        'Replaces the original Varoma lid',
+        'Compatible with TM6 and TM7 Varoma',
+      ],
+    },
+  },
+
+  'kit-sous-vide-pompe-et-sachets': {
+    fr: {
+      name: 'Kit sous-vide pompe et sachets',
+      tagline: 'Pompe manuelle et sachets réutilisables pour exploiter le mode sous-vide du robot.',
+      description:
+        "Le mode sous-vide du TM6 et du TM7 maintient une température précise pendant des heures — encore faut-il emballer les aliments sans air. Cette pompe manuelle aspire l'air des sachets fournis en quelques secondes, sans machine de mise sous vide encombrante.\n\nLes sachets à valve se lavent et se réutilisent : viandes fondantes, poissons nacrés et légumes croquants, sans consommable à racheter.",
+      features: [
+        'Pompe manuelle compacte, sans électricité',
+        'Sachets à valve lavables et réutilisables',
+        'Pensé pour le mode sous-vide TM6 et TM7',
+        'Aucun consommable à racheter',
+      ],
+    },
+    de: {
+      name: 'Sous-vide-Set Pumpe und Beutel',
+      tagline: 'Handpumpe und wiederverwendbare Beutel für den Sous-vide-Modus des Geräts.',
+      description:
+        'Der Sous-vide-Modus von TM6 und TM7 hält stundenlang eine präzise Temperatur — dafür müssen die Lebensmittel aber luftdicht verpackt sein. Diese Handpumpe saugt die Luft aus den mitgelieferten Beuteln in Sekunden, ganz ohne sperriges Vakuumiergerät.\n\nDie Ventilbeutel lassen sich waschen und wiederverwenden: zartes Fleisch, glasiger Fisch und knackiges Gemüse, ohne Verbrauchsmaterial nachzukaufen.',
+      features: [
+        'Kompakte Handpumpe, ohne Strom',
+        'Waschbare, wiederverwendbare Ventilbeutel',
+        'Für den Sous-vide-Modus von TM6 und TM7',
+        'Kein Verbrauchsmaterial nachzukaufen',
+      ],
+    },
+    it: {
+      name: 'Kit sottovuoto pompa e sacchetti',
+      tagline: 'Pompa manuale e sacchetti riutilizzabili per sfruttare la modalità sottovuoto del robot.',
+      description:
+        "La modalità sottovuoto di TM6 e TM7 mantiene una temperatura precisa per ore — purché gli alimenti siano confezionati senz'aria. Questa pompa manuale aspira l'aria dai sacchetti forniti in pochi secondi, senza una macchina per sottovuoto ingombrante.\n\nI sacchetti con valvola si lavano e si riutilizzano: carni tenere, pesce perfetto e verdure croccanti, senza materiali di consumo da ricomprare.",
+      features: [
+        'Pompa manuale compatta, senza elettricità',
+        'Sacchetti con valvola lavabili e riutilizzabili',
+        'Pensato per la modalità sottovuoto TM6 e TM7',
+        'Nessun materiale di consumo da ricomprare',
+      ],
+    },
+    en: {
+      name: 'Sous-Vide Pump and Bag Kit',
+      tagline: 'Hand pump and reusable bags to make the most of the machine’s sous-vide mode.',
+      description:
+        'The TM6 and TM7 sous-vide mode holds a precise temperature for hours — but the food still has to be packed airtight. This hand pump draws the air out of the supplied bags in seconds, with no bulky vacuum sealer.\n\nThe valve bags wash and reuse: tender meat, perfectly cooked fish and crisp vegetables, with no consumables to rebuy.',
+      features: [
+        'Compact hand pump, no power needed',
+        'Washable, reusable valve bags',
+        'Designed for TM6 and TM7 sous-vide mode',
+        'No consumables to rebuy',
+      ],
+    },
+  },
+
+  'tapis-a-patisserie': {
+    fr: {
+      name: 'Tapis à pâtisserie',
+      tagline: 'Tapis antiadhésif gradué pour étaler pâtes et biscuits sans fariner le plan de travail.',
+      description:
+        "Le robot pétrit la pâte ; il reste à l'étaler. Ce tapis antiadhésif évite de fariner le plan de travail et la pâte ne colle pas au rouleau. Ses repères de diamètre permettent d'abaisser une pâte à tarte au bon format du premier coup.\n\nIl supporte la cuisson au four et se roule pour le rangement. Lavage à l'eau savonneuse.",
+      features: [
+        'Surface antiadhésive, sans farine',
+        'Repères de diamètre pour tartes et pizzas',
+        'Résiste à la cuisson au four',
+        'Se roule pour le rangement',
+      ],
+    },
+    de: {
+      name: 'Backmatte',
+      tagline: 'Antihaft-Backmatte mit Markierungen zum Ausrollen ohne bemehlte Arbeitsfläche.',
+      description:
+        'Das Gerät knetet den Teig; ausrollen muss man ihn noch selbst. Diese Antihaftmatte erspart das Bemehlen der Arbeitsfläche, und der Teig klebt nicht am Nudelholz. Durchmesser-Markierungen helfen, einen Tarteteig gleich im richtigen Format auszurollen.\n\nSie ist backofenfest und lässt sich zum Verstauen aufrollen. Reinigung mit Spülwasser.',
+      features: [
+        'Antihaft-Oberfläche, ohne Mehl',
+        'Durchmesser-Markierungen für Tartes und Pizzen',
+        'Backofenfest',
+        'Zum Verstauen aufrollbar',
+      ],
+    },
+    it: {
+      name: 'Tappetino da pasticceria',
+      tagline: 'Tappetino antiaderente graduato per stendere impasti senza infarinare il piano.',
+      description:
+        "Il robot impasta; resta da stendere. Questo tappetino antiaderente evita di infarinare il piano di lavoro e la pasta non si attacca al mattarello. I riferimenti di diametro permettono di stendere una frolla nel formato giusto al primo colpo.\n\nResiste alla cottura in forno e si arrotola per riporlo. Lavaggio con acqua e sapone.",
+      features: [
+        'Superficie antiaderente, senza farina',
+        'Riferimenti di diametro per crostate e pizze',
+        'Resiste alla cottura in forno',
+        'Si arrotola per riporlo',
+      ],
+    },
+    en: {
+      name: 'Pastry Mat',
+      tagline: 'Non-stick marked mat for rolling out dough without flouring the worktop.',
+      description:
+        'The machine kneads the dough; rolling it out is still up to you. This non-stick mat saves flouring the worktop, and the dough does not cling to the rolling pin. Diameter guides help you roll a tart base to the right size first time.\n\nIt is oven-safe and rolls up for storage. Wash in soapy water.',
+      features: [
+        'Non-stick surface, no flour needed',
+        'Diameter guides for tarts and pizzas',
+        'Oven-safe',
+        'Rolls up for storage',
+      ],
+    },
+  },
+
+  'moule-a-pain': {
+    fr: {
+      name: 'Moule à pain',
+      tagline: 'Moule pour pain de mie et brioches, dimensionné pour une pâte pétrie au robot.',
+      description:
+        "Une pâte à pain de mie ou à brioche pétrie au robot remplit exactement ce moule : la pâte lève sans déborder et donne une mie régulière, aux tranches toutes de la même taille. Le revêtement antiadhésif libère le pain sans graisser.\n\nIl convient aussi aux cakes, terrines et pains de viande. Passage au lave-vaisselle.",
+      features: [
+        'Dimensionné pour une pâte pétrie au robot',
+        'Revêtement antiadhésif, démoulage facile',
+        'Convient aussi aux cakes et terrines',
+        'Passage au lave-vaisselle',
+      ],
+    },
+    de: {
+      name: 'Brotbackform',
+      tagline: 'Form für Toastbrot und Brioche, abgestimmt auf einen im Gerät gekneteten Teig.',
+      description:
+        'Ein im Gerät gekneteter Toastbrot- oder Briocheteig füllt diese Form genau aus: Der Teig geht auf, ohne überzulaufen, und ergibt eine gleichmäßige Krume mit gleich großen Scheiben. Die Antihaftbeschichtung löst das Brot ohne Einfetten.\n\nSie eignet sich auch für Kuchen, Terrinen und Hackbraten. Spülmaschinenfest.',
+      features: [
+        'Abgestimmt auf einen im Gerät gekneteten Teig',
+        'Antihaftbeschichtung, leichtes Lösen',
+        'Auch für Kuchen und Terrinen geeignet',
+        'Spülmaschinenfest',
+      ],
+    },
+    it: {
+      name: 'Stampo per pane',
+      tagline: 'Stampo per pan carré e brioche, dimensionato per un impasto lavorato dal robot.',
+      description:
+        "Un impasto per pan carré o brioche lavorato dal robot riempie esattamente questo stampo: la pasta lievita senza traboccare e dà una mollica regolare, con fette tutte uguali. Il rivestimento antiaderente libera il pane senza ungere.\n\nÈ adatto anche a plumcake, terrine e polpettoni. Lavabile in lavastoviglie.",
+      features: [
+        'Dimensionato per un impasto lavorato dal robot',
+        'Rivestimento antiaderente, sformatura facile',
+        'Adatto anche a plumcake e terrine',
+        'Lavabile in lavastoviglie',
+      ],
+    },
+    en: {
+      name: 'Bread Tin',
+      tagline: 'Tin for sandwich loaves and brioche, sized for a dough kneaded in the machine.',
+      description:
+        'A sandwich-loaf or brioche dough kneaded in the machine fills this tin exactly: it rises without spilling over and gives an even crumb with slices all the same size. The non-stick coating releases the loaf without greasing.\n\nIt also suits cakes, terrines and meatloaf. Dishwasher-safe.',
+      features: [
+        'Sized for a dough kneaded in the machine',
+        'Non-stick coating, easy release',
+        'Also suits cakes and terrines',
+        'Dishwasher-safe',
+      ],
+    },
+  },
 };
 
 /**

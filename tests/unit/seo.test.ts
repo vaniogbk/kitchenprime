@@ -139,7 +139,7 @@ describe('données structurées', () => {
       }) as {
         '@type': string;
         offers: { price: string; priceCurrency: string; availability: string; priceValidUntil: string; itemCondition: string };
-        aggregateRating: { ratingValue: string; reviewCount: number };
+        aggregateRating?: { ratingValue: string; reviewCount: number };
         brand: { name: string };
       };
 
@@ -151,7 +151,14 @@ describe('données structurées', () => {
       expect(ld.offers.availability).toBe('https://schema.org/InStock');
       expect(ld.offers.priceValidUntil).toMatch(/^\d{4}-\d{2}-\d{2}$/);
       expect(ld.brand.name).toBe(p.brand);
-      expect(ld.aggregateRating.reviewCount).toBe(p.reviewsCount);
+
+      // Note structurée uniquement si des avis existent : Google sanctionne
+      // les AggregateRating fictifs, et le droit européen les interdit.
+      if (p.reviewsCount > 0) {
+        expect(ld.aggregateRating?.reviewCount, `${p.slug}`).toBe(p.reviewsCount);
+      } else {
+        expect(ld.aggregateRating, `${p.slug} : note sans avis`).toBeUndefined();
+      }
     }
   });
 

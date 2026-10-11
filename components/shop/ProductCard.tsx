@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { type Product, categoryIcon, formatEUR } from '@/lib/products';
+import { type Product, categoryIcon, formatEUR, hasReviews } from '@/lib/products';
 import { BCP47 } from '@/lib/seo';
 import { type Locale } from '@/lib/i18n';
 import { Icon } from '@/components/ui/Icon';
@@ -81,13 +81,18 @@ export async function ProductCard({
         <Heading className="pname">
           <Link href={href} className="pname-link">{content.name}</Link>
         </Heading>
-        <p className="pstars">
-          <Icon name="star" />
-          <span>
-            {product.rating.toFixed(1)}
-            <span className="sr-only"> {tCard('ratingOutOf5')} </span>({product.reviewsCount})
-          </span>
-        </p>
+        {hasReviews(product) ? (
+          <p className="pstars">
+            <Icon name="star" />
+            <span>
+              {product.rating.toFixed(1)}
+              <span className="sr-only"> {tCard('ratingOutOf5')} </span>({product.reviewsCount})
+            </span>
+          </p>
+        ) : (
+          // Même hauteur que la ligne d'étoiles : la grille reste alignée.
+          <p className="pstars pstars--none">{tCard('noReviews')}</p>
+        )}
         <p className="pprice-row">
           <span className="pprice">{formatEUR(product.priceCents, numLocale)}</span>
           {product.oldPriceCents && (

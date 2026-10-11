@@ -6,17 +6,35 @@ import {
   formatEUR,
   savingsEuros,
   categoryIcon,
+  hasReviews,
   type Category,
 } from '@/lib/products';
+import fr from '@/messages/fr.json';
+import de from '@/messages/de.json';
+import it_ from '@/messages/it.json';
+import en from '@/messages/en.json';
 import { ICONS } from '@/components/ui/icons.generated';
 
 const CATEGORIES: Category[] = ['robots', 'acc', 'livres', 'packs', 'maison'];
 
 describe('catalogue', () => {
-  it('contient les 20 produits annoncés dans les libellés de catalogue', () => {
-    // Le texte « Catalogue complet · 20 produits » est en dur dans les
-    // traductions : ce test empêche qu'il redevienne faux.
-    expect(PRODUCTS).toHaveLength(20);
+  it('ne fige aucun nombre de produits dans les libellés', () => {
+    // Le compte était écrit en dur (« 20 produits ») et devenait faux à chaque
+    // ajout. Les libellés reçoivent désormais {count} : on vérifie qu'aucun
+    // nombre ne s'y est réinstallé.
+    const keys = [
+      ['meta', 'catalogTitle'], ['meta', 'catalogDesc'], ['home', 'seeAll'],
+      ['catalog', 'eyebrow'], ['catalog', 'subtitle'],
+    ] as const;
+    for (const msgs of [fr, de, it_, en] as Array<Record<string, Record<string, string>>>) {
+      for (const [ns, key] of keys) {
+        expect(msgs[ns][key], `${ns}.${key}`).toContain('{count}');
+      }
+    }
+  });
+
+  it('contient 27 produits', () => {
+    expect(PRODUCTS).toHaveLength(27);
   });
 
   it('n’a aucun slug en double', () => {
@@ -59,11 +77,35 @@ describe('catalogue', () => {
     }
   });
 
-  it('garde des notes dans l’échelle 0–5 et des compteurs d’avis positifs', () => {
+  it('garde des notes dans l’échelle 0–5', () => {
     for (const p of PRODUCTS) {
-      expect(p.rating).toBeGreaterThan(0);
+      expect(p.rating).toBeGreaterThanOrEqual(0);
       expect(p.rating).toBeLessThanOrEqual(5);
       expect(p.reviewsCount).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it('n’associe jamais une note à zéro avis, ni l’inverse', () => {
+    // Une note sans avis, c'est une note inventée : le site ne l'affiche pas
+    // et ne la transmet pas à Google. Les deux champs vont donc de pair.
+    for (const p of PRODUCTS) {
+      expect(p.rating > 0, `${p.slug} : note et nombre d’avis désaccordés`).toBe(p.reviewsCount > 0);
+      expect(hasReviews(p)).toBe(p.reviewsCount > 0);
+    }
+  });
+
+  it('n’attribue aucune note aux produits ajoutés après coup', () => {
+    // Aucun avis n'a été recueilli pour eux : toute note serait fictive.
+    const added = [
+      'samsung-family-hub', 'thermostat-nest', 'dyson-hot-cool', 'ninja-creami',
+      'couvercle-de-bol-melangeur', 'protege-lame-et-eplucheur', 'pare-eclaboussures',
+      'couvercle-transparent-varoma', 'kit-sous-vide-pompe-et-sachets',
+      'tapis-a-patisserie', 'moule-a-pain',
+    ];
+    for (const slug of added) {
+      const p = getProductBySlug(slug);
+      expect(p, `${slug} introuvable`).toBeDefined();
+      expect(hasReviews(p!), `${slug} affiche une note sans avis`).toBe(false);
     }
   });
 
